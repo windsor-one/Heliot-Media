@@ -1,0 +1,51 @@
+<div class="container" style="margin-top:30px; max-width:800px;">
+  <div class="post-page">
+    <div class="post-body">
+      <p style="text-align:center;"><strong>¿Tienes alguna pregunta, sugerencia o comentario?</strong></p>
+      <p style="text-align:center;">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
+
+      <div style="background:#f8fafc; border-radius:20px; padding:40px 30px; margin:30px auto; max-width:700px;">
+        <h3 style="color:#00406e; font-family:'Playfair Display',serif; text-align:center;">Solicitud de Información</h3>
+        <form id="contact-form" style="display:flex; flex-direction:column; gap:20px;">
+          <div><label style="font-weight:600;">Nombre y Apellido (Obligatorio)</label><input type="text" id="name" name="Nombre" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+          <div><label style="font-weight:600;">Correo Electrónico (Obligatorio)</label><input type="email" id="email" name="Correo" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+          <div><label style="font-weight:600;">Asunto</label><input type="text" id="subject" name="Asunto" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+          <div><label style="font-weight:600;">Mensaje</label><textarea id="message" name="Mensaje" rows="6" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px; resize:vertical;"></textarea></div>
+          <button type="submit" id="submit-btn" style="background:#00406e; color:white; border:none; border-radius:50px; padding:14px 32px; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s;">Enviar</button>
+        </form>
+        <p style="font-size:13px; margin-top:20px; text-align:center; color:#777;">Tu información será tratada de acuerdo con nuestra <a href="politica-de-privacidad.html" style="color:#00406e;font-weight:600;">Política de Privacidad</a>.</p>
+      </div>
+
+      <div style="text-align:center; margin-top:20px;">
+        <h3 style="color:#00406e;">Otros medios de contacto</h3>
+        <p><strong>Redes sociales:</strong> <a href="https://www.instagram.com/heliotmedia" target="_blank" style="color:#00406e;font-weight:600;">Instagram</a></p>
+        <p style="color:#999;font-size:13px;">Intentamos responder en un plazo de 24 a 48 horas hábiles.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('submit-btn');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+    var data = { Nombre: document.getElementById('name').value, Correo: document.getElementById('email').value, Asunto: document.getElementById('subject').value, Mensaje: document.getElementById('message').value };
+    fetch('https://formsubmit.co/ajax/alexhrnndz32@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.success === 'true' || data.message === 'OK') {
+        alert('✅ Mensaje enviado. Te responderemos en 24-48 horas.');
+        document.getElementById('contact-form').reset();
+      } else { throw new Error('Error'); }
+    }).catch(function() {
+      alert('❌ Hubo un error. Por favor, intenta de nuevo o escríbenos a alexhrnndz32@gmail.com');
+    }).finally(function() {
+      btn.textContent = 'Enviar';
+      btn.disabled = false;
+    });
+  });
+</script>
