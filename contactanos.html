@@ -50,10 +50,80 @@
     </div>
   </div>
 
-  <div class="footer">...</div>
-  <div class="search-overlay" id="searchOverlay">...</div>
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="margin-bottom:12px;"><img alt="Heliot Media" height="60" src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" style="width:200px;height:auto;"/></div>
+          <h3>Heliot Media</h3>
+          <p class="tagline">Proyecto editorial independiente enfocado en información, cultura, academia y sociedad.</p>
+        </div>
+        <div class="footer-col"><h4>Accesos directos</h4><ul><li><a href="index.html">Inicio</a></li><li><a href="sobre-nosotros.html">Nosotros</a></li><li><a href="contactanos.html">Contactanos</a></li></ul></div>
+        <div class="footer-col"><h4>Secciones</h4><ul><li><a href="index.html#radar">Radar</a></li><li><a href="index.html#cultura">Cultura</a></li><li><a href="index.html#educacion">Vida Académica</a></li><li><a href="index.html#medioambiente">Medioambiente</a></li></ul></div>
+        <div class="footer-col"><h4>Transparencia</h4><ul><li><a href="politica-editorial.html">Política Editorial</a></li><li><a href="politica-de-privacidad.html">Política de Privacidad</a></li><li><a href="politica-de-cookies.html">Política de Cookies</a></li><li><a href="terminos-y-condiciones-de-uso.html">Términos</a></li><li><a href="aviso-legal.html">Aviso Legal</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><span>&#169; 2026 Heliot Media</span><div class="footer-social"><a href="https://www.instagram.com/heliotmedia" target="_blank">Instagram</a></div></div>
+    </div>
+  </div>
+
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-modal">
+      <button class="search-close" id="searchClose">&#10005;</button>
+      <div class="search-container">
+        <input class="search-input" id="searchInput" placeholder="Buscar en Heliot Media..." type="text"/>
+        <button class="search-submit-btn" id="searchButton"><svg fill="none" height="22" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="22"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+      <p class="search-hint">Presiona ESC para cerrar</p>
+    </div>
+  </div>
+
   <script>
-    /* Mismos scripts del index + el script del formulario */
+    (function() {
+      var cursor = document.getElementById('customCursor'); if (!cursor) return;
+      document.addEventListener('mousemove', function(e) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+      document.addEventListener('mouseleave', function() { cursor.style.opacity = '0'; });
+      document.addEventListener('mouseenter', function() { cursor.style.opacity = '0.9'; });
+    })();
+    var header = document.getElementById('mainHeader'), ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) { requestAnimationFrame(function() { header.classList.toggle('scroll-hidden', window.pageYOffset > 50); ticking = false; }); ticking = true; }
+    });
+    var mobileToggle = document.getElementById('mobileToggle'), navMain = document.getElementById('navMain');
+    if (mobileToggle) mobileToggle.addEventListener('click', function() { navMain.classList.toggle('active'); });
+    document.querySelectorAll('.nav-main a').forEach(function(link) { link.addEventListener('click', function() { if (window.innerWidth <= 768) navMain.classList.remove('active'); }); });
+    document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+      var btn = dropdown.querySelector('.dropbtn');
+      btn.addEventListener('click', function(e) { if (window.innerWidth <= 768) { e.preventDefault(); dropdown.classList.toggle('active'); } });
+    });
+    (function() {
+      var searchInput = document.getElementById('searchInput'), searchButton = document.getElementById('searchButton'), resultsContainer = document.getElementById('searchResults'), overlay = document.getElementById('searchOverlay'), closeBtn = document.getElementById('searchClose'), toggleBtn = document.getElementById('searchToggle');
+      if (!searchInput || !resultsContainer) return;
+      var searchTimeout;
+      function performSearch(query) {
+        if (!query || query.length < 2) { resultsContainer.innerHTML = ''; return; }
+        resultsContainer.innerHTML = '<div class="loading">Buscando...</div>';
+        var allLinks = [];
+        document.querySelectorAll('.nav-main a, .submenu a, .footer a').forEach(function(link) {
+          var href = link.getAttribute('href'), text = link.textContent.trim();
+          if (href && href.indexOf('javascript:') === -1 && href.indexOf('#') === -1 && href.indexOf('mailto:') === -1) { allLinks.push({ title: text, url: href, type: 'Página' }); }
+        });
+        var known = [ {title:'Inicio', url:'index.html'}, {title:'El tiempo', url:'el-tiempo.html'}, {title:'Quienes somos', url:'sobre-nosotros.html'}, {title:'Política editorial', url:'politica-editorial.html'}, {title:'Beneficios', url:'beneficios.html'}, {title:'CIDE', url:'cide-heliot.html'}, {title:'Aranceles', url:'aranceles.html'}, {title:'Promociones', url:'promociones.html'}, {title:'Reservar', url:'reservas.html'}, {title:'Pago Online', url:'pago-online.html'}, {title:'Contacto', url:'contactanos.html'} ];
+        known.forEach(function(p) { if (!allLinks.some(function(item) { return item.url === p.url; })) { allLinks.push({ title: p.title, url: p.url, type: 'Página' }); } });
+        var results = allLinks.filter(function(item) { return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1; });
+        if (results.length === 0) { resultsContainer.innerHTML = '<div class="no-results">No se encontraron resultados para "<strong>' + query + '</strong>"</div>'; } else { var html = ''; results.slice(0,10).forEach(function(result) { html += '<div class="result-item"><a href="' + result.url + '">' + result.title + '</a><div class="result-type">' + result.type + '</div></div>'; }); resultsContainer.innerHTML = html; }
+      }
+      searchInput.addEventListener('input', function() { clearTimeout(searchTimeout); var q = this.value.trim(); if (q.length >= 2) { searchTimeout = setTimeout(function() { performSearch(q); }, 300); } else { resultsContainer.innerHTML = ''; } });
+      searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); var q = this.value.trim(); if (q.length >= 2) performSearch(q); } });
+      if (searchButton) searchButton.addEventListener('click', function() { var q = searchInput.value.trim(); if (q.length >= 2) performSearch(q); });
+      function closeSearch() { overlay.classList.remove('active'); resultsContainer.innerHTML = ''; if (searchInput) searchInput.value = ''; }
+      if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSearch(); });
+      if (toggleBtn) toggleBtn.addEventListener('click', function(e) { e.stopPropagation(); overlay.classList.add('active'); setTimeout(function() { if (searchInput) searchInput.focus(); }, 300); });
+    })();
+
+    // Script del formulario
     document.getElementById('contact-form').addEventListener('submit', function(e) {
       e.preventDefault();
       var btn = document.getElementById('submit-btn');
