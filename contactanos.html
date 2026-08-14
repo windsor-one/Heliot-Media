@@ -1,43 +1,82 @@
-<p style="text-align:center;"><strong>¿Tienes alguna pregunta, sugerencia o comentario?</strong></p>
-<p style="text-align:center;">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
-<div style="background:#f8fafc; border-radius:20px; padding:40px 30px; margin:30px auto; max-width:700px;">
-  <h3 style="color:#00406e; font-family:'Playfair Display',serif; text-align:center;">Solicitud de Información</h3>
-  <form id="contact-form" style="display:flex; flex-direction:column; gap:20px;">
-    <div><label style="font-weight:600;">Nombre y Apellido (Obligatorio)</label><input type="text" id="name" name="Nombre" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
-    <div><label style="font-weight:600;">Correo Electrónico (Obligatorio)</label><input type="email" id="email" name="Correo" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
-    <div><label style="font-weight:600;">Asunto</label><input type="text" id="subject" name="Asunto" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
-    <div><label style="font-weight:600;">Mensaje</label><textarea id="message" name="Mensaje" rows="6" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px; resize:vertical;"></textarea></div>
-    <button type="submit" id="submit-btn" style="background:#00406e; color:white; border:none; border-radius:50px; padding:14px 32px; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s;">Enviar</button>
-  </form>
-  <p style="font-size:13px; margin-top:20px; text-align:center; color:#777;">Tu información será tratada de acuerdo con nuestra <a href="politica-de-privacidad.html" style="color:#00406e;font-weight:600;">Política de Privacidad</a>.</p>
-</div>
-<div style="text-align:center; margin-top:20px;">
-  <h3 style="color:#00406e;">Otros medios de contacto</h3>
-  <p><strong>Redes sociales:</strong> <a href="https://www.instagram.com/heliotmedia" target="_blank" style="color:#00406e;font-weight:600;">Instagram</a></p>
-  <p style="color:#999;font-size:13px;">Intentamos responder en un plazo de 24 a 48 horas hábiles.</p>
-</div>
-<script>
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var btn = document.getElementById('submit-btn');
-    btn.textContent = 'Enviando...';
-    btn.disabled = true;
-    var data = { Nombre: document.getElementById('name').value, Correo: document.getElementById('email').value, Asunto: document.getElementById('subject').value, Mensaje: document.getElementById('message').value };
-    fetch('https://formsubmit.co/ajax/alexhrnndz32@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(function(response) { return response.json(); })
-    .then(function(data) {
-      if (data.success === 'true' || data.message === 'OK') {
-        alert('✅ Mensaje enviado. Te responderemos en 24-48 horas.');
-        document.getElementById('contact-form').reset();
-      } else { throw new Error('Error'); }
-    }).catch(function() {
-      alert('❌ Hubo un error. Por favor, intenta de nuevo o escríbenos a alexhrnndz32@gmail.com');
-    }).finally(function() {
-      btn.textContent = 'Enviar';
-      btn.disabled = false;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto · Heliot Media</title>
+  <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&amp;display=swap' rel='stylesheet'/>
+  <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="header" id="mainHeader">
+    <div class="header-inner">
+      <div class="logo"><h1><a href="index.html">Heliot Media</a></h1></div>
+      <ul class="nav-main" id="navMain">
+        <li class="dropdown"><button class="dropbtn">Nosotros</button><ul class="submenu"><li><a href="sobre-nosotros.html">Quienes somos</a></li><li><a href="politica-editorial.html">Política editorial</a></li><li><a href="https://heliotacademy.milaulas.com/">Campus virtual</a></li></ul></li>
+        <li class="dropdown"><button class="dropbtn">Vinculación Social</button><ul class="submenu"><li><a href="beneficios.html">Beneficios y Alianzas</a></li><li><a href="cide-heliot.html">Centro de Innovación</a></li></ul></li>
+        <li class="dropdown"><button class="dropbtn">Radar</button><ul class="submenu"><li><a href="index.html#radar">Radar de novedades</a></li><li><a href="index.html#univo">Acontecer UNIVO</a></li><li><a href="index.html#ugb">Actualidad UGB</a></li><li><a href="index.html#inya">Novedades INYA</a></li></ul></li>
+        <li><a href="el-tiempo.html">El tiempo</a></li>
+        <li class="dropdown"><button class="dropbtn">Heliot Media</button><ul class="submenu"><li><a href="sobre-nosotros.html">Sobre Nosotros</a></li><li><a href="aranceles.html">Aranceles</a></li><li><a href="promociones.html">Promociones</a></li><li><a href="reservas.html">Reservar</a></li><li><a href="pago-online.html">Pago Online</a></li></ul></li>
+      </ul>
+      <button aria-label="Buscar" class="search-toggle" id="searchToggle"><svg fill="none" height="20" stroke="#00406e" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="20"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></button>
+      <button aria-label="Menu" class="menu-mobile-toggle" id="mobileToggle">&#9776;</button>
+    </div>
+  </div>
+
+  <div class="container" style="margin-top:30px; max-width:800px;">
+    <div class="post-page">
+      <div class="post-body">
+        <p style="text-align:center;"><strong>¿Tienes alguna pregunta, sugerencia o comentario?</strong></p>
+        <p style="text-align:center;">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
+        <div style="background:#f8fafc; border-radius:20px; padding:40px 30px; margin:30px auto; max-width:700px;">
+          <h3 style="color:#00406e; font-family:'Playfair Display',serif; text-align:center;">Solicitud de Información</h3>
+          <form id="contact-form" style="display:flex; flex-direction:column; gap:20px;">
+            <div><label style="font-weight:600;">Nombre y Apellido (Obligatorio)</label><input type="text" id="name" name="Nombre" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+            <div><label style="font-weight:600;">Correo Electrónico (Obligatorio)</label><input type="email" id="email" name="Correo" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+            <div><label style="font-weight:600;">Asunto</label><input type="text" id="subject" name="Asunto" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px;"/></div>
+            <div><label style="font-weight:600;">Mensaje</label><textarea id="message" name="Mensaje" rows="6" required style="width:100%; padding:12px 16px; border:1px solid #dce0e8; border-radius:20px; font-size:16px; resize:vertical;"></textarea></div>
+            <button type="submit" id="submit-btn" style="background:#00406e; color:white; border:none; border-radius:50px; padding:14px 32px; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s;">Enviar</button>
+          </form>
+          <p style="font-size:13px; margin-top:20px; text-align:center; color:#777;">Tu información será tratada de acuerdo con nuestra <a href="politica-de-privacidad.html" style="color:#00406e;font-weight:600;">Política de Privacidad</a>.</p>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <h3 style="color:#00406e;">Otros medios de contacto</h3>
+          <p><strong>Redes sociales:</strong> <a href="https://www.instagram.com/heliotmedia" target="_blank" style="color:#00406e;font-weight:600;">Instagram</a></p>
+          <p style="color:#999;font-size:13px;">Intentamos responder en un plazo de 24 a 48 horas hábiles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">...</div>
+  <div class="search-overlay" id="searchOverlay">...</div>
+  <script>
+    /* Mismos scripts del index + el script del formulario */
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = document.getElementById('submit-btn');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      var data = { Nombre: document.getElementById('name').value, Correo: document.getElementById('email').value, Asunto: document.getElementById('subject').value, Mensaje: document.getElementById('message').value };
+      fetch('https://formsubmit.co/ajax/alexhrnndz32@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function(response) { return response.json(); })
+      .then(function(data) {
+        if (data.success === 'true' || data.message === 'OK') {
+          alert('✅ Mensaje enviado. Te responderemos en 24-48 horas.');
+          document.getElementById('contact-form').reset();
+        } else { throw new Error('Error'); }
+      }).catch(function() {
+        alert('❌ Hubo un error. Por favor, intenta de nuevo o escríbenos a alexhrnndz32@gmail.com');
+      }).finally(function() {
+        btn.textContent = 'Enviar';
+        btn.disabled = false;
+      });
     });
-  });
-</script>
+  </script>
+</body>
+</html>
