@@ -6,430 +6,15 @@
   <title>Heliot Media · Inicio</title>
   <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&amp;display=swap' rel='stylesheet'/>
   <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
-  <style>
-    /* ===== RESET Y VARIABLES ===== */
-    :root {
-      --primary-color: #00406e;
-      --secondary-color: #FFD700;
-      --accent-color: #E53935;
-      --bg-color: #F5F7FA;
-      --text-color: #1e2a3e;
-      --white: #FFFFFF;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.03);
-      --shadow-md: 0 8px 20px rgba(0,0,0,0.08);
-      --shadow-lg: 0 12px 24px -8px rgba(0,64,110,0.12);
-      --border-radius: 10px;
-      --container-max: 1200px;
-      --header-height: 60px;
-      --total-header-height: 70px;
-      --content-spacing: 20px;
-      --total-top-padding: calc(var(--total-header-height) + var(--content-spacing));
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Kumbh Sans', sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      min-height: 100vh;
-      padding-top: var(--total-top-padding);
-      cursor: default;
-    }
-    a { text-decoration: none; color: inherit; transition: var(--transition); }
-    img { max-width: 100%; height: auto; display: block; }
-    .container {
-      width: 92%;
-      max-width: var(--container-max);
-      margin: 0 auto;
-      padding: 0 15px;
-      flex: 1;
-    }
-
-    /* ===== CURSOR PERSONALIZADO (CORREGIDO) ===== */
-    .custom-cursor {
-      position: fixed;
-      width: 16px;
-      height: 16px;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 99999;
-      box-shadow: 0 0 8px rgba(0,0,0,0.15);
-      transform: translate(-50%, -50%);
-      transition: none; /* Sin transición, movimiento instantáneo */
-      will-change: transform;
-      opacity: 0.9;
-      /* Sin mix-blend-mode para evitar conflictos visuales */
-    }
-
-    @media (max-width: 768px) {
-      .custom-cursor { display: none; }
-    }
-
-    /* ===== HEADER ===== */
-    .header {
-      background: var(--white);
-      border-bottom: 1px solid #E5E9F0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      box-shadow: var(--shadow-sm);
-      height: var(--header-height);
-      min-height: var(--header-height);
-      transition: transform var(--transition);
-    }
-    .header.scroll-hidden { transform: translateY(-100%); }
-    .header-inner {
-      max-width: var(--container-max);
-      margin: 0 auto;
-      padding: 8px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 100%;
-      gap: 10px;
-    }
-    .logo h1 {
-      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-      font-family: 'semplicitapro', 'Playfair Display', serif;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
-
-    /* ===== MENÚ ===== */
-    .nav-main {
-      display: flex;
-      gap: clamp(0.5rem, 1.5vw, 1.5rem);
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      margin-left: auto;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .nav-main > li { position: relative; }
-    .nav-main a, .dropbtn {
-      font-weight: 400;
-      font-size: clamp(0.7rem, 1vw, 1rem);
-      text-transform: capitalize;
-      letter-spacing: 0.3px;
-      color: var(--text-color);
-      padding: 0.3rem 0;
-      display: inline-block;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      font-family: inherit;
-      position: relative;
-      white-space: nowrap;
-    }
-    .nav-main a::after, .dropbtn::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--secondary-color);
-      transition: width var(--transition);
-    }
-    .nav-main a:hover::after, .dropbtn:hover::after { width: 100%; }
-    .nav-main a:hover, .dropbtn:hover { color: var(--primary-color); }
-
-    .submenu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      min-width: 180px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(10px);
-      transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
-      z-index: 1000;
-      padding: 8px 0;
-      list-style: none;
-    }
-    .dropdown:hover .submenu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-    .submenu a {
-      display: block;
-      padding: 10px 22px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--primary-color);
-      border-bottom: 1px solid #f0f2f5;
-      text-align: left;
-    }
-    .submenu a:hover { background: var(--secondary-color); color: var(--white); }
-    .submenu li:last-child a { border-bottom: none; }
-
-    .menu-mobile-toggle, .search-toggle {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--primary-color);
-      padding: 4px 8px;
-      font-size: 1.5rem;
-    }
-    .menu-mobile-toggle { font-size: 1.8rem; }
-    .search-toggle svg { stroke: var(--primary-color); width: 22px; height: 22px; }
-
-    /* ===== HERO ESTÁTICO ===== */
-    .static-hero {
-      margin: 30px 0 50px;
-      text-align: center;
-      padding: 40px 20px;
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-md);
-    }
-    .static-hero h1 {
-      font-family: 'semplicitapro', 'Playfair Display', serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      color: var(--primary-color);
-      margin-bottom: 15px;
-    }
-    .static-hero p {
-      font-size: clamp(1rem, 1.5vw, 1.2rem);
-      color: #4a5568;
-      max-width: 700px;
-      margin: 0 auto 20px;
-      line-height: 1.6;
-    }
-    .static-hero .badge {
-      display: inline-block;
-      background: var(--secondary-color);
-      color: var(--primary-color);
-      padding: 8px 24px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .static-hero .cta-buttons {
-      margin-top: 25px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .static-hero .cta-btn {
-      display: inline-block;
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-weight: 600;
-      border: 2px solid var(--primary-color);
-    }
-    .static-hero .cta-btn-primary { background: var(--primary-color); color: white; }
-    .static-hero .cta-btn-primary:hover { background: transparent; color: var(--primary-color); }
-    .static-hero .cta-btn-secondary { background: transparent; color: var(--primary-color); }
-    .static-hero .cta-btn-secondary:hover { background: var(--primary-color); color: white; }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      background: #003366;
-      color: white;
-      padding: clamp(30px, 5vw, 50px) 15px clamp(20px, 3vw, 30px);
-      margin-top: 40px;
-    }
-    .footer-inner { max-width: var(--container-max); margin: 0 auto; }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: clamp(20px, 3vw, 35px);
-      margin-bottom: 30px;
-      text-align: left;
-    }
-    .footer-brand h3 {
-      font-family: 'semplicitapro', 'Playfair Display', serif;
-      font-size: clamp(20px, 2.5vw, 24px);
-      margin: 0 0 6px 0;
-      color: white;
-    }
-    .footer-brand .tagline {
-      font-size: clamp(12px, 1.2vw, 13px);
-      opacity: 0.7;
-      line-height: 1.6;
-    }
-    .footer-col h4 {
-      font-size: clamp(11px, 1vw, 12px);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--secondary-color);
-      margin: 0 0 10px 0;
-      font-weight: 700;
-    }
-    .footer-col ul { list-style: none; padding: 0; }
-    .footer-col ul li { margin-bottom: 6px; }
-    .footer-col ul li a {
-      color: rgba(255,255,255,0.8);
-      font-size: clamp(12px, 1.1vw, 13px);
-      transition: var(--transition);
-    }
-    .footer-col ul li a:hover { color: var(--secondary-color); }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: clamp(11px, 1vw, 12px);
-      color: rgba(255,255,255,0.5);
-    }
-    .footer-social a {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 14px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 0;
-      font-size: clamp(11px, 1vw, 12px);
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: var(--transition);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.8);
-    }
-    .footer-social a:hover { background: var(--secondary-color); color: var(--primary-color); border-color: var(--secondary-color); }
-
-    /* ===== BÚSQUEDA OVERLAY ===== */
-    .search-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      z-index: 99999;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .search-overlay.active { display: flex; }
-    .search-modal {
-      background: white;
-      border-radius: var(--border-radius);
-      padding: clamp(20px, 3vw, 30px);
-      max-width: 600px;
-      width: 95%;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .search-close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: #999;
-      transition: var(--transition);
-    }
-    .search-close:hover { color: var(--primary-color); transform: rotate(90deg); }
-    .search-container {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-    .search-input {
-      flex: 1;
-      padding: 12px 20px;
-      border: 2px solid #E5E9F0;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-family: 'Kumbh Sans', sans-serif;
-      outline: none;
-      background: #f8fafc;
-      min-width: 200px;
-    }
-    .search-input:focus { border-color: var(--primary-color); background: white; box-shadow: 0 0 0 4px rgba(0,64,110,0.1); }
-    .search-submit-btn {
-      background: var(--primary-color);
-      border: none;
-      border-radius: 50px;
-      padding: 12px 20px;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .search-submit-btn:hover { background: #00345a; transform: scale(1.02); }
-    .search-submit-btn svg { stroke: white; width: 22px; height: 22px; }
-    .search-results { margin-top: 15px; max-height: 300px; overflow-y: auto; text-align: left; }
-    .search-results .result-item {
-      padding: 10px 14px;
-      border-bottom: 1px solid #f0f2f5;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .search-results .result-item:hover { background: #f8fafc; }
-    .search-results .result-item a { color: var(--primary-color); font-weight: 600; display: block; }
-    .search-hint { font-size: 12px; color: #999; text-align: center; margin: 12px 0 0; }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      :root { --header-height: 50px; --total-top-padding: calc(50px + 15px); }
-      .menu-mobile-toggle, .search-toggle { display: block; }
-      .nav-main {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        background: white;
-        padding: 0.5rem 0;
-        border-top: 1px solid #E5E9F0;
-        order: 4;
-        max-height: 70vh;
-        overflow-y: auto;
-      }
-      .nav-main.active { display: flex; }
-      .nav-main li { width: 100%; text-align: center; }
-      .nav-main a, .dropbtn { padding: 10px 0; display: block; font-size: 0.9rem; white-space: normal; }
-      .submenu {
-        position: static;
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-        box-shadow: none;
-        background: #f8fafc;
-        display: none;
-        width: 100%;
-      }
-      .dropdown.active .submenu { display: block; }
-      .submenu a { text-align: center; padding: 10px 20px; }
-    }
-    @media (max-width: 480px) {
-      :root { --header-height: 45px; --total-top-padding: calc(45px + 12px); }
-      .logo h1 { font-size: 0.95rem; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <!-- Los estilos específicos de index (si hay) van aquí, pero todo está en style.css -->
 </head>
 <body>
 
-  <!-- ===== CURSOR PERSONALIZADO ===== -->
+  <!-- CURSOR -->
   <div class="custom-cursor" id="customCursor"></div>
 
-  <!-- ===== HEADER ===== -->
+  <!-- HEADER -->
   <div class="header" id="mainHeader">
     <div class="header-inner">
       <div class="logo"><h1><a href="index.html">Heliot Media</a></h1></div>
@@ -477,7 +62,7 @@
     </div>
   </div>
 
-  <!-- ===== CONTENIDO ===== -->
+  <!-- CONTENIDO -->
   <div class="container">
     <div class="static-hero">
       <h1>Heliot Media</h1>
@@ -508,14 +93,12 @@
     </div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
+  <!-- FOOTER -->
   <div class="footer">
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div style="margin-bottom: 12px;">
-            <img alt="Heliot Media" height="60" src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" style="width: 200px; height: auto;"/>
-          </div>
+          <div style="margin-bottom:12px;"><img alt="Heliot Media" height="60" src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" style="width:200px;height:auto;"/></div>
           <h3>Heliot Media</h3>
           <p class="tagline">Proyecto editorial independiente enfocado en información, cultura, academia y sociedad.</p>
         </div>
@@ -549,14 +132,12 @@
       </div>
       <div class="footer-bottom">
         <span>&#169; 2026 Heliot Media &#8226; Proyecto de Heliot Media</span>
-        <div class="footer-social">
-          <a href="https://www.instagram.com/heliotmedia" target="_blank">Instagram</a>
-        </div>
+        <div class="footer-social"><a href="https://www.instagram.com/heliotmedia" target="_blank">Instagram</a></div>
       </div>
     </div>
   </div>
 
-  <!-- ===== BÚSQUEDA OVERLAY ===== -->
+  <!-- BÚSQUEDA OVERLAY -->
   <div class="search-overlay" id="searchOverlay">
     <div class="search-modal">
       <button class="search-close" id="searchClose">&#10005;</button>
@@ -571,26 +152,18 @@
     </div>
   </div>
 
-  <!-- ===== SCRIPTS ===== -->
+  <!-- SCRIPTS -->
   <script>
-    // ===== CURSOR INSTANTÁNEO (sin arrastre) =====
+    // ===== CURSOR INSTANTÁNEO =====
     (function() {
       var cursor = document.getElementById('customCursor');
       if (!cursor) return;
-
       document.addEventListener('mousemove', function(e) {
-        // Movimiento instantáneo: la pelotita sigue exactamente al puntero
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
       });
-
-      // Ocultar cursor al salir de la ventana
-      document.addEventListener('mouseleave', function() {
-        cursor.style.opacity = '0';
-      });
-      document.addEventListener('mouseenter', function() {
-        cursor.style.opacity = '0.9';
-      });
+      document.addEventListener('mouseleave', function() { cursor.style.opacity = '0'; });
+      document.addEventListener('mouseenter', function() { cursor.style.opacity = '0.9'; });
     })();
 
     // ===== HEADER SCROLL =====
@@ -611,9 +184,7 @@
     var mobileToggle = document.getElementById('mobileToggle');
     var navMain = document.getElementById('navMain');
     if (mobileToggle) {
-      mobileToggle.addEventListener('click', function() {
-        navMain.classList.toggle('active');
-      });
+      mobileToggle.addEventListener('click', function() { navMain.classList.toggle('active'); });
     }
     document.querySelectorAll('.nav-main a').forEach(function(link) {
       link.addEventListener('click', function() {
@@ -641,18 +212,11 @@
       var closeBtn = document.getElementById('searchClose');
       var toggleBtn = document.getElementById('searchToggle');
       if (!searchInput || !resultsContainer) return;
-
       var searchTimeout;
-
       function performSearch(query) {
-        if (!query || query.length < 2) {
-          resultsContainer.innerHTML = '';
-          return;
-        }
+        if (!query || query.length < 2) { resultsContainer.innerHTML = ''; return; }
         resultsContainer.innerHTML = '<div class="loading">Buscando...</div>';
-
         var allLinks = [];
-        // Recoger enlaces del menú
         document.querySelectorAll('.nav-main a, .submenu a, .footer a').forEach(function(link) {
           var href = link.getAttribute('href');
           var text = link.textContent.trim();
@@ -660,7 +224,6 @@
             allLinks.push({ title: text, url: href, type: 'Página' });
           }
         });
-        // Páginas conocidas
         var known = [
           { title: 'Inicio', url: 'index.html' },
           { title: 'El tiempo', url: 'el-tiempo.html' },
@@ -679,11 +242,9 @@
             allLinks.push({ title: p.title, url: p.url, type: 'Página' });
           }
         });
-
         var results = allLinks.filter(function(item) {
           return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
         });
-
         if (results.length === 0) {
           resultsContainer.innerHTML = '<div class="no-results">No se encontraron resultados para "<strong>' + query + '</strong>"</div>';
         } else {
@@ -694,7 +255,6 @@
           resultsContainer.innerHTML = html;
         }
       }
-
       searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         var q = this.value.trim();
@@ -704,7 +264,6 @@
           resultsContainer.innerHTML = '';
         }
       });
-
       searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -712,20 +271,17 @@
           if (q.length >= 2) performSearch(q);
         }
       });
-
       if (searchButton) {
         searchButton.addEventListener('click', function() {
           var q = searchInput.value.trim();
           if (q.length >= 2) performSearch(q);
         });
       }
-
       function closeSearch() {
         overlay.classList.remove('active');
         resultsContainer.innerHTML = '';
         if (searchInput) searchInput.value = '';
       }
-
       if (closeBtn) closeBtn.addEventListener('click', closeSearch);
       overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
       document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSearch(); });
@@ -738,6 +294,5 @@
       }
     })();
   </script>
-
 </body>
 </html>
