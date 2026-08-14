@@ -1,0 +1,106 @@
+<div class="container" style="margin-top:30px;">
+  <div class="post-page">
+    <div class="post-body">
+      <!-- Contenido de aranceles (tablas) -->
+      <div class="paquetes-container">
+        <div class="paquetes-divider"><span class="paquetes-divider-line"></span></div>
+
+        <!-- Paquete Básico -->
+        <div class="paquete-card">
+          <h3>Paquete Básico</h3>
+          <div class="paquete-sub">Para momentos simples</div>
+          <div class="paquete-precio">$5.00 <small>USD</small></div>
+          <span class="badge">por persona</span>
+          <div class="paquete-tabla-wrap">
+            <table class="paquete-tabla">
+              <thead><tr><th>Incluye</th><th>Detalle</th></tr></thead>
+              <tbody>
+                <tr><td>Tiempo de entrega</td><td>2 días hábiles</td></tr>
+                <tr><td>Tiempo de sesión</td><td>5 minutos dirigidos</td></tr>
+                <tr><td>Fotos digitales</td><td>2 fotos enviadas por WhatsApp / Drive</td></tr>
+                <tr><td>Foto impresa</td><td>1 foto tamaño 5x7" en sobre decorado</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Paquete Amigos -->
+        <div class="paquete-card">
+          <h3>Paquete Amigos / Dúo</h3>
+          <div class="paquete-sub">Ideal para compartir</div>
+          <div class="paquete-precio">$8.00 <small>USD</small></div>
+          <span class="badge">por pareja</span>
+          <div class="paquete-tabla-wrap">
+            <table class="paquete-tabla">
+              <thead><tr><th>Incluye</th><th>Detalle</th></tr></thead>
+              <tbody>
+                <tr><td>Tiempo de entrega</td><td>2 días hábiles</td></tr>
+                <tr><td>Tiempo de sesión</td><td>10 minutos dirigidos</td></tr>
+                <tr><td>Fotos digitales</td><td>4 fotos del grupo</td></tr>
+                <tr><td>Fotos impresas</td><td>2 fotos (una para cada uno)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Premium Plus -->
+        <div class="paquete-card featured">
+          <h3>Premium Plus</h3>
+          <div class="paquete-sub">Captura Instantánea</div>
+          <div class="paquete-precio">$10.00 <small>USD</small></div>
+          <span class="badge">por persona</span>
+          <div class="paquete-tabla-wrap">
+            <table class="paquete-tabla">
+              <thead><tr><th>Incluye</th><th>Detalle</th></tr></thead>
+              <tbody>
+                <tr><td>Tiempo de entrega</td><td>3 a 4 días hábiles</td></tr>
+                <tr><td>Tiempo de sesión</td><td>20 minutos dirigidos</td></tr>
+                <tr><td>Locación</td><td>Estudio o exterior</td></tr>
+                <tr><td>Entrega digital</td><td>Galería con 8 fotos editadas en alta resolución</td></tr>
+                <tr><td>Entrega física</td><td>1 foto 5x7" + 2 fotos billetera</td></tr>
+                <tr><td>Empaque</td><td>Sobre de cartulina Kraft decorado</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="paquete-actions">
+          <a class="btn-action btn-reservar" href="reservas.html">Reservar ahora</a>
+          <a class="btn-action btn-promociones" href="promociones.html">Ver promociones</a>
+        </div>
+        <div class="paquete-footer-note">
+          <p>Todos los paquetes incluyen edición profesional y entrega en tiempo acordado.</p>
+          <p class="aranceles-leyenda">Sujeto a <a href="terminos-y-condiciones-de-uso.html" style="color:#00406e;text-decoration:underline;">Términos y Condiciones</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Estilos específicos para aranceles (copiar del feed) -->
+<style>
+  .paquetes-container { width:100%; max-width:100%; }
+  .paquetes-divider { text-align:center; padding:8px 0 20px; }
+  .paquetes-divider-line { display:inline-block; width:80px; height:3px; background:#F9B410; border-radius:2px; }
+  .paquete-card { background:white; border-radius:20px; padding:25px; margin-bottom:35px; box-shadow:0 5px 15px rgba(0,0,0,0.05); border:1px solid #eaedf2; }
+  .paquete-card.featured { border-left:4px solid #d4af37; background:#fafcff; }
+  .paquete-card h3 { font-size:1.5rem; font-family:'Playfair Display',serif; color:#00406e; margin:0 0 4px; }
+  .paquete-card .paquete-sub { color:#5a6c7d; font-size:0.95rem; margin-bottom:12px; }
+  .paquete-card .paquete-precio { font-size:1.8rem; font-weight:700; color:#00406e; }
+  .paquete-card .paquete-precio small { font-size:1rem; font-weight:400; color:#5a6c7d; }
+  .paquete-card .badge { display:inline-block; background:#dce4ec; border-radius:30px; font-size:0.7rem; font-weight:600; color:#1f3a4b; padding:2px 14px; margin-bottom:12px; }
+  .paquete-tabla-wrap { overflow-x:auto; margin:12px 0 0; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+  .paquete-tabla { width:100%; border-collapse:collapse; font-size:0.95rem; }
+  .paquete-tabla thead th { background:#003268; color:#fff; padding:14px 18px; text-align:left; }
+  .paquete-tabla tbody td { padding:12px 18px; color:#6D7882; }
+  .paquete-tabla tbody tr:nth-child(odd) td { background:#FFFFFF; }
+  .paquete-tabla tbody tr:nth-child(even) td { background:#E5EAEF; }
+  .paquete-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:16px; margin:25px 0 20px; }
+  .btn-action { display:inline-block; font-size:0.7rem; font-weight:600; padding:6px 18px; border-radius:50px; border:2px solid; text-decoration:none; transition:0.3s; text-transform:uppercase; background:transparent; }
+  .btn-reservar { color:#00406e; border-color:#00406e; }
+  .btn-reservar:hover { background:#00406e; color:#fff; }
+  .btn-promociones { color:#003268; border-color:#F3AF13; }
+  .btn-promociones:hover { background:#F3AF13; color:#003268; }
+  .paquete-footer-note { text-align:center; color:#5a6c7d; font-size:0.9rem; border-top:1px solid #eaedf2; padding-top:20px; }
+  .paquete-footer-note .aranceles-leyenda { font-size:0.72rem; color:#8a9aa8; margin-top:6px; font-style:italic; }
+  @media (max-width:768px) { .paquete-card { padding:18px; } .paquete-card h3 { font-size:1.3rem; } .paquete-tabla thead th, .paquete-tabla tbody td { font-size:0.82rem; padding:10px 12px; } }
+</style>
