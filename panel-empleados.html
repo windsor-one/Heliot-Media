@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de Empleados · Heliot Media</title>
+  <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'/>
+  <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
+  <style>
+    /* ============================================
+       ESTILOS GENERALES (igual que el sitio)
+       ============================================ */
+    :root {
+      --primary-color: #00406e;
+      --secondary-color: #FFD700;
+      --accent-color: #E53935;
+      --bg-color: #F5F7FA;
+      --text-color: #1e2a3e;
+      --white: #FFFFFF;
+      --shadow-md: 0 8px 20px rgba(0,0,0,0.08);
+      --border-radius: 10px;
+      --container-max: 1200px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Kumbh Sans', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* ===== HEADER DEL PANEL ===== */
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      background: white;
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 30px;
+    }
+    .panel-header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .panel-header .logo-area img {
+      height: 40px;
+      width: auto;
+    }
+    .panel-header .logo-area span {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--primary-color);
+      font-family: 'semplicitapro', 'Playfair Display', serif;
+    }
+    .panel-header .user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .panel-header .user-info .user-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+    .btn-logout {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-logout:hover {
+      background: #c62828;
+      transform: translateY(-2px);
+    }
+
+    /* ===== ESTADÍSTICAS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      padding: 18px 16px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    .stat-card .label {
+      font-size: 13px;
+      color: #5a6c7d;
+      margin-top: 4px;
+    }
+
+    /* ===== BARRA DE ACCIONES ===== */
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover {
+      background: #00345a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,64,110,0.25);
+    }
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: var(--primary-color);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-secondary:hover {
+      background: #e5a300;
+      transform: translateY(-2px);
+    }
+    .btn-danger {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-danger:hover {
+      background: #c62828;
+    }
+    .btn-edit {
+      background: #2d7a4f;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-edit:hover {
+      background: #1e5a3a;
+    }
+
+    /* ===== TABLA DE RESERVAS ===== */
+    .table-wrapper {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead {
+      background: #f0f4f9;
+    }
+    th {
+      text-align: left;
+      padding: 14px 12px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    td {
+      padding: 12px 12px;
+      border-bottom: 1px solid #eaedf2;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-pendiente { background: #fff3cd; color: #856404; }
+    .badge-confirmada { background: #d4edda; color: #155724; }
+    .badge-cancelada { background: #f8d7da; color: #721c24; }
+
+    /* ===== MODAL (para crear/editar) ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: white;
+      max-width: 540px;
+      width: 100%;
+      border-radius: 24px;
+      padding: 30px 28px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal h2 {
+      font-family: 'semplicitapro', 'Playfair Display', serif;
+      color: var(--primary-color);
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #8a9aa8;
+      transition: var(--transition);
+    }
+    .modal-close:hover { color: var(--accent-color); }
+    .modal .form-group {
+      margin-bottom: 16px;
+    }
+    .modal .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e2a3e;
+      margin-bottom: 4px;
+    }
+    .modal .form-group input,
+    .modal .form-group select,
+    .modal .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #eaedf2;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      background: #f8fafc;
+      transition: var(--transition);
+    }
+    .modal .form-group input:focus,
+    .modal .form-group select:focus,
+    .modal .form-group textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0,64,110,0.08);
+    }
+    .modal .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .modal .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .modal .btn-cancel {
+      background: #eaedf2;
+      color: #1e2a3e;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .modal .btn-cancel:hover {
+      background: #d5dce6;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .panel-header { flex-direction: column; align-items: stretch; text-align: center; }
+      .panel-header .user-info { justify-content: center; }
+      .actions-bar { justify-content: center; }
+      .modal .form-row { grid-template-columns: 1fr; }
+      table { font-size: 12px; }
+      th, td { padding: 8px 6px; }
+      .actions-cell { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .modal { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="panel-header">
+      <div class="logo-area">
+        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot Media">
+        <span>Panel Empleados</span>
+      </div>
+      <div class="user-info">
+        <span class="user-name" id="userName">Empleado</span>
+        <button class="btn-logout" id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="number" id="totalReservas">0</div>
+        <div class="label">Total reservas</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="reservasHoy">0</div>
+        <div class="label">Reservas de hoy</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="reservasPendientes">0</div>
+        <div class="label">Pendientes</div>
+      </div>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="actions-bar">
+      <button class="btn-primary" id="btnNuevaReserva">➕ Nueva reserva</button>
+      <button class="btn-secondary" id="btnLimpiarFiltros">🔄 Mostrar todas</button>
+    </div>
+
+    <!-- TABLA DE RESERVAS -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Paquete</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="reservasBody">
+          <tr><td colspan="7" style="text-align:center; color:#8a9aa8; padding:30px;">No hay reservas registradas</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ===== MODAL PARA CREAR/EDITAR RESERVA ===== -->
+  <div class="modal-overlay" id="modalReserva">
+    <div class="modal">
+      <h2>
+        <span id="modalTitle">Nueva Reserva</span>
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
+      </h2>
+      <form id="reservaForm">
+        <input type="hidden" id="reservaId" value="">
+
+        <div class="form-group">
+          <label>Nombre del cliente *</label>
+          <input type="text" id="clienteNombre" placeholder="Ej: María González" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono *</label>
+          <input type="tel" id="clienteTelefono" placeholder="7000-0000" required>
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="clienteEmail" placeholder="cliente@correo.com">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha *</label>
+            <input type="date" id="reservaFecha" required>
+          </div>
+          <div class="form-group">
+            <label>Hora *</label>
+            <input type="time" id="reservaHora" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Paquete *</label>
+          <select id="reservaPaquete" required>
+            <option value="Básico">Básico</option>
+            <option value="Amigos / Dúo">Amigos / Dúo</option>
+            <option value="Premium Plus">Premium Plus</option>
+            <option value="Estrella Heliot (Promo)">Estrella Heliot (Promo)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="reservaEstado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmada">Confirmada</option>
+            <option value="Cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Comentarios adicionales</label>
+          <textarea id="reservaComentarios" rows="2" placeholder="Observaciones..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="modalCancelBtn">Cancelar</button>
+          <button type="submit" class="btn-primary" id="modalSubmitBtn">Guardar reserva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // SISTEMA DE RESERVAS CON LOCALSTORAGE
+    // ============================================
+
+    const RESERVAS_KEY = 'heliot_reservas';
+    const SESSION_KEY = 'heliot_empleado_sesion';
+
+    // ----- Utilidades -----
+    function getReservas() {
+      try {
+        return JSON.parse(localStorage.getItem(RESERVAS_KEY)) || [];
+      } catch { return []; }
+    }
+    function saveReservas(reservas) {
+      localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservas));
+    }
+
+    // ----- Verificar sesión -----
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+      } catch { return null; }
+    }
+    const session = getSession();
+    if (!session) {
+      // No hay sesión, redirigir al login
+      window.location.href = 'login-empleados.html';
+    }
+    document.getElementById('userName').textContent = session.name || 'Empleado';
+
+    // ----- Cerrar sesión -----
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(SESSION_KEY);
+      window.location.href = 'login-empleados.html';
+    });
+
+    // ----- Variables globales -----
+    let reservas = getReservas();
+    let editandoId = null;
+
+    // ----- Referencias DOM -----
+    const tbody = document.getElementById('reservasBody');
+    const totalReservas = document.getElementById('totalReservas');
+    const reservasHoy = document.getElementById('reservasHoy');
+    const reservasPendientes = document.getElementById('reservasPendientes');
+
+    // Modal
+    const modal = document.getElementById('modalReserva');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+    const reservaForm = document.getElementById('reservaForm');
+    const reservaId = document.getElementById('reservaId');
+    const clienteNombre = document.getElementById('clienteNombre');
+    const clienteTelefono = document.getElementById('clienteTelefono');
+    const clienteEmail = document.getElementById('clienteEmail');
+    const reservaFecha = document.getElementById('reservaFecha');
+    const reservaHora = document.getElementById('reservaHora');
+    const reservaPaquete = document.getElementById('reservaPaquete');
+    const reservaEstado = document.getElementById('reservaEstado');
+    const reservaComentarios = document.getElementById('reservaComentarios');
+
+    // ----- Renderizar tabla -----
+    function renderReservas(lista) {
+      if (!lista) lista = reservas;
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#8a9aa8; padding:30px;">No hay reservas registradas</td></tr>';
+        return;
+      }
+      // Ordenar por fecha más reciente
+      const sorted = [...lista].sort((a, b) => new Date(b.fecha + 'T' + b.hora) - new Date(a.fecha + 'T' + a.hora));
+      let html = '';
+      sorted.forEach((r, index) => {
+        const estadoClass = r.estado === 'Pendiente' ? 'badge-pendiente' :
+                            r.estado === 'Confirmada' ? 'badge-confirmada' : 'badge-cancelada';
+        html += `
+          <tr>
+            <td><strong>${r.cliente}</strong>${r.email ? `<br><small style="color:#8a9aa8;">${r.email}</small>` : ''}</td>
+            <td>${r.telefono}</td>
+            <td>${r.fecha}</td>
+            <td>${r.hora}</td>
+            <td>${r.paquete}</td>
+            <td><span class="badge-status ${estadoClass}">${r.estado}</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-edit" onclick="editarReserva('${r.id}')">✎ Editar</button>
+                <button class="btn-danger" onclick="eliminarReserva('${r.id}')">✕ Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+      actualizarEstadisticas();
+    }
+
+    // ----- Actualizar estadísticas -----
+    function actualizarEstadisticas() {
+      const total = reservas.length;
+      const hoy = new Date().toISOString().slice(0,10);
+      const hoyCount = reservas.filter(r => r.fecha === hoy).length;
+      const pendientes = reservas.filter(r => r.estado === 'Pendiente').length;
+      totalReservas.textContent = total;
+      reservasHoy.textContent = hoyCount;
+      reservasPendientes.textContent = pendientes;
+    }
+
+    // ----- Generar ID único -----
+    function generarId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    // ----- Abrir modal para nueva reserva -----
+    document.getElementById('btnNuevaReserva').addEventListener('click', () => {
+      editandoId = null;
+      modalTitle.textContent = 'Nueva Reserva';
+      modalSubmitBtn.textContent = 'Guardar reserva';
+      reservaForm.reset();
+      reservaId.value = '';
+      // Fecha por defecto: hoy
+      const hoy = new Date().toISOString().slice(0,10);
+      reservaFecha.value = hoy;
+      reservaEstado.value = 'Pendiente';
+      modal.classList.add('active');
+    });
+
+    // ----- Editar reserva -----
+    window.editarReserva = function(id) {
+      const r = reservas.find(res => res.id === id);
+      if (!r) return;
+      editandoId = id;
+      modalTitle.textContent = 'Editar Reserva';
+      modalSubmitBtn.textContent = 'Actualizar reserva';
+      reservaId.value = r.id;
+      clienteNombre.value = r.cliente;
+      clienteTelefono.value = r.telefono;
+      clienteEmail.value = r.email || '';
+      reservaFecha.value = r.fecha;
+      reservaHora.value = r.hora;
+      reservaPaquete.value = r.paquete;
+      reservaEstado.value = r.estado;
+      reservaComentarios.value = r.comentarios || '';
+      modal.classList.add('active');
+    };
+
+    // ----- Eliminar reserva -----
+    window.eliminarReserva = function(id) {
+      if (!confirm('¿Eliminar esta reserva permanentemente?')) return;
+      reservas = reservas.filter(r => r.id !== id);
+      saveReservas(reservas);
+      renderReservas();
+    };
+
+    // ----- Cerrar modal -----
+    function cerrarModal() {
+      modal.classList.remove('active');
+    }
+    modalCloseBtn.addEventListener('click', cerrarModal);
+    modalCancelBtn.addEventListener('click', cerrarModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) cerrarModal();
+    });
+
+    // ----- Guardar reserva (crear o editar) -----
+    reservaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cliente = clienteNombre.value.trim();
+      const telefono = clienteTelefono.value.trim();
+      const email = clienteEmail.value.trim();
+      const fecha = reservaFecha.value;
+      const hora = reservaHora.value;
+      const paquete = reservaPaquete.value;
+      const estado = reservaEstado.value;
+      const comentarios = reservaComentarios.value.trim();
+
+      if (!cliente || !telefono || !fecha || !hora) {
+        alert('Completa todos los campos obligatorios.');
+        return;
+      }
+
+      if (editandoId) {
+        // Editar
+        const index = reservas.findIndex(r => r.id === editandoId);
+        if (index !== -1) {
+          reservas[index] = {
+            ...reservas[index],
+            cliente,
+            telefono,
+            email,
+            fecha,
+            hora,
+            paquete,
+            estado,
+            comentarios
+          };
+        }
+      } else {
+        // Nueva
+        const nueva = {
+          id: generarId(),
+          cliente,
+          telefono,
+          email,
+          fecha,
+          hora,
+          paquete,
+          estado,
+          comentarios,
+          creado: new Date().toISOString()
+        };
+        reservas.push(nueva);
+      }
+
+      saveReservas(reservas);
+      renderReservas();
+      cerrarModal();
+    });
+
+    // ----- Filtro: mostrar todas -----
+    document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
+      renderReservas();
+    });
+
+    // ----- Inicializar -----
+    renderReservas();
+  </script>
+</body>
+</html>
