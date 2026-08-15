@@ -4,17 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Acceso Empleados · Heliot Media</title>
-  <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'/>
-  <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
+  <!-- Fuente Inter (igual que Zoho Books) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Kumbh Sans', sans-serif;
-      background: #F5F7FA;
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -22,129 +26,136 @@
       padding: 20px;
     }
     .login-container {
-      max-width: 420px;
+      max-width: 400px;
       width: 100%;
-      background: white;
-      border-radius: 28px;
-      padding: 40px 35px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-      border: 1px solid #eaedf2;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e6e9ef;
+    }
+    .login-container .logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .login-container .logo img {
+      height: 44px;
+      width: auto;
     }
     .login-container h1 {
-      font-family: 'semplicitapro', 'Playfair Display', serif;
-      font-size: 28px;
-      color: #00406e;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a2634;
       text-align: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .login-container .sub {
       text-align: center;
-      color: #5a6c7d;
+      color: #5f6b7a;
       font-size: 14px;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
-    .form-group { margin-bottom: 18px; }
+    .form-group {
+      margin-bottom: 18px;
+    }
     .form-group label {
       display: block;
       font-size: 13px;
-      font-weight: 600;
-      color: #1e2a3e;
+      font-weight: 500;
+      color: #1a2634;
       margin-bottom: 4px;
     }
     .form-group input {
       width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #eaedf2;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 10px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
       transition: 0.2s;
-      background: #f8fafc;
+      background: #fafbfc;
     }
     .form-group input:focus {
-      border-color: #00406e;
+      border-color: #066CFF;
       outline: none;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(0,64,110,0.08);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(6, 108, 255, 0.1);
     }
     .btn-primary {
       width: 100%;
-      padding: 14px;
-      background: #00406e;
-      color: white;
+      padding: 12px;
+      background: #066CFF;
+      color: #fff;
       border: none;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 700;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
-      margin-top: 8px;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      margin-top: 6px;
     }
     .btn-primary:hover {
-      background: #00345a;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,64,110,0.25);
+      background: #0052cc;
     }
     .btn-secondary {
       background: transparent;
       border: none;
-      color: #00406e;
+      color: #066CFF;
       font-weight: 600;
       cursor: pointer;
       font-size: 14px;
-      padding: 8px;
-      text-decoration: underline;
+      padding: 6px;
+      font-family: 'Inter', sans-serif;
     }
     .toggle-link {
       text-align: center;
       margin-top: 16px;
+      font-size: 14px;
+      color: #5f6b7a;
     }
-    .toggle-link span { color: #5a6c7d; }
     .toggle-link button {
       background: none;
       border: none;
-      color: #00406e;
+      color: #066CFF;
       font-weight: 600;
       cursor: pointer;
       font-size: 14px;
-      text-decoration: underline;
+      font-family: 'Inter', sans-serif;
+    }
+    .error-msg, .success-msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
     }
     .error-msg {
-      background: #fed7d7;
-      color: #c62828;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin-bottom: 16px;
-      display: none;
+      background: #fee9e7;
+      color: #b91c1c;
     }
     .success-msg {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin-bottom: 16px;
-      display: none;
+      background: #e6f7e6;
+      color: #0b6e0b;
     }
-    .logo-area { text-align: center; margin-bottom: 20px; }
-    .logo-area img { height: 50px; width: auto; }
     .separator {
       display: flex;
       align-items: center;
       gap: 15px;
       margin: 20px 0 18px;
-      color: #8a9aa8;
+      color: #8a94a6;
       font-size: 12px;
     }
-    .separator::before, .separator::after {
+    .separator::before,
+    .separator::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: #eaedf2;
+      background: #e6e9ef;
     }
     .empleado-code-hint {
       font-size: 12px;
-      color: #8a9aa8;
+      color: #8a94a6;
       margin-top: 4px;
     }
     @media (max-width: 480px) {
@@ -154,8 +165,8 @@
 </head>
 <body>
   <div class="login-container">
-    <div class="logo-area">
-      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot Media" style="height:50px;">
+    <div class="logo">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot Media">
     </div>
     <h1>Área de Empleados</h1>
     <p class="sub" id="formSub">Accede para gestionar reservas</p>
@@ -207,9 +218,7 @@
   </div>
 
   <script>
-    // ============================================
-    // 1. CONFIGURACIÓN DE FIREBASE (TU PROYECTO)
-    // ============================================
+    // ===== CONFIGURACIÓN DE FIREBASE =====
     const firebaseConfig = {
       apiKey: "AIzaSyDpRltXZjEBjlq-4vKDlzL5Fgc5NcKr0_8",
       authDomain: "heliotmediaadmin.firebaseapp.com",
@@ -221,13 +230,9 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
-    // Código de empleado (solo para el registro)
     const EMPLOYEE_CODE = 'HELIOT2026';
 
-    // ============================================
-    // 2. ELEMENTOS DOM
-    // ============================================
+    // ===== ELEMENTOS DOM =====
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const toggleBtn = document.getElementById('toggleBtn');
@@ -235,7 +240,6 @@
     const errorMsg = document.getElementById('errorMsg');
     const successMsg = document.getElementById('successMsg');
     const formSub = document.getElementById('formSub');
-
     let isLogin = true;
 
     function showError(msg) {
@@ -253,9 +257,6 @@
       successMsg.style.display = 'none';
     }
 
-    // ============================================
-    // 3. TOGGLE ENTRE LOGIN Y REGISTRO
-    // ============================================
     toggleBtn.addEventListener('click', () => {
       isLogin = !isLogin;
       if (isLogin) {
@@ -275,21 +276,14 @@
       }
     });
 
-    // ============================================
-    // 4. LOGIN (Firebase Auth)
-    // ============================================
+    // Login
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-      if (!email || !password) {
-        showError('Completa todos los campos.');
-        return;
-      }
+      if (!email || !password) { showError('Completa todos los campos.'); return; }
       auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          window.location.href = 'panel-empleados.html';
-        })
+        .then(() => { window.location.href = 'panel-empleados.html'; })
         .catch((err) => {
           let msg = 'Error al iniciar sesión. Verifica tus credenciales.';
           if (err.code === 'auth/user-not-found') msg = 'Usuario no encontrado.';
@@ -300,29 +294,16 @@
         });
     });
 
-    // ============================================
-    // 5. REGISTRO (Firebase Auth + Firestore)
-    // ============================================
+    // Registro
     registerForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const email = document.getElementById('registerEmail').value.trim();
       const name = document.getElementById('registerName').value.trim();
       const password = document.getElementById('registerPassword').value;
       const code = document.getElementById('registerCode').value.trim();
-
-      if (!email || !name || !password || !code) {
-        showError('Completa todos los campos.');
-        return;
-      }
-      if (code !== EMPLOYEE_CODE) {
-        showError('Código de empleado incorrecto.');
-        return;
-      }
-      if (password.length < 6) {
-        showError('La contraseña debe tener al menos 6 caracteres.');
-        return;
-      }
-
+      if (!email || !name || !password || !code) { showError('Completa todos los campos.'); return; }
+      if (code !== EMPLOYEE_CODE) { showError('Código de empleado incorrecto.'); return; }
+      if (password.length < 6) { showError('La contraseña debe tener al menos 6 caracteres.'); return; }
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -355,13 +336,8 @@
         });
     });
 
-    // ============================================
-    // 6. Si ya hay sesión, redirigir al panel
-    // ============================================
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        window.location.href = 'panel-empleados.html';
-      }
+      if (user) window.location.href = 'panel-empleados.html';
     });
   </script>
 </body>
