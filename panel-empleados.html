@@ -549,23 +549,31 @@
     let unsubscribe = null;
 
     // ============================================
-    // 5. FUNCIÓN: RENDERIZAR RESERVAS (en tiempo real)
+    // 5. FUNCIÓN: RENDERIZAR RESERVAS (SIN orderBy)
     // ============================================
     function iniciarEscuchaReservas() {
       if (unsubscribe) unsubscribe();
+      // Escucha TODOS los documentos de la colección "reservas" (sin orderBy)
       unsubscribe = db.collection('reservas')
-        .orderBy('fecha', 'desc')
-        .orderBy('hora', 'desc')
         .onSnapshot((snapshot) => {
           const reservas = [];
           snapshot.forEach((doc) => {
             reservas.push({ id: doc.id, ...doc.data() });
           });
+          // Ordenar manualmente en JavaScript (fecha y hora descendente)
+          reservas.sort((a, b) => {
+            // Primero por fecha (más reciente primero)
+            if (a.fecha !== b.fecha) {
+              return b.fecha.localeCompare(a.fecha);
+            }
+            // Si misma fecha, por hora (más tarde primero)
+            return b.hora.localeCompare(a.hora);
+          });
           renderizarTabla(reservas);
           actualizarEstadisticas(reservas);
         }, (error) => {
-          console.error('Error al escuchar reservas:', error);
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#c62828; padding:30px;">Error al cargar reservas. Verifica tu conexión.</td></tr>';
+          console.error('❌ Error al escuchar reservas:', error);
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#c62828; padding:30px;">Error al cargar reservas: ' + error.message + '</td></tr>';
         });
     }
 
