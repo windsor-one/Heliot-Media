@@ -3,1345 +3,506 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel Empleados · Heliot Media</title>
+  <title>Iniciar sesión · Heliot Media</title>
+  <!-- Inter (igual que Zoho Books) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ==========================================================
-       VARIABLES DE TEMA
-       ========================================================== */
-    :root {
-      --bg-body: #f0f2f5;
-      --bg-sidebar: #ffffff;
-      --border-color: #e6e9ef;
-      --text-primary: #1a2634;
-      --text-secondary: #5f6b7a;
-      --text-muted: #8a94a6;
-      --bg-card: #ffffff;
-      --bg-input: #fafbfc;
-      --shadow: 0 2px 6px rgba(0,0,0,0.02);
-      --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
-      --bg-table-header: #f8f9fc;
-      --bg-hover: #eef4ff;
-      --color-primary: #066CFF;
-      --color-primary-hover: #0052cc;
-      --color-danger: #dc3545;
-      --color-success: #28a745;
-      --badge-pendiente-bg: #fff3cd;
-      --badge-pendiente-text: #856404;
-      --badge-confirmada-bg: #d4edda;
-      --badge-confirmada-text: #155724;
-      --badge-cancelada-bg: #f8d7da;
-      --badge-cancelada-text: #721c24;
-      --transition: 0.2s ease;
+    /* ============================================================
+       RESET Y BASE (igual que Zoho Books)
+       ============================================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    body.dark-theme {
-      --bg-body: #1a1f2b;
-      --bg-sidebar: #222836;
-      --border-color: #2e3444;
-      --text-primary: #e6e9ef;
-      --text-secondary: #a8b3c9;
-      --text-muted: #6b7a8f;
-      --bg-card: #2a3040;
-      --bg-input: #2a3040;
-      --shadow: 0 2px 6px rgba(0,0,0,0.4);
-      --shadow-modal: 0 20px 60px rgba(0,0,0,0.6);
-      --bg-table-header: #2a3040;
-      --bg-hover: #1f2533;
-      --color-primary: #4a8aff;
-      --color-primary-hover: #6aa0ff;
-      --badge-pendiente-bg: #4a3f1a;
-      --badge-pendiente-text: #e6c76b;
-      --badge-confirmada-bg: #1a3d2a;
-      --badge-confirmada-text: #7ac79a;
-      --badge-cancelada-bg: #3d1a1a;
-      --badge-cancelada-text: #e67a7a;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg-body);
-      color: var(--text-primary);
-      height: 100vh;
-      display: flex;
-      transition: background var(--transition), color var(--transition);
-    }
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 260px;
-      background: var(--bg-sidebar);
-      border-right: 1px solid var(--border-color);
+      background: #f0f2f5;
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      overflow-y: auto;
-      transition: background var(--transition), border var(--transition);
-      padding-bottom: 12px;
-    }
-    .sidebar .logo-area {
-      padding: 18px 20px 16px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sidebar .logo-area img {
-      height: 32px;
-      width: auto;
-    }
-    .sidebar .logo-area span {
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--text-primary);
-    }
-    .sidebar nav {
-      flex: 1;
-      padding: 12px 8px;
-      overflow-y: auto;
-    }
-    .sidebar nav .nav-group { margin-bottom: 8px; }
-    .sidebar nav .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      text-decoration: none;
-    }
-    .sidebar nav .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-    .sidebar nav .nav-item.active { background: var(--bg-hover); color: var(--color-primary); }
-    .sidebar nav .nav-item .icon {
-      width: 22px;
-      text-align: center;
-      font-size: 16px;
-      color: var(--text-muted);
-    }
-    .sidebar nav .nav-item.active .icon { color: var(--color-primary); }
-    .sidebar nav .nav-item .fa-chevron-down {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--text-muted);
-      transition: transform 0.2s;
-    }
-    .sidebar nav .nav-item .fa-chevron-down.open { transform: rotate(180deg); }
-    .sidebar nav .sub-menu {
-      padding-left: 36px;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.25s ease;
-    }
-    .sidebar nav .sub-menu.open { max-height: 800px; }
-    .sidebar nav .sub-menu .nav-item {
-      font-size: 13px;
-      padding: 6px 14px;
-      font-weight: 400;
-    }
-    .sidebar nav .sub-menu .nav-item .icon { font-size: 13px; width: 20px; }
-    .sidebar .user-section {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border-color);
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-    .sidebar .user-section .user-name {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-    .sidebar .user-section .logout-btn {
-      background: none;
-      border: none;
-      color: var(--color-primary);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 13px;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
-    .sidebar .user-section .logout-btn:hover { text-decoration: underline; }
-    .theme-toggle {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      cursor: pointer;
-    }
-    .theme-toggle .switch {
-      position: relative;
-      width: 40px;
-      height: 22px;
-      background: var(--border-color);
-      border-radius: 12px;
-      transition: background 0.2s;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-    .theme-toggle .switch .slider {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    body.dark-theme .theme-toggle .switch { background: var(--color-primary); }
-    body.dark-theme .theme-toggle .switch .slider { transform: translateX(18px); }
-
-    /* ===== MAIN CONTENT ===== */
-    .main-content {
-      flex: 1;
-      padding: 28px 32px;
-      overflow-y: auto;
-      height: 100vh;
-      background: var(--bg-body);
-      transition: background var(--transition);
-    }
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .page-header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    .view-content { display: none; }
-    .view-content.active { display: block; }
-
-    /* ===== CONFIGURACIÓN ===== */
-    .config-layout {
-      display: flex;
-      gap: 24px;
-      margin-top: 8px;
-    }
-    .config-sidebar {
-      width: 240px;
-      flex-shrink: 0;
-    }
-    .config-sidebar .config-search {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      background: var(--bg-input);
-      color: var(--text-primary);
-      font-size: 14px;
-      margin-bottom: 16px;
-      transition: border var(--transition), background var(--transition);
-    }
-    .config-sidebar .config-search:focus {
-      border-color: var(--color-primary);
-      outline: none;
-    }
-    .config-sidebar .config-category {
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text-secondary);
-      padding: 10px 12px 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-    .config-sidebar .config-item {
-      display: block;
-      padding: 6px 12px;
-      border-radius: 6px;
-      color: var(--text-secondary);
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      text-decoration: none;
-    }
-    .config-sidebar .config-item:hover {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
-    .config-sidebar .config-item.active {
-      background: var(--bg-hover);
-      color: var(--color-primary);
-      font-weight: 500;
-    }
-    .config-content {
-      flex: 1;
-      background: var(--bg-card);
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      padding: 24px 28px;
-      transition: background var(--transition), border var(--transition);
-      min-height: 400px;
-    }
-    .config-content .config-section { display: none; }
-    .config-content .config-section.active { display: block; }
-    .config-content .config-section h2 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: var(--text-primary);
-    }
-    .config-content .config-section .form-group {
-      margin-bottom: 16px;
-    }
-    .config-content .config-section .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-    .config-content .config-section .form-group input,
-    .config-content .config-section .form-group select {
-      width: 100%;
-      max-width: 400px;
-      padding: 8px 12px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-input);
-      color: var(--text-primary);
-      transition: 0.15s;
-    }
-    .config-content .config-section .form-group input:focus,
-    .config-content .config-section .form-group select:focus {
-      border-color: var(--color-primary);
-      outline: none;
-    }
-    .config-content .config-section .btn {
-      margin-top: 8px;
-    }
-    .config-content .config-section .list-item {
-      background: var(--bg-input);
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid var(--border-color);
-    }
-    .config-content .config-section .list-item .remove-btn {
-      color: var(--color-danger);
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-size: 16px;
-    }
-    .config-content .config-section .list-item .remove-btn:hover { opacity: 0.7; }
-    .config-close-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 18px;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-      transition: background 0.15s;
-    }
-    .config-close-btn:hover { background: var(--bg-hover); }
-
-    /* ===== ESTADÍSTICAS Y TABLA ===== */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      background: var(--bg-card);
-      padding: 18px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow);
-      transition: background var(--transition), border var(--transition);
-    }
-    .stat-card .number {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .stat-card .label {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-    .actions-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-    .btn {
-      font-family: 'Inter', sans-serif;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-      transition: 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-primary {
-      background: var(--color-primary);
-      color: #fff;
-    }
-    .btn-primary:hover { background: var(--color-primary-hover); }
-    .btn-secondary {
-      background: var(--border-color);
-      color: var(--text-primary);
-    }
-    .btn-secondary:hover {
-      background: var(--text-muted);
-      color: #fff;
-    }
-    .btn-danger {
-      background: var(--color-danger);
-      color: #fff;
-    }
-    .btn-danger:hover { background: #b02a37; }
-    .btn-edit {
-      background: var(--color-success);
-      color: #fff;
-    }
-    .btn-edit:hover { background: #1e7e34; }
-    .btn-sm {
-      padding: 4px 12px;
-      font-size: 12px;
-    }
-    .table-wrapper {
-      background: var(--bg-card);
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      overflow-x: auto;
-      box-shadow: var(--shadow);
-      transition: background var(--transition), border var(--transition);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      min-width: 600px;
-    }
-    thead { background: var(--bg-table-header); }
-    th {
-      text-align: left;
-      padding: 14px 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-      border-bottom: 1px solid var(--border-color);
-    }
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border-color);
-      vertical-align: middle;
-      color: var(--text-primary);
-    }
-    tr:last-child td { border-bottom: none; }
-    .badge-status {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .badge-pendiente { background: var(--badge-pendiente-bg); color: var(--badge-pendiente-text); }
-    .badge-confirmada { background: var(--badge-confirmada-bg); color: var(--badge-confirmada-text); }
-    .badge-cancelada { background: var(--badge-cancelada-bg); color: var(--badge-cancelada-text); }
-    .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(4px);
-      display: none;
+      min-height: 100vh;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      padding: 20px;
+      padding: 24px 16px;
     }
-    .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--bg-card);
-      max-width: 540px;
+
+    /* ============================================================
+       TARJETA PRINCIPAL (igual que Zoho Books)
+       ============================================================ */
+    .login-card {
+      max-width: 400px;
       width: 100%;
+      background: #ffffff;
       border-radius: 16px;
-      padding: 28px 32px;
-      box-shadow: var(--shadow-modal);
-      animation: slideUp 0.25s ease;
-      transition: background var(--transition);
+      padding: 40px 32px 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e6e9ef;
+      transition: border 0.2s;
     }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    /* Logo */
+    .login-card .logo {
+      text-align: center;
+      margin-bottom: 28px;
     }
-    .modal h2 {
-      font-size: 20px;
+    .login-card .logo img {
+      height: 44px;
+      width: auto;
+    }
+
+    /* Título y subtítulo */
+    .login-card h1 {
+      font-size: 22px;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: #1a2634;
+      text-align: center;
+      margin-bottom: 4px;
     }
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: 0.15s;
+    .login-card .sub {
+      text-align: center;
+      color: #5f6b7a;
+      font-size: 14px;
+      margin-bottom: 28px;
     }
-    .modal-close:hover { color: var(--text-primary); }
-    .modal .form-group { margin-bottom: 16px; }
-    .modal .form-group label {
+
+    /* Mensajes de error / éxito */
+    .login-card .msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .login-card .msg.error {
+      background: #fee9e7;
+      color: #b91c1c;
+    }
+    .login-card .msg.success {
+      background: #e6f7e6;
+      color: #0b6e0b;
+    }
+
+    /* Campos de formulario */
+    .login-card .form-group {
+      margin-bottom: 18px;
+    }
+    .login-card .form-group label {
       display: block;
       font-size: 13px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: #1a2634;
       margin-bottom: 4px;
     }
-    .modal .form-group input,
-    .modal .form-group select,
-    .modal .form-group textarea {
+    .login-card .form-group input {
       width: 100%;
-      padding: 8px 12px;
-      border: 1.5px solid var(--border-color);
+      padding: 10px 14px;
+      border: 1.5px solid #d1d5db;
       border-radius: 8px;
       font-size: 14px;
       font-family: 'Inter', sans-serif;
-      background: var(--bg-input);
-      color: var(--text-primary);
-      transition: 0.15s;
+      transition: 0.2s;
+      background: #fafbfc;
+      color: #1a2634;
     }
-    .modal .form-group input:focus,
-    .modal .form-group select:focus,
-    .modal .form-group textarea:focus {
-      border-color: var(--color-primary);
+    .login-card .form-group input:focus {
+      border-color: #066CFF;
       outline: none;
-      box-shadow: 0 0 0 3px rgba(6,108,255,0.08);
-    }
-    .modal .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .modal .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 20px;
-    }
-    .modal .btn-cancel {
-      background: var(--border-color);
-      color: var(--text-primary);
-      border: none;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-    }
-    .modal .btn-cancel:hover {
-      background: var(--text-muted);
-      color: #fff;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(6, 108, 255, 0.1);
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      .config-layout { flex-direction: column; }
-      .config-sidebar { width: 100%; }
+    /* Botón primario (azul) */
+    .login-card .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: #066CFF;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      margin-top: 4px;
     }
-    @media (max-width: 768px) {
-      .sidebar { width: 60px; }
-      .sidebar .logo-area span { display: none; }
-      .sidebar .logo-area { justify-content: center; padding: 16px 0; }
-      .sidebar .user-section .user-name { display: none; }
-      .sidebar .user-section .logout-btn { font-size: 12px; }
-      .sidebar nav .nav-item span:not(.icon) { display: none; }
-      .sidebar nav .nav-item { justify-content: center; padding: 10px; }
-      .sidebar nav .nav-item .fa-chevron-down { display: none; }
-      .sidebar nav .sub-menu { padding-left: 0; max-height: 0 !important; }
-      .main-content { padding: 20px 16px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .config-content { padding: 16px; }
+    .login-card .btn-primary:hover {
+      background: #0052cc;
     }
+    .login-card .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Enlace de ayuda */
+    .login-card .help-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    .login-card .help-links a {
+      color: #066CFF;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.15s;
+    }
+    .login-card .help-links a:hover {
+      text-decoration: underline;
+    }
+    .login-card .help-links .forgot {
+      color: #5f6b7a;
+    }
+
+    /* Separador "o" */
+    .login-card .separator {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 24px 0 20px;
+      color: #8a94a6;
+      font-size: 12px;
+    }
+    .login-card .separator::before,
+    .login-card .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e6e9ef;
+    }
+
+    /* Registro (oculto por defecto) */
+    .login-card .register-fields {
+      display: none;
+    }
+    .login-card .register-fields.active {
+      display: block;
+    }
+
+    /* Ayuda para el código de empleado */
+    .login-card .code-hint {
+      font-size: 12px;
+      color: #8a94a6;
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       FOOTER (igual que Zoho Books)
+       ============================================================ */
+    .login-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: #8a94a6;
+      max-width: 400px;
+      width: 100%;
+    }
+    .login-footer a {
+      color: #066CFF;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+    .login-footer .legal {
+      margin-top: 4px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .login-footer .legal a {
+      color: #8a94a6;
+      font-weight: 400;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .modal .form-row { grid-template-columns: 1fr; }
-      .page-header h1 { font-size: 18px; }
+      .login-card {
+        padding: 30px 20px 24px;
+      }
+      .login-card h1 {
+        font-size: 20px;
+      }
+      .login-card .help-links {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== SIDEBAR ===== -->
-<div class="sidebar">
-  <div class="logo-area">
-    <img id="orgLogo" src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot" />
-    <span id="orgNameDisplay">Heliot Media</span>
-  </div>
-  <nav>
-    <div class="nav-item active" data-view="dashboard"><span class="icon"><i class="fas fa-home"></i></span><span>Dashboard</span></div>
-    <div class="nav-item" data-view="reservas"><span class="icon"><i class="fas fa-list-ul"></i></span><span>Reservas</span></div>
-    <div class="nav-item" data-view="empleados"><span class="icon"><i class="fas fa-users"></i></span><span>Empleados</span></div>
-    <div class="nav-group">
-      <div class="nav-item" id="configToggle">
-        <span class="icon"><i class="fas fa-cog"></i></span>
-        <span>Configuración</span>
-        <i class="fas fa-chevron-down" id="configChevron"></i>
+  <!-- ===== TARJETA DE LOGIN ===== -->
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="logo">
+      <img
+        src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw"
+        alt="Heliot Media"
+      />
+    </div>
+
+    <!-- Título -->
+    <h1>Área de Empleados</h1>
+    <p class="sub" id="formSub">Accede para gestionar reservas</p>
+
+    <!-- Mensajes -->
+    <div id="errorMsg" class="msg error"></div>
+    <div id="successMsg" class="msg success"></div>
+
+    <!-- ===== FORMULARIO DE LOGIN ===== -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="empleado@heliot.com" required />
       </div>
-      <div class="sub-menu" id="configSubMenu">
-        <div class="nav-item config-option" data-section="organizacion"><span class="icon"><i class="fas fa-building"></i></span><span>Organización</span></div>
-        <div class="nav-item config-option" data-section="usuarios-roles"><span class="icon"><i class="fas fa-user-cog"></i></span><span>Usuarios y roles</span></div>
-        <div class="nav-item config-option" data-section="impuestos"><span class="icon"><i class="fas fa-receipt"></i></span><span>Impuestos</span></div>
-        <div class="nav-item config-option" data-section="personalizacion"><span class="icon"><i class="fas fa-palette"></i></span><span>Personalización</span></div>
-        <div class="nav-item config-option" data-section="monedas"><span class="icon"><i class="fas fa-dollar-sign"></i></span><span>Monedas</span></div>
-        <div class="nav-item config-option" data-section="pagos"><span class="icon"><i class="fas fa-credit-card"></i></span><span>Términos de pago</span></div>
-        <div class="nav-item config-option" data-section="plantillas"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Plantillas PDF</span></div>
-        <div class="nav-item config-option" data-section="notificaciones"><span class="icon"><i class="fas fa-envelope"></i></span><span>Notificaciones</span></div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
       </div>
-    </div>
-  </nav>
-  <div class="user-section">
-    <div class="user-name" id="userName">Empleado</div>
-    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
-    <div class="theme-toggle" id="themeToggle">
-      <i class="fas fa-sun"></i>
-      <div class="switch"><div class="slider"></div></div>
-      <i class="fas fa-moon"></i>
-    </div>
-  </div>
-</div>
+      <button type="submit" class="btn-primary">Iniciar sesión</button>
 
-<!-- ===== MAIN CONTENT ===== -->
-<div class="main-content">
-
-  <!-- DASHBOARD -->
-  <div id="view-dashboard" class="view-content active">
-    <div class="page-header"><h1>Dashboard</h1><span id="userNameHeader" style="color:var(--text-secondary);font-size:14px;">Empleado</span></div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="number" id="totalReservas">0</div><div class="label">Total reservas</div></div>
-      <div class="stat-card"><div class="number" id="reservasHoy">0</div><div class="label">Reservas de hoy</div></div>
-      <div class="stat-card"><div class="number" id="reservasPendientes">0</div><div class="label">Pendientes</div></div>
-    </div>
-    <div class="actions-bar">
-      <button class="btn btn-primary" id="btnNuevaReserva"><i class="fas fa-plus"></i> Nueva reserva</button>
-      <button class="btn btn-secondary" id="btnLimpiarFiltros"><i class="fas fa-sync-alt"></i> Mostrar todas</button>
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead><tr><th>Cliente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th><th>Paquete</th><th>Estado</th><th>Acciones</th></tr></thead>
-        <tbody id="reservasBody"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Cargando reservas...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- RESERVAS (vista duplicada) -->
-  <div id="view-reservas" class="view-content">
-    <div class="page-header"><h1>Reservas</h1></div>
-    <div class="actions-bar">
-      <button class="btn btn-primary" id="btnNuevaReserva2"><i class="fas fa-plus"></i> Nueva reserva</button>
-      <button class="btn btn-secondary" id="btnLimpiarFiltros2"><i class="fas fa-sync-alt"></i> Mostrar todas</button>
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead><tr><th>Cliente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th><th>Paquete</th><th>Estado</th><th>Acciones</th></tr></thead>
-        <tbody id="reservasBody2"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Cargando reservas...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- EMPLEADOS -->
-  <div id="view-empleados" class="view-content">
-    <div class="page-header"><h1>Gestión de Empleados</h1></div>
-    <div class="actions-bar">
-      <button class="btn btn-primary" id="btnInvitarEmpleado"><i class="fas fa-user-plus"></i> Invitar empleado</button>
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th></tr></thead>
-        <tbody id="empleadosBody"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:30px;">Cargando empleados...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- CONFIGURACIÓN -->
-  <div id="view-config" class="view-content">
-    <div class="page-header">
-      <h1>Configuración</h1>
-      <button class="config-close-btn" id="closeConfig"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="config-layout">
-      <div class="config-sidebar">
-        <input type="text" class="config-search" placeholder="Busque su configuración..." id="configSearch" />
-        <div class="config-category">Organización</div>
-        <a class="config-item active" data-section="organizacion"><i class="fas fa-building" style="margin-right:8px;"></i> Organización</a>
-        <div class="config-category">Usuarios y roles</div>
-        <a class="config-item" data-section="usuarios-roles"><i class="fas fa-user-cog" style="margin-right:8px;"></i> Usuarios y roles</a>
-        <div class="config-category">Impuestos</div>
-        <a class="config-item" data-section="impuestos"><i class="fas fa-receipt" style="margin-right:8px;"></i> Impuestos</a>
-        <div class="config-category">Personalización</div>
-        <a class="config-item" data-section="personalizacion"><i class="fas fa-palette" style="margin-right:8px;"></i> Personalización</a>
-        <div class="config-category">Finanzas</div>
-        <a class="config-item" data-section="monedas"><i class="fas fa-dollar-sign" style="margin-right:8px;"></i> Monedas</a>
-        <a class="config-item" data-section="pagos"><i class="fas fa-credit-card" style="margin-right:8px;"></i> Términos de pago</a>
-        <div class="config-category">Documentos</div>
-        <a class="config-item" data-section="plantillas"><i class="fas fa-file-pdf" style="margin-right:8px;"></i> Plantillas PDF</a>
-        <a class="config-item" data-section="notificaciones"><i class="fas fa-envelope" style="margin-right:8px;"></i> Notificaciones</a>
+      <div class="help-links">
+        <span class="forgot">¿Olvidó su contraseña?</span>
+        <a href="#" id="toggleBtn">Registrarse</a>
       </div>
-      <div class="config-content">
-        <!-- Organización -->
-        <div class="config-section active" data-section="organizacion">
-          <h2><i class="fas fa-building"></i> Organización</h2>
-          <div class="form-group">
-            <label>Nombre de la organización</label>
-            <input type="text" id="orgName" placeholder="Heliot Media" />
-          </div>
-          <div class="form-group">
-            <label>Email de contacto</label>
-            <input type="email" id="orgEmail" placeholder="contacto@heliotmedia.com" />
-          </div>
-          <div class="form-group">
-            <label>Teléfono</label>
-            <input type="text" id="orgPhone" placeholder="+503 7000-0000" />
-          </div>
-          <button class="btn btn-primary" id="saveOrgConfig"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-
-        <!-- Usuarios y roles -->
-        <div class="config-section" data-section="usuarios-roles">
-          <h2><i class="fas fa-user-cog"></i> Usuarios y roles</h2>
-          <p style="color:var(--text-secondary);margin-bottom:16px;">Aquí puedes ver y asignar roles a los empleados registrados.</p>
-          <div id="rolesList"></div>
-        </div>
-
-        <!-- Impuestos -->
-        <div class="config-section" data-section="impuestos">
-          <h2><i class="fas fa-receipt"></i> Impuestos</h2>
-          <div class="form-group">
-            <label>Nombre del impuesto</label>
-            <input type="text" id="taxName" placeholder="IVA" />
-          </div>
-          <div class="form-group">
-            <label>Tasa (%)</label>
-            <input type="number" id="taxRate" placeholder="13" step="0.01" />
-          </div>
-          <button class="btn btn-primary" id="addTaxBtn"><i class="fas fa-plus"></i> Agregar impuesto</button>
-          <div id="taxList" style="margin-top:16px;"></div>
-        </div>
-
-        <!-- Personalización -->
-        <div class="config-section" data-section="personalizacion">
-          <h2><i class="fas fa-palette"></i> Personalización</h2>
-          <div class="form-group">
-            <label>URL del logo</label>
-            <input type="text" id="logoUrl" placeholder="https://ejemplo.com/logo.png" />
-          </div>
-          <div class="form-group">
-            <label>Color primario</label>
-            <input type="color" id="primaryColor" value="#066CFF" />
-          </div>
-          <button class="btn btn-primary" id="saveBranding"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-
-        <!-- Monedas -->
-        <div class="config-section" data-section="monedas">
-          <h2><i class="fas fa-dollar-sign"></i> Monedas</h2>
-          <div class="form-group">
-            <label>Moneda base</label>
-            <select id="baseCurrency">
-              <option value="USD">USD - Dólar estadounidense</option>
-              <option value="EUR">EUR - Euro</option>
-              <option value="MXN">MXN - Peso mexicano</option>
-              <option value="COP">COP - Peso colombiano</option>
-              <option value="ARS">ARS - Peso argentino</option>
-              <option value="CLP">CLP - Peso chileno</option>
-              <option value="PEN">PEN - Sol peruano</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" id="saveCurrency"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-
-        <!-- Términos de pago -->
-        <div class="config-section" data-section="pagos">
-          <h2><i class="fas fa-credit-card"></i> Términos de pago</h2>
-          <div class="form-group">
-            <label>Días de plazo por defecto</label>
-            <input type="number" id="paymentTerms" placeholder="30" />
-          </div>
-          <button class="btn btn-primary" id="savePaymentTerms"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-
-        <!-- Plantillas PDF -->
-        <div class="config-section" data-section="plantillas">
-          <h2><i class="fas fa-file-pdf"></i> Plantillas PDF</h2>
-          <div class="form-group">
-            <label>Mensaje de pie de página en facturas</label>
-            <textarea id="pdfFooter" rows="3" placeholder="Gracias por su compra." style="width:100%;padding:8px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-input);color:var(--text-primary);"></textarea>
-          </div>
-          <button class="btn btn-primary" id="savePdfFooter"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-
-        <!-- Notificaciones -->
-        <div class="config-section" data-section="notificaciones">
-          <h2><i class="fas fa-envelope"></i> Notificaciones</h2>
-          <div class="form-group">
-            <label>Email de envío de notificaciones</label>
-            <input type="email" id="notificationEmail" placeholder="notificaciones@heliotmedia.com" />
-          </div>
-          <button class="btn btn-primary" id="saveNotificationEmail"><i class="fas fa-save"></i> Guardar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL RESERVA ===== -->
-<div class="modal-overlay" id="modalReserva">
-  <div class="modal">
-    <h2><span id="modalTitle">Nueva Reserva</span><button class="modal-close" id="modalCloseBtn">&times;</button></h2>
-    <form id="reservaForm">
-      <input type="hidden" id="reservaId" />
-      <div class="form-group"><label>Nombre del cliente *</label><input type="text" id="clienteNombre" required /></div>
-      <div class="form-group"><label>Teléfono *</label><input type="tel" id="clienteTelefono" required /></div>
-      <div class="form-group"><label>Correo electrónico</label><input type="email" id="clienteEmail" /></div>
-      <div class="form-row">
-        <div class="form-group"><label>Fecha *</label><input type="date" id="reservaFecha" required /></div>
-        <div class="form-group"><label>Hora *</label><input type="time" id="reservaHora" required /></div>
-      </div>
-      <div class="form-group"><label>Paquete *</label><select id="reservaPaquete"><option value="Básico">Básico</option><option value="Amigos / Dúo">Amigos / Dúo</option><option value="Premium Plus">Premium Plus</option><option value="Estrella Heliot (Promo)">Estrella Heliot (Promo)</option></select></div>
-      <div class="form-group"><label>Estado</label><select id="reservaEstado"><option value="Pendiente">Pendiente</option><option value="Confirmada">Confirmada</option><option value="Cancelada">Cancelada</option></select></div>
-      <div class="form-group"><label>Comentarios</label><textarea id="reservaComentarios" rows="2"></textarea></div>
-      <div class="modal-actions"><button type="button" class="btn-cancel" id="modalCancelBtn">Cancelar</button><button type="submit" class="btn btn-primary" id="modalSubmitBtn">Guardar reserva</button></div>
     </form>
+
+    <!-- ===== FORMULARIO DE REGISTRO (toggle) ===== -->
+    <div class="register-fields" id="registerContainer">
+      <div class="separator">o</div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="registerEmail" placeholder="empleado@heliot.com" required />
+        </div>
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="registerName" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label>Contraseña (mínimo 6 caracteres)</label>
+          <input type="password" id="registerPassword" placeholder="••••••••" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label>Código de empleado</label>
+          <input type="text" id="registerCode" placeholder="Código secreto" required />
+          <div class="code-hint">Pide el código a tu supervisor.</div>
+        </div>
+        <button type="submit" class="btn-primary">Registrarse</button>
+
+        <div class="help-links" style="margin-top:12px; justify-content:center;">
+          <a href="#" id="toggleBack">← Volver a iniciar sesión</a>
+        </div>
+      </form>
+    </div>
+
   </div>
-</div>
 
-<!-- ===== MODAL INVITAR EMPLEADO ===== -->
-<div class="modal-overlay" id="modalInvitarEmpleado">
-  <div class="modal">
-    <h2>Invitar empleado<button class="modal-close" id="modalInvitarClose">&times;</button></h2>
-    <form id="invitarForm">
-      <div class="form-group"><label>Correo electrónico *</label><input type="email" id="invitarEmail" required placeholder="empleado@heliot.com" /></div>
-      <div class="form-group"><label>Rol</label><select id="invitarRol"><option value="Recepcionista">Recepcionista</option><option value="Admin">Admin</option></select></div>
-      <div class="modal-actions"><button type="button" class="btn-cancel" id="modalInvitarCancel">Cancelar</button><button type="submit" class="btn btn-primary">Enviar invitación</button></div>
-    </form>
+  <!-- ===== FOOTER ===== -->
+  <div class="login-footer">
+    <p>&copy; 2026 Heliot Media · Todos los derechos reservados.</p>
+    <div class="legal">
+      <a href="terminos-y-condiciones-de-uso.html">Términos</a>
+      <a href="politica-de-privacidad.html">Privacidad</a>
+      <a href="politica-de-cookies.html">Cookies</a>
+    </div>
   </div>
-</div>
 
-<script>
-  // ============================================================
-  // 1. FIREBASE
-  // ============================================================
-  const firebaseConfig = {
-    apiKey: "AIzaSyDpRltXZjEBjlq-4vKDlzL5Fgc5NcKr0_8",
-    authDomain: "heliotmediaadmin.firebaseapp.com",
-    projectId: "heliotmediaadmin",
-    storageBucket: "heliotmediaadmin.firebasestorage.app",
-    messagingSenderId: "137792880519",
-    appId: "1:137792880519:web:8bf42511db838241eddd22"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+  <!-- ============================================================
+  JAVASCRIPT (FIREBASE)
+  ============================================================ -->
+  <script>
+    // ============================================
+    // 1. CONFIGURACIÓN DE FIREBASE
+    // ============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDpRltXZjEBjlq-4vKDlzL5Fgc5NcKr0_8",
+      authDomain: "heliotmediaadmin.firebaseapp.com",
+      projectId: "heliotmediaadmin",
+      storageBucket: "heliotmediaadmin.firebasestorage.app",
+      messagingSenderId: "137792880519",
+      appId: "1:137792880519:web:8bf42511db838241eddd22"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-  // ============================================================
-  // 2. SESSION Y NOMBRE
-  // ============================================================
-  let currentUser = null;
-  auth.onAuthStateChanged(async (user) => {
-    if (!user) { window.location.href = 'login-empleados.html'; return; }
-    currentUser = user;
-    const doc = await db.collection('users').doc(user.uid).get();
-    const name = doc.exists ? doc.data().name : user.email.split('@')[0];
-    document.getElementById('userName').textContent = name;
-    document.getElementById('userNameHeader').textContent = name;
-    // Cargar configuración
-    cargarConfiguracion();
-    cargarEmpleados();
-    iniciarEscuchaReservas();
-  });
+    const EMPLOYEE_CODE = 'HELIOT2026';
 
-  // ============================================================
-  // 3. LOGOUT
-  // ============================================================
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    auth.signOut().then(() => window.location.href = 'login-empleados.html');
-  });
+    // ============================================
+    // 2. ELEMENTOS DOM
+    // ============================================
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const registerContainer = document.getElementById('registerContainer');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleBack = document.getElementById('toggleBack');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const formSub = document.getElementById('formSub');
 
-  // ============================================================
-  // 4. TEMA OSCURO/CLARO
-  // ============================================================
-  const body = document.body;
-  if (localStorage.getItem('theme') === 'dark') body.classList.add('dark-theme');
-  document.getElementById('themeToggle').addEventListener('click', function() {
-    body.classList.toggle('dark-theme');
-    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-  });
+    let isLogin = true;
 
-  // ============================================================
-  // 5. NAVEGACIÓN
-  // ============================================================
-  const views = {
-    dashboard: document.getElementById('view-dashboard'),
-    reservas: document.getElementById('view-reservas'),
-    empleados: document.getElementById('view-empleados'),
-    config: document.getElementById('view-config')
-  };
-
-  function showView(name) {
-    Object.keys(views).forEach(key => views[key].classList.remove('active'));
-    if (views[name]) views[name].classList.add('active');
-    document.querySelectorAll('.nav-item[data-view]').forEach(el => el.classList.remove('active'));
-    const navItem = document.querySelector(`.nav-item[data-view="${name}"]`);
-    if (navItem) navItem.classList.add('active');
-    if (name === 'config') {
-      document.getElementById('configSubMenu').classList.remove('open');
-      document.getElementById('configChevron').classList.remove('open');
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.className = 'msg error';
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
     }
-  }
 
-  document.querySelectorAll('.nav-item[data-view]').forEach(el => {
-    el.addEventListener('click', function(e) {
-      if (this.dataset.view === 'config') return;
-      showView(this.dataset.view);
-    });
-  });
+    function showSuccess(msg) {
+      successMsg.textContent = msg;
+      successMsg.className = 'msg success';
+      successMsg.style.display = 'block';
+      errorMsg.style.display = 'none';
+    }
 
-  document.getElementById('configToggle').addEventListener('click', function(e) {
-    e.stopPropagation();
-    const sub = document.getElementById('configSubMenu');
-    const chevron = document.getElementById('configChevron');
-    sub.classList.toggle('open');
-    chevron.classList.toggle('open');
-  });
+    function hideMessages() {
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+    }
 
-  document.querySelectorAll('.config-option').forEach(el => {
-    el.addEventListener('click', function() {
-      const section = this.dataset.section;
-      showView('config');
-      document.querySelectorAll('.config-sidebar .config-item').forEach(i => i.classList.remove('active'));
-      const target = document.querySelector(`.config-sidebar .config-item[data-section="${section}"]`);
-      if (target) target.classList.add('active');
-      document.querySelectorAll('.config-content .config-section').forEach(s => s.classList.remove('active'));
-      const content = document.querySelector(`.config-content .config-section[data-section="${section}"]`);
-      if (content) content.classList.add('active');
-      if (window.innerWidth <= 768) {
-        document.getElementById('configSubMenu').classList.remove('open');
-        document.getElementById('configChevron').classList.remove('open');
+    // ============================================
+    // 3. TOGGLE LOGIN / REGISTRO
+    // ============================================
+    function toggleMode(showLogin) {
+      isLogin = showLogin;
+      if (isLogin) {
+        loginForm.style.display = 'block';
+        registerContainer.classList.remove('active');
+        toggleBtn.textContent = 'Registrarse';
+        formSub.textContent = 'Accede para gestionar reservas';
+      } else {
+        loginForm.style.display = 'none';
+        registerContainer.classList.add('active');
+        toggleBtn.textContent = 'Iniciar sesión';
+        formSub.textContent = 'Crea tu cuenta de empleado';
       }
-    });
-  });
+      hideMessages();
+    }
 
-  document.getElementById('closeConfig').addEventListener('click', () => showView('dashboard'));
-
-  // Búsqueda en configuración
-  document.getElementById('configSearch').addEventListener('input', function() {
-    const q = this.value.toLowerCase().trim();
-    document.querySelectorAll('.config-sidebar .config-item').forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = (!q || text.includes(q)) ? 'block' : 'none';
-    });
-  });
-
-  // Sidebar config items
-  document.querySelectorAll('.config-sidebar .config-item').forEach(item => {
-    item.addEventListener('click', function(e) {
+    toggleBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const section = this.dataset.section;
-      document.querySelectorAll('.config-sidebar .config-item').forEach(i => i.classList.remove('active'));
-      this.classList.add('active');
-      document.querySelectorAll('.config-content .config-section').forEach(s => s.classList.remove('active'));
-      const content = document.querySelector(`.config-content .config-section[data-section="${section}"]`);
-      if (content) content.classList.add('active');
+      toggleMode(!isLogin);
     });
-  });
 
-  // ============================================================
-  // 6. CONFIGURACIÓN (guardar/leer desde Firestore)
-  // ============================================================
-  const CONFIG_DOC = 'org_settings';
-
-  async function cargarConfiguracion() {
-    try {
-      const doc = await db.collection(CONFIG_DOC).doc('general').get();
-      if (!doc.exists) return;
-      const data = doc.data();
-      // Organización
-      document.getElementById('orgName').value = data.orgName || '';
-      document.getElementById('orgEmail').value = data.orgEmail || '';
-      document.getElementById('orgPhone').value = data.orgPhone || '';
-      document.getElementById('orgNameDisplay').textContent = data.orgName || 'Heliot Media';
-      // Logo
-      if (data.logoUrl) document.getElementById('orgLogo').src = data.logoUrl;
-      // Color primario
-      if (data.primaryColor) {
-        document.getElementById('primaryColor').value = data.primaryColor;
-        document.documentElement.style.setProperty('--color-primary', data.primaryColor);
-        document.documentElement.style.setProperty('--color-primary-hover', data.primaryColor + 'cc');
-      }
-      // Moneda
-      if (data.baseCurrency) document.getElementById('baseCurrency').value = data.baseCurrency;
-      // Términos de pago
-      if (data.paymentTerms) document.getElementById('paymentTerms').value = data.paymentTerms;
-      // PDF Footer
-      if (data.pdfFooter) document.getElementById('pdfFooter').value = data.pdfFooter;
-      // Notificación email
-      if (data.notificationEmail) document.getElementById('notificationEmail').value = data.notificationEmail;
-      // Impuestos
-      if (data.taxes) renderTaxes(data.taxes);
-    } catch (e) { console.error('Error cargando configuración:', e); }
-  }
-
-  async function guardarConfiguracion(updates) {
-    try {
-      await db.collection(CONFIG_DOC).doc('general').set(updates, { merge: true });
-      alert('Configuración guardada.');
-    } catch (e) { alert('Error al guardar: ' + e.message); }
-  }
-
-  // Organización
-  document.getElementById('saveOrgConfig').addEventListener('click', function() {
-    const orgName = document.getElementById('orgName').value.trim();
-    const orgEmail = document.getElementById('orgEmail').value.trim();
-    const orgPhone = document.getElementById('orgPhone').value.trim();
-    guardarConfiguracion({ orgName, orgEmail, orgPhone });
-    document.getElementById('orgNameDisplay').textContent = orgName || 'Heliot Media';
-  });
-
-  // Personalización (logo + color)
-  document.getElementById('saveBranding').addEventListener('click', function() {
-    const logoUrl = document.getElementById('logoUrl').value.trim();
-    const primaryColor = document.getElementById('primaryColor').value;
-    guardarConfiguracion({ logoUrl, primaryColor });
-    if (logoUrl) document.getElementById('orgLogo').src = logoUrl;
-    document.documentElement.style.setProperty('--color-primary', primaryColor);
-    document.documentElement.style.setProperty('--color-primary-hover', primaryColor + 'cc');
-  });
-
-  // Moneda
-  document.getElementById('saveCurrency').addEventListener('click', function() {
-    const baseCurrency = document.getElementById('baseCurrency').value;
-    guardarConfiguracion({ baseCurrency });
-  });
-
-  // Términos de pago
-  document.getElementById('savePaymentTerms').addEventListener('click', function() {
-    const paymentTerms = parseInt(document.getElementById('paymentTerms').value) || 30;
-    guardarConfiguracion({ paymentTerms });
-  });
-
-  // PDF Footer
-  document.getElementById('savePdfFooter').addEventListener('click', function() {
-    const pdfFooter = document.getElementById('pdfFooter').value.trim();
-    guardarConfiguracion({ pdfFooter });
-  });
-
-  // Notificaciones
-  document.getElementById('saveNotificationEmail').addEventListener('click', function() {
-    const notificationEmail = document.getElementById('notificationEmail').value.trim();
-    guardarConfiguracion({ notificationEmail });
-  });
-
-  // ============================================================
-  // 7. IMPUESTOS (CRUD en Firestore)
-  // ============================================================
-  async function renderTaxes(taxes = []) {
-    const container = document.getElementById('taxList');
-    if (!taxes.length) {
-      container.innerHTML = '<p style="color:var(--text-muted);">No hay impuestos configurados.</p>';
-      return;
-    }
-    let html = '';
-    taxes.forEach((tax, index) => {
-      html += `
-        <div class="list-item">
-          <span><strong>${tax.name}</strong> (${tax.rate}%)</span>
-          <button class="remove-btn" data-index="${index}"><i class="fas fa-times"></i></button>
-        </div>
-      `;
+    toggleBack.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMode(true);
     });
-    container.innerHTML = html;
-    container.querySelectorAll('.remove-btn').forEach(btn => {
-      btn.addEventListener('click', async function() {
-        const idx = parseInt(this.dataset.index);
-        const doc = await db.collection(CONFIG_DOC).doc('general').get();
-        const taxes = doc.data().taxes || [];
-        taxes.splice(idx, 1);
-        await db.collection(CONFIG_DOC).doc('general').update({ taxes });
-        renderTaxes(taxes);
-      });
-    });
-  }
 
-  document.getElementById('addTaxBtn').addEventListener('click', async function() {
-    const name = document.getElementById('taxName').value.trim();
-    const rate = parseFloat(document.getElementById('taxRate').value);
-    if (!name || isNaN(rate)) { alert('Ingresa nombre y tasa válida.'); return; }
-    const doc = await db.collection(CONFIG_DOC).doc('general').get();
-    const taxes = doc.data().taxes || [];
-    taxes.push({ name, rate });
-    await db.collection(CONFIG_DOC).doc('general').update({ taxes });
-    document.getElementById('taxName').value = '';
-    document.getElementById('taxRate').value = '';
-    renderTaxes(taxes);
-  });
-
-  // ============================================================
-  // 8. EMPLEADOS (listar usuarios + roles)
-  // ============================================================
-  async function cargarEmpleados() {
-    try {
-      const usersSnap = await db.collection('users').get();
-      const users = [];
-      usersSnap.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
-      const tbody = document.getElementById('empleadosBody');
-      if (!users.length) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:30px;">No hay empleados registrados.</td></tr>';
+    // ============================================
+    // 4. LOGIN
+    // ============================================
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) {
+        showError('Completa todos los campos.');
         return;
       }
-      let html = '';
-      for (const u of users) {
-        const userRecord = await auth.getUser(u.id).catch(() => null);
-        const email = userRecord ? userRecord.email : u.email || 'sin email';
-        const rol = u.rol || 'Recepcionista';
-        html += `
-          <tr>
-            <td>${u.name || 'Sin nombre'}</td>
-            <td>${email}</td>
-            <td>
-              <select class="rol-select" data-uid="${u.id}" style="padding:4px 8px;border-radius:6px;border:1.5px solid var(--border-color);background:var(--bg-input);color:var(--text-primary);">
-                <option value="Recepcionista" ${rol === 'Recepcionista' ? 'selected' : ''}>Recepcionista</option>
-                <option value="Admin" ${rol === 'Admin' ? 'selected' : ''}>Admin</option>
-              </select>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-primary" onclick="actualizarRol('${u.id}')"><i class="fas fa-save"></i></button>
-              <button class="btn btn-sm btn-danger" onclick="eliminarEmpleado('${u.id}')"><i class="fas fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      }
-      tbody.innerHTML = html;
-    } catch (e) { console.error('Error cargando empleados:', e); }
-  }
-
-  window.actualizarRol = async function(uid) {
-    const select = document.querySelector(`.rol-select[data-uid="${uid}"]`);
-    if (!select) return;
-    const nuevoRol = select.value;
-    await db.collection('users').doc(uid).update({ rol: nuevoRol });
-    alert('Rol actualizado.');
-  };
-
-  window.eliminarEmpleado = async function(uid) {
-    if (!confirm('¿Eliminar este empleado? Se eliminará su acceso.')) return;
-    try {
-      await auth.deleteUser(uid).catch(() => {});
-      await db.collection('users').doc(uid).delete();
-      cargarEmpleados();
-    } catch (e) { alert('Error: ' + e.message); }
-  };
-
-  // Invitar empleado (crea usuario en Auth y Firestore)
-  document.getElementById('btnInvitarEmpleado').addEventListener('click', function() {
-    document.getElementById('modalInvitarEmpleado').classList.add('active');
-  });
-  document.getElementById('modalInvitarClose').addEventListener('click', function() {
-    document.getElementById('modalInvitarEmpleado').classList.remove('active');
-  });
-  document.getElementById('modalInvitarCancel').addEventListener('click', function() {
-    document.getElementById('modalInvitarEmpleado').classList.remove('active');
-  });
-  document.getElementById('invitarForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const email = document.getElementById('invitarEmail').value.trim();
-    const rol = document.getElementById('invitarRol').value;
-    if (!email) { alert('Ingresa un correo.'); return; }
-    try {
-      // Crear usuario en Auth con contraseña temporal
-      const tempPassword = Math.random().toString(36).slice(-8);
-      const userCred = await auth.createUserWithEmailAndPassword(email, tempPassword);
-      await db.collection('users').doc(userCred.user.uid).set({
-        name: email.split('@')[0],
-        email: email,
-        rol: rol,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      alert(`Empleado invitado. Contraseña temporal: ${tempPassword}`);
-      document.getElementById('modalInvitarEmpleado').classList.remove('active');
-      cargarEmpleados();
-    } catch (e) {
-      alert('Error al invitar: ' + e.message);
-    }
-  });
-
-  // ============================================================
-  // 9. RESERVAS (CRUD)
-  // ============================================================
-  let unsubscribeReservas = null;
-
-  function iniciarEscuchaReservas() {
-    if (unsubscribeReservas) unsubscribeReservas();
-    unsubscribeReservas = db.collection('reservas')
-      .onSnapshot(snapshot => {
-        const reservas = [];
-        snapshot.forEach(doc => reservas.push({ id: doc.id, ...doc.data() }));
-        reservas.sort((a, b) => {
-          if (a.fecha !== b.fecha) return b.fecha.localeCompare(a.fecha);
-          return b.hora.localeCompare(a.hora);
+      const btn = loginForm.querySelector('.btn-primary');
+      btn.disabled = true;
+      btn.textContent = 'Iniciando...';
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          window.location.href = 'panel-empleados.html';
+        })
+        .catch((err) => {
+          let msg = 'Error al iniciar sesión. Verifica tus credenciales.';
+          if (err.code === 'auth/user-not-found') msg = 'Usuario no encontrado.';
+          if (err.code === 'auth/wrong-password') msg = 'Contraseña incorrecta.';
+          if (err.code === 'auth/invalid-email') msg = 'Correo inválido.';
+          if (err.code === 'auth/too-many-requests') msg = 'Demasiados intentos. Espera un momento.';
+          showError(msg);
+          btn.disabled = false;
+          btn.textContent = 'Iniciar sesión';
         });
-        renderizarTabla(reservas, document.getElementById('reservasBody'));
-        renderizarTabla(reservas, document.getElementById('reservasBody2'));
-        actualizarEstadisticas(reservas);
-      }, error => {
-        console.error('Error en reservas:', error);
-        const msg = '<tr><td colspan="7" style="text-align:center;color:#b91c1c;padding:30px;">Error al cargar reservas.</td></tr>';
-        document.getElementById('reservasBody').innerHTML = msg;
-        document.getElementById('reservasBody2').innerHTML = msg;
-      });
-  }
-
-  function renderizarTabla(reservas, tbody) {
-    if (!reservas.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">No hay reservas registradas</td></tr>';
-      return;
-    }
-    let html = '';
-    reservas.forEach(r => {
-      const cls = r.estado === 'Pendiente' ? 'badge-pendiente' : r.estado === 'Confirmada' ? 'badge-confirmada' : 'badge-cancelada';
-      html += `
-        <tr>
-          <td><strong>${r.cliente}</strong>${r.email ? `<br><small style="color:var(--text-muted);">${r.email}</small>` : ''}</td>
-          <td>${r.telefono}</td>
-          <td>${r.fecha}</td>
-          <td>${r.hora}</td>
-          <td>${r.paquete}</td>
-          <td><span class="badge-status ${cls}">${r.estado}</span></td>
-          <td>
-            <button class="btn btn-edit btn-sm" onclick="editarReserva('${r.id}')"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-danger btn-sm" onclick="eliminarReserva('${r.id}')"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>
-      `;
     });
-    tbody.innerHTML = html;
-  }
 
-  function actualizarEstadisticas(reservas) {
-    const total = reservas.length;
-    const hoy = new Date().toISOString().slice(0,10);
-    const hoyCount = reservas.filter(r => r.fecha === hoy).length;
-    const pendientes = reservas.filter(r => r.estado === 'Pendiente').length;
-    document.getElementById('totalReservas').textContent = total;
-    document.getElementById('reservasHoy').textContent = hoyCount;
-    document.getElementById('reservasPendientes').textContent = pendientes;
-  }
+    // ============================================
+    // 5. REGISTRO
+    // ============================================
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('registerEmail').value.trim();
+      const name = document.getElementById('registerName').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const code = document.getElementById('registerCode').value.trim();
 
-  // CRUD modal
-  const modalReserva = document.getElementById('modalReserva');
-  const reservaForm = document.getElementById('reservaForm');
-  let editandoId = null;
+      if (!email || !name || !password || !code) {
+        showError('Completa todos los campos.');
+        return;
+      }
+      if (code !== EMPLOYEE_CODE) {
+        showError('Código de empleado incorrecto.');
+        return;
+      }
+      if (password.length < 6) {
+        showError('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
 
-  function abrirModalReserva(titulo, btnTexto, data = null) {
-    if (data) {
-      editandoId = data.id;
-      document.getElementById('reservaId').value = data.id;
-      document.getElementById('clienteNombre').value = data.cliente || '';
-      document.getElementById('clienteTelefono').value = data.telefono || '';
-      document.getElementById('clienteEmail').value = data.email || '';
-      document.getElementById('reservaFecha').value = data.fecha || '';
-      document.getElementById('reservaHora').value = data.hora || '';
-      document.getElementById('reservaPaquete').value = data.paquete || 'Básico';
-      document.getElementById('reservaEstado').value = data.estado || 'Pendiente';
-      document.getElementById('reservaComentarios').value = data.comentarios || '';
-    } else {
-      editandoId = null;
-      document.getElementById('reservaId').value = '';
-      reservaForm.reset();
-      document.getElementById('reservaFecha').value = new Date().toISOString().slice(0,10);
-      document.getElementById('reservaEstado').value = 'Pendiente';
-    }
-    document.getElementById('modalTitle').textContent = titulo;
-    document.getElementById('modalSubmitBtn').textContent = btnTexto;
-    modalReserva.classList.add('active');
-  }
+      const btn = registerForm.querySelector('.btn-primary');
+      btn.disabled = true;
+      btn.textContent = 'Registrando...';
 
-  function cerrarModalReserva() {
-    modalReserva.classList.remove('active');
-  }
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          return db.collection('users').doc(user.uid).set({
+            email: email,
+            name: name,
+            rol: 'Recepcionista',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          showSuccess('¡Cuenta creada! Ahora inicia sesión.');
+          // Autocompletar el login
+          document.getElementById('loginEmail').value = email;
+          document.getElementById('loginPassword').value = password;
+          setTimeout(() => {
+            toggleMode(true);
+            btn.disabled = false;
+            btn.textContent = 'Registrarse';
+          }, 1500);
+        })
+        .catch((err) => {
+          let msg = 'Error al registrar.';
+          if (err.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado.';
+          if (err.code === 'auth/invalid-email') msg = 'Correo inválido.';
+          if (err.code === 'auth/weak-password') msg = 'Contraseña demasiado débil.';
+          showError(msg);
+          btn.disabled = false;
+          btn.textContent = 'Registrarse';
+        });
+    });
 
-  document.getElementById('btnNuevaReserva').addEventListener('click', () => abrirModalReserva('Nueva Reserva', 'Guardar reserva'));
-  document.getElementById('btnNuevaReserva2').addEventListener('click', () => abrirModalReserva('Nueva Reserva', 'Guardar reserva'));
-  document.getElementById('modalCloseBtn').addEventListener('click', cerrarModalReserva);
-  document.getElementById('modalCancelBtn').addEventListener('click', cerrarModalReserva);
+    // ============================================
+    // 6. REDIRIGIR SI YA HAY SESIÓN
+    // ============================================
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = 'panel-empleados.html';
+      }
+    });
+  </script>
 
-  window.editarReserva = function(id) {
-    db.collection('reservas').doc(id).get().then(doc => {
-      if (!doc.exists) return;
-      abrirModalReserva('Editar Reserva', 'Actualizar reserva', { id, ...doc.data() });
-    }).catch(err => alert('Error: ' + err.message));
-  };
-
-  window.eliminarReserva = function(id) {
-    if (!confirm('¿Eliminar permanentemente?')) return;
-    db.collection('reservas').doc(id).delete().catch(err => alert('Error: ' + err.message));
-  };
-
-  reservaForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const data = {
-      cliente: document.getElementById('clienteNombre').value.trim(),
-      telefono: document.getElementById('clienteTelefono').value.trim(),
-      email: document.getElementById('clienteEmail').value.trim(),
-      fecha: document.getElementById('reservaFecha').value,
-      hora: document.getElementById('reservaHora').value,
-      paquete: document.getElementById('reservaPaquete').value,
-      estado: document.getElementById('reservaEstado').value,
-      comentarios: document.getElementById('reservaComentarios').value.trim()
-    };
-    if (!data.cliente || !data.telefono || !data.fecha || !data.hora) {
-      alert('Completa todos los campos obligatorios.');
-      return;
-    }
-    if (editandoId) {
-      db.collection('reservas').doc(editandoId).update(data).then(cerrarModalReserva).catch(err => alert('Error: ' + err.message));
-    } else {
-      db.collection('reservas').add({ ...data, creado: firebase.firestore.FieldValue.serverTimestamp() }).then(cerrarModalReserva).catch(err => alert('Error: ' + err.message));
-    }
-  });
-
-  document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
-    if (unsubscribeReservas) { unsubscribeReservas(); iniciarEscuchaReservas(); }
-  });
-  document.getElementById('btnLimpiarFiltros2').addEventListener('click', () => {
-    if (unsubscribeReservas) { unsubscribeReservas(); iniciarEscuchaReservas(); }
-  });
-
-</script>
 </body>
 </html>
