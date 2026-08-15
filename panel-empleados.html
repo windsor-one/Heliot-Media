@@ -1,29 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel de Empleados · Heliot Media</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Empleados · Heliot Media</title>
+  <!-- Inter (igual que Zoho Books) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome (iconos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ===== RESET & BASE ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f0f2f5;
-      color: #1a2634;
-      height: 100vh;
-      display: flex;
+    /* ==========================================================
+       VARIABLES DE TEMA (claro / oscuro)
+       ========================================================== */
+    :root {
+      --bg-body: #f0f2f5;
+      --bg-sidebar: #ffffff;
+      --border-color: #e6e9ef;
+      --text-primary: #1a2634;
+      --text-secondary: #5f6b7a;
+      --text-muted: #8a94a6;
+      --bg-card: #ffffff;
+      --bg-input: #fafbfc;
+      --shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
+      --bg-table-header: #f8f9fc;
+      --bg-hover: #eef4ff;
+      --color-primary: #066CFF;
+      --color-primary-hover: #0052cc;
+      --color-danger: #dc3545;
+      --color-success: #28a745;
+      --badge-pendiente-bg: #fff3cd;
+      --badge-pendiente-text: #856404;
+      --badge-confirmada-bg: #d4edda;
+      --badge-confirmada-text: #155724;
+      --badge-cancelada-bg: #f8d7da;
+      --badge-cancelada-text: #721c24;
+      --transition: 0.2s ease;
     }
 
-    /* ===== SIDEBAR ===== */
+    body.dark-theme {
+      --bg-body: #1a1f2b;
+      --bg-sidebar: #222836;
+      --border-color: #2e3444;
+      --text-primary: #e6e9ef;
+      --text-secondary: #a8b3c9;
+      --text-muted: #6b7a8f;
+      --bg-card: #2a3040;
+      --bg-input: #2a3040;
+      --shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.6);
+      --bg-table-header: #2a3040;
+      --bg-hover: #1f2533;
+      --color-primary: #4a8aff;
+      --color-primary-hover: #6aa0ff;
+      --badge-pendiente-bg: #4a3f1a;
+      --badge-pendiente-text: #e6c76b;
+      --badge-confirmada-bg: #1a3d2a;
+      --badge-confirmada-text: #7ac79a;
+      --badge-cancelada-bg: #3d1a1a;
+      --badge-cancelada-text: #e67a7a;
+    }
+
+    /* ==========================================================
+       RESET & BASE
+       ========================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* ==========================================================
+       SIDEBAR
+       ========================================================== */
     .sidebar {
-      width: 240px;
-      background: #fff;
-      border-right: 1px solid #e6e9ef;
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -31,82 +97,202 @@
       position: sticky;
       top: 0;
       overflow-y: auto;
+      transition: background var(--transition), border var(--transition);
+      padding-bottom: 12px;
     }
+
     .sidebar .logo-area {
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid #e6e9ef;
+      padding: 18px 20px 16px;
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       gap: 10px;
     }
+
     .sidebar .logo-area img {
       height: 32px;
       width: auto;
     }
+
     .sidebar .logo-area span {
       font-weight: 600;
       font-size: 16px;
-      color: #1a2634;
+      color: var(--text-primary);
     }
+
+    /* Navegación del sidebar */
     .sidebar nav {
       flex: 1;
-      padding: 16px 12px;
+      padding: 12px 8px;
+      overflow-y: auto;
     }
+
+    .sidebar nav .nav-group {
+      margin-bottom: 8px;
+    }
+
+    .sidebar nav .nav-group .nav-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 8px 12px 4px;
+      font-weight: 600;
+    }
+
     .sidebar nav .nav-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-radius: 8px;
-      color: #5f6b7a;
+      color: var(--text-secondary);
       font-weight: 500;
       font-size: 14px;
-      cursor: default;
-      transition: 0.15s;
-      margin-bottom: 2px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
     }
+
+    .sidebar nav .nav-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
     .sidebar nav .nav-item.active {
-      background: #eef4ff;
-      color: #066CFF;
+      background: var(--bg-hover);
+      color: var(--color-primary);
     }
+
     .sidebar nav .nav-item .icon {
-      font-size: 18px;
-      width: 24px;
+      width: 22px;
       text-align: center;
+      font-size: 16px;
+      color: var(--text-muted);
     }
+
+    .sidebar nav .nav-item.active .icon {
+      color: var(--color-primary);
+    }
+
+    .sidebar nav .nav-item .fa-chevron-down {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .sidebar nav .nav-item .fa-chevron-down.open {
+      transform: rotate(180deg);
+    }
+
+    /* Submenú de configuración */
+    .sidebar nav .sub-menu {
+      padding-left: 36px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+
+    .sidebar nav .sub-menu.open {
+      max-height: 800px;
+    }
+
+    .sidebar nav .sub-menu .nav-item {
+      font-size: 13px;
+      padding: 6px 14px;
+      font-weight: 400;
+    }
+
+    .sidebar nav .sub-menu .nav-item .icon {
+      font-size: 13px;
+      width: 20px;
+    }
+
+    /* Usuario y toggle tema */
     .sidebar .user-section {
       padding: 16px 20px;
-      border-top: 1px solid #e6e9ef;
+      border-top: 1px solid var(--border-color);
       font-size: 13px;
-      color: #5f6b7a;
+      color: var(--text-secondary);
     }
+
     .sidebar .user-section .user-name {
       font-weight: 600;
-      color: #1a2634;
+      color: var(--text-primary);
       margin-bottom: 4px;
     }
+
     .sidebar .user-section .logout-btn {
       background: none;
       border: none;
-      color: #066CFF;
+      color: var(--color-primary);
       font-weight: 600;
       cursor: pointer;
       font-size: 13px;
       padding: 0;
       font-family: 'Inter', sans-serif;
     }
+
     .sidebar .user-section .logout-btn:hover {
       text-decoration: underline;
     }
 
-    /* ===== MAIN CONTENT ===== */
+    /* Toggle oscuro/claro */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .theme-toggle .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: var(--border-color);
+      border-radius: 12px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .theme-toggle .switch .slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .body.dark-theme .theme-toggle .switch {
+      background: var(--color-primary);
+    }
+
+    .body.dark-theme .theme-toggle .switch .slider {
+      transform: translateX(18px);
+    }
+
+    /* ==========================================================
+       MAIN CONTENT
+       ========================================================== */
     .main-content {
       flex: 1;
       padding: 28px 32px;
       overflow-y: auto;
       height: 100vh;
+      background: var(--bg-body);
+      transition: background var(--transition);
     }
-    .main-content .page-header {
+
+    .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -114,44 +300,163 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-    .main-content .page-header h1 {
+
+    .page-header h1 {
       font-size: 22px;
       font-weight: 600;
-      color: #1a2634;
+      color: var(--text-primary);
     }
 
-    /* ===== STATS ===== */
+    /* ===== VISTA DE CONFIGURACIÓN ===== */
+    .config-layout {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .config-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+    }
+
+    .config-sidebar .config-search {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 14px;
+      margin-bottom: 16px;
+      transition: border var(--transition), background var(--transition);
+    }
+
+    .config-sidebar .config-search:focus {
+      border-color: var(--color-primary);
+      outline: none;
+    }
+
+    .config-sidebar .config-category {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 10px 12px 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .config-sidebar .config-item {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+
+    .config-sidebar .config-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .config-sidebar .config-item.active {
+      background: var(--bg-hover);
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .config-content {
+      flex: 1;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 24px 28px;
+      transition: background var(--transition), border var(--transition);
+    }
+
+    .config-content .config-section {
+      display: none;
+    }
+
+    .config-content .config-section.active {
+      display: block;
+    }
+
+    .config-content .config-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .config-content .config-section p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .config-content .config-section .placeholder-icon {
+      font-size: 48px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .config-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .config-close-btn:hover {
+      background: var(--bg-hover);
+    }
+
+    /* ==========================================================
+       ESTADÍSTICAS Y TABLA (igual que antes)
+       ========================================================== */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 16px;
       margin-bottom: 28px;
     }
+
     .stat-card {
-      background: #fff;
+      background: var(--bg-card);
       padding: 18px 16px;
       border-radius: 12px;
-      border: 1px solid #e6e9ef;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      transition: background var(--transition), border var(--transition);
     }
+
     .stat-card .number {
       font-size: 28px;
       font-weight: 700;
-      color: #1a2634;
+      color: var(--text-primary);
     }
+
     .stat-card .label {
       font-size: 13px;
-      color: #5f6b7a;
+      color: var(--text-secondary);
       margin-top: 4px;
     }
 
-    /* ===== ACTIONS ===== */
     .actions-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 24px;
     }
+
     .btn {
       font-family: 'Inter', sans-serif;
       padding: 8px 20px;
@@ -165,65 +470,79 @@
       align-items: center;
       gap: 6px;
     }
+
     .btn-primary {
-      background: #066CFF;
+      background: var(--color-primary);
       color: #fff;
     }
     .btn-primary:hover {
-      background: #0052cc;
+      background: var(--color-primary-hover);
     }
+
     .btn-secondary {
-      background: #e6e9ef;
-      color: #1a2634;
+      background: var(--border-color);
+      color: var(--text-primary);
     }
     .btn-secondary:hover {
-      background: #d1d5db;
+      background: var(--text-muted);
+      color: #fff;
     }
+
     .btn-danger {
-      background: #dc3545;
+      background: var(--color-danger);
       color: #fff;
     }
     .btn-danger:hover {
       background: #b02a37;
     }
+
     .btn-edit {
-      background: #28a745;
+      background: var(--color-success);
       color: #fff;
     }
     .btn-edit:hover {
       background: #1e7e34;
     }
 
-    /* ===== TABLE ===== */
     .table-wrapper {
-      background: #fff;
+      background: var(--bg-card);
       border-radius: 12px;
-      border: 1px solid #e6e9ef;
+      border: 1px solid var(--border-color);
       overflow-x: auto;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      box-shadow: var(--shadow);
+      transition: background var(--transition), border var(--transition);
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
       min-width: 600px;
     }
+
     thead {
-      background: #f8f9fc;
+      background: var(--bg-table-header);
     }
+
     th {
       text-align: left;
       padding: 14px 16px;
       font-weight: 600;
-      color: #1a2634;
-      border-bottom: 1px solid #e6e9ef;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
     }
+
     td {
       padding: 12px 16px;
-      border-bottom: 1px solid #e6e9ef;
+      border-bottom: 1px solid var(--border-color);
       vertical-align: middle;
+      color: var(--text-primary);
     }
-    tr:last-child td { border-bottom: none; }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
     .badge-status {
       display: inline-block;
       padding: 4px 12px;
@@ -231,20 +550,35 @@
       font-size: 12px;
       font-weight: 600;
     }
-    .badge-pendiente { background: #fff3cd; color: #856404; }
-    .badge-confirmada { background: #d4edda; color: #155724; }
-    .badge-cancelada { background: #f8d7da; color: #721c24; }
+    .badge-pendiente {
+      background: var(--badge-pendiente-bg);
+      color: var(--badge-pendiente-text);
+    }
+    .badge-confirmada {
+      background: var(--badge-confirmada-bg);
+      color: var(--badge-confirmada-text);
+    }
+    .badge-cancelada {
+      background: var(--badge-cancelada-bg);
+      color: var(--badge-cancelada-text);
+    }
+
     .actions-cell {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
     }
 
-    /* ===== MODAL ===== */
+    /* ==========================================================
+       MODAL (igual que antes)
+       ========================================================== */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -252,82 +586,105 @@
       z-index: 9999;
       padding: 20px;
     }
-    .modal-overlay.active { display: flex; }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
     .modal {
-      background: #fff;
+      background: var(--bg-card);
       max-width: 540px;
       width: 100%;
       border-radius: 16px;
       padding: 28px 32px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      box-shadow: var(--shadow-modal);
       animation: slideUp 0.25s ease;
+      transition: background var(--transition);
     }
+
     @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
+
     .modal h2 {
       font-size: 20px;
       font-weight: 600;
-      color: #1a2634;
+      color: var(--text-primary);
       margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .modal-close {
       background: none;
       border: none;
       font-size: 24px;
       cursor: pointer;
-      color: #8a94a6;
+      color: var(--text-muted);
       transition: 0.15s;
     }
-    .modal-close:hover { color: #1a2634; }
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
     .modal .form-group {
       margin-bottom: 16px;
     }
+
     .modal .form-group label {
       display: block;
       font-size: 13px;
       font-weight: 500;
-      color: #1a2634;
+      color: var(--text-primary);
       margin-bottom: 4px;
     }
+
     .modal .form-group input,
     .modal .form-group select,
     .modal .form-group textarea {
       width: 100%;
       padding: 8px 12px;
-      border: 1.5px solid #d1d5db;
+      border: 1.5px solid var(--border-color);
       border-radius: 8px;
       font-size: 14px;
       font-family: 'Inter', sans-serif;
-      background: #fafbfc;
+      background: var(--bg-input);
+      color: var(--text-primary);
       transition: 0.15s;
     }
+
     .modal .form-group input:focus,
     .modal .form-group select:focus,
     .modal .form-group textarea:focus {
-      border-color: #066CFF;
+      border-color: var(--color-primary);
       outline: none;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(6,108,255,0.08);
+      box-shadow: 0 0 0 3px rgba(6, 108, 255, 0.08);
     }
+
     .modal .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
+
     .modal .modal-actions {
       display: flex;
       gap: 10px;
       justify-content: flex-end;
       margin-top: 20px;
     }
+
     .modal .btn-cancel {
-      background: #e6e9ef;
-      color: #1a2634;
+      background: var(--border-color);
+      color: var(--text-primary);
       border: none;
       padding: 8px 20px;
       border-radius: 8px;
@@ -335,102 +692,447 @@
       cursor: pointer;
       font-family: 'Inter', sans-serif;
     }
-    .modal .btn-cancel:hover { background: #d1d5db; }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .sidebar { width: 60px; }
-      .sidebar .logo-area span { display: none; }
-      .sidebar .logo-area { justify-content: center; padding: 16px 0; }
-      .sidebar .user-section .user-name { display: none; }
-      .sidebar .user-section .logout-btn { font-size: 12px; }
-      .sidebar nav .nav-item span { display: none; }
-      .sidebar nav .nav-item { justify-content: center; padding: 10px; }
-      .main-content { padding: 20px 16px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
+    .modal .btn-cancel:hover {
+      background: var(--text-muted);
+      color: #fff;
     }
+
+    /* ==========================================================
+       RESPONSIVE
+       ========================================================== */
+    @media (max-width: 1024px) {
+      .config-layout {
+        flex-direction: column;
+      }
+      .config-sidebar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 60px;
+      }
+      .sidebar .logo-area span {
+        display: none;
+      }
+      .sidebar .logo-area {
+        justify-content: center;
+        padding: 16px 0;
+      }
+      .sidebar .user-section .user-name {
+        display: none;
+      }
+      .sidebar .user-section .logout-btn {
+        font-size: 12px;
+      }
+      .sidebar nav .nav-item span:not(.icon) {
+        display: none;
+      }
+      .sidebar nav .nav-item {
+        justify-content: center;
+        padding: 10px;
+      }
+      .sidebar nav .nav-item .fa-chevron-down {
+        display: none;
+      }
+      .sidebar nav .sub-menu {
+        padding-left: 0;
+        max-height: 0 !important;
+      }
+      .main-content {
+        padding: 20px 16px;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .config-content {
+        padding: 16px;
+      }
+    }
+
     @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .modal .form-row { grid-template-columns: 1fr; }
-      .main-content .page-header h1 { font-size: 18px; }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal .form-row {
+        grid-template-columns: 1fr;
+      }
+      .page-header h1 {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== SIDEBAR ===== -->
+  <!-- ==========================================================
+  SIDEBAR
+  ========================================================== -->
   <div class="sidebar">
     <div class="logo-area">
-      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot" />
       <span>Heliot Media</span>
     </div>
+
     <nav>
-      <div class="nav-item active">
-        <span class="icon">📋</span>
-        <span>Reservas</span>
+      <!-- Dashboard -->
+      <div class="nav-group">
+        <div class="nav-item active" data-view="dashboard">
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span>Dashboard</span>
+        </div>
       </div>
-      <!-- Puedes agregar más items si quieres -->
+
+      <!-- Reservas -->
+      <div class="nav-group">
+        <div class="nav-item" data-view="reservas">
+          <span class="icon"><i class="fas fa-list-ul"></i></span>
+          <span>Reservas</span>
+        </div>
+      </div>
+
+      <!-- Empleados -->
+      <div class="nav-group">
+        <div class="nav-item" data-view="empleados">
+          <span class="icon"><i class="fas fa-users"></i></span>
+          <span>Empleados</span>
+        </div>
+      </div>
+
+      <!-- Configuración (con submenú) -->
+      <div class="nav-group">
+        <div class="nav-item" id="configToggle">
+          <span class="icon"><i class="fas fa-cog"></i></span>
+          <span>Configuración</span>
+          <i class="fas fa-chevron-down" id="configChevron"></i>
+        </div>
+        <div class="sub-menu" id="configSubMenu">
+          <div class="nav-item config-option" data-view="config" data-section="organizacion">
+            <span class="icon"><i class="fas fa-building"></i></span>
+            <span>Organización</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="usuarios-roles">
+            <span class="icon"><i class="fas fa-user-cog"></i></span>
+            <span>Usuarios y roles</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="impuestos">
+            <span class="icon"><i class="fas fa-receipt"></i></span>
+            <span>Impuestos y cumplimiento</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="personalizacion">
+            <span class="icon"><i class="fas fa-palette"></i></span>
+            <span>Personalización</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="automation">
+            <span class="icon"><i class="fas fa-robot"></i></span>
+            <span>Automation</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="ventas">
+            <span class="icon"><i class="fas fa-cart-plus"></i></span>
+            <span>Ventas</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="compras">
+            <span class="icon"><i class="fas fa-truck"></i></span>
+            <span>Compras</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="integraciones">
+            <span class="icon"><i class="fas fa-plug"></i></span>
+            <span>Integraciones y Marketplace</span>
+          </div>
+          <div class="nav-item config-option" data-view="config" data-section="developer">
+            <span class="icon"><i class="fas fa-code"></i></span>
+            <span>Desarrollador y datos</span>
+          </div>
+        </div>
+      </div>
     </nav>
+
+    <!-- Usuario y tema -->
     <div class="user-section">
       <div class="user-name" id="userName">Empleado</div>
-      <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+      <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i>
+        <div class="switch">
+          <div class="slider"></div>
+        </div>
+        <i class="fas fa-moon"></i>
+      </div>
     </div>
   </div>
 
-  <!-- ===== MAIN CONTENT ===== -->
+  <!-- ==========================================================
+  MAIN CONTENT
+  ========================================================== -->
   <div class="main-content">
 
-    <div class="page-header">
-      <h1>Reservas</h1>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <span style="font-size:14px; color:#5f6b7a;" id="userNameHeader">Empleado</span>
+    <!-- ===== VISTA DASHBOARD (por defecto) ===== -->
+    <div id="view-dashboard" class="view-content">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <span style="font-size:14px; color:var(--text-secondary);" id="userNameHeader">Empleado</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number" id="totalReservas">0</div>
+          <div class="label">Total reservas</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="reservasHoy">0</div>
+          <div class="label">Reservas de hoy</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="reservasPendientes">0</div>
+          <div class="label">Pendientes</div>
+        </div>
+      </div>
+
+      <div class="actions-bar">
+        <button class="btn btn-primary" id="btnNuevaReserva"><i class="fas fa-plus"></i> Nueva reserva</button>
+        <button class="btn btn-secondary" id="btnLimpiarFiltros"><i class="fas fa-sync-alt"></i> Mostrar todas</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Teléfono</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Paquete</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="reservasBody">
+            <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Cargando reservas...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="number" id="totalReservas">0</div>
-        <div class="label">Total reservas</div>
+    <!-- ===== VISTA RESERVAS (idéntica a dashboard, pero podemos reutilizar) ===== -->
+    <div id="view-reservas" class="view-content" style="display:none;">
+      <div class="page-header">
+        <h1>Reservas</h1>
       </div>
-      <div class="stat-card">
-        <div class="number" id="reservasHoy">0</div>
-        <div class="label">Reservas de hoy</div>
+      <!-- Reutilizamos el mismo contenido de dashboard para reservas -->
+      <div class="actions-bar">
+        <button class="btn btn-primary" id="btnNuevaReserva2"><i class="fas fa-plus"></i> Nueva reserva</button>
+        <button class="btn btn-secondary" id="btnLimpiarFiltros2"><i class="fas fa-sync-alt"></i> Mostrar todas</button>
       </div>
-      <div class="stat-card">
-        <div class="number" id="reservasPendientes">0</div>
-        <div class="label">Pendientes</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Teléfono</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Paquete</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="reservasBody2">
+            <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Cargando reservas...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="actions-bar">
-      <button class="btn btn-primary" id="btnNuevaReserva">➕ Nueva reserva</button>
-      <button class="btn btn-secondary" id="btnLimpiarFiltros">🔄 Mostrar todas</button>
+    <!-- ===== VISTA EMPLEADOS ===== -->
+    <div id="view-empleados" class="view-content" style="display:none;">
+      <div class="page-header">
+        <h1>Gestión de Empleados</h1>
+      </div>
+      <div style="background:var(--bg-card); border-radius:12px; border:1px solid var(--border-color); padding:24px; transition: background var(--transition);">
+        <p style="color:var(--text-secondary);">Aquí podrás gestionar los roles y permisos de los empleados (próximamente).</p>
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary" disabled><i class="fas fa-user-plus"></i> Invitar empleado</button>
+          <button class="btn btn-secondary" disabled><i class="fas fa-user-edit"></i> Editar roles</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Table -->
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Teléfono</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Paquete</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="reservasBody">
-          <tr><td colspan="7" style="text-align:center; color:#8a94a6; padding:30px;">Cargando reservas...</td></tr>
-        </tbody>
-      </table>
+    <!-- ===== VISTA CONFIGURACIÓN ===== -->
+    <div id="view-config" class="view-content" style="display:none;">
+      <div class="page-header">
+        <h1>Configuración</h1>
+        <button class="config-close-btn" id="closeConfig"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="config-layout">
+        <!-- Sidebar de configuración -->
+        <div class="config-sidebar">
+          <input type="text" class="config-search" placeholder="Busque su configuración..." id="configSearch" />
+          <div class="config-category">Organización</div>
+          <a class="config-item active" data-section="organizacion"><i class="fas fa-building" style="margin-right:8px;"></i> Perfil</a>
+          <a class="config-item" data-section="personalizacion-marca"><i class="fas fa-paint-brush" style="margin-right:8px;"></i> Personalización de marca</a>
+          <a class="config-item" data-section="dominio"><i class="fas fa-globe" style="margin-right:8px;"></i> Dominio personalizado</a>
+          <a class="config-item" data-section="ubicaciones"><i class="fas fa-map-marker-alt" style="margin-right:8px;"></i> Ubicaciones</a>
+
+          <div class="config-category">Usuarios y roles</div>
+          <a class="config-item" data-section="usuarios"><i class="fas fa-users" style="margin-right:8px;"></i> Usuarios</a>
+          <a class="config-item" data-section="roles"><i class="fas fa-user-tag" style="margin-right:8px;"></i> Roles</a>
+
+          <div class="config-category">Impuestos y cumplimiento</div>
+          <a class="config-item" data-section="impuestos"><i class="fas fa-receipt" style="margin-right:8px;"></i> Impuestos</a>
+
+          <div class="config-category">Instalación y configuraciones</div>
+          <a class="config-item" data-section="general"><i class="fas fa-cogs" style="margin-right:8px;"></i> General</a>
+          <a class="config-item" data-section="monedas"><i class="fas fa-dollar-sign" style="margin-right:8px;"></i> Monedas</a>
+          <a class="config-item" data-section="pagos"><i class="fas fa-credit-card" style="margin-right:8px;"></i> Términos de pago</a>
+
+          <div class="config-category">Personalización</div>
+          <a class="config-item" data-section="numeracion"><i class="fas fa-sort-numeric-up" style="margin-right:8px;"></i> Series de números</a>
+          <a class="config-item" data-section="plantillas"><i class="fas fa-file-pdf" style="margin-right:8px;"></i> Plantillas PDF</a>
+          <a class="config-item" data-section="notificaciones"><i class="fas fa-envelope" style="margin-right:8px;"></i> Notificaciones por email</a>
+
+          <div class="config-category">Automation</div>
+          <a class="config-item" data-section="workflows"><i class="fas fa-project-diagram" style="margin-right:8px;"></i> Reglas del flujo de trabajo</a>
+
+          <div class="config-category">Ventas</div>
+          <a class="config-item" data-section="facturas"><i class="fas fa-file-invoice" style="margin-right:8px;"></i> Facturas</a>
+          <a class="config-item" data-section="pagos-recibidos"><i class="fas fa-hand-holding-usd" style="margin-right:8px;"></i> Pagos recibidos</a>
+
+          <div class="config-category">Compras</div>
+          <a class="config-item" data-section="ordenes-compra"><i class="fas fa-shopping-cart" style="margin-right:8px;"></i> Órdenes de compra</a>
+
+          <div class="config-category">Integraciones</div>
+          <a class="config-item" data-section="zoho-apps"><i class="fas fa-cubes" style="margin-right:8px;"></i> Aplicaciones de Zoho</a>
+          <a class="config-item" data-section="whatsapp"><i class="fab fa-whatsapp" style="margin-right:8px;"></i> WhatsApp</a>
+
+          <div class="config-category">Desarrollador</div>
+          <a class="config-item" data-section="webhooks"><i class="fas fa-webhook" style="margin-right:8px;"></i> Webhooks entrantes</a>
+          <a class="config-item" data-section="api"><i class="fas fa-code" style="margin-right:8px;"></i> Uso de API</a>
+        </div>
+
+        <!-- Contenido de configuración -->
+        <div class="config-content">
+          <!-- Cada sección se mostrará según data-section -->
+          <div class="config-section active" data-section="organizacion">
+            <h2><i class="fas fa-building" style="margin-right:10px;"></i> Organización</h2>
+            <p><strong>Nombre:</strong> Heliot Media</p>
+            <p><strong>Email:</strong> contacto@heliotmedia.com</p>
+            <p><strong>Teléfono:</strong> +503 7000-0000</p>
+            <p style="margin-top:12px;">Aquí puedes editar la información básica de tu organización.</p>
+          </div>
+
+          <div class="config-section" data-section="personalizacion-marca">
+            <h2><i class="fas fa-paint-brush" style="margin-right:10px;"></i> Personalización de marca</h2>
+            <p>Sube tu logotipo, elige colores y personaliza la apariencia de tus documentos.</p>
+            <div style="margin-top:12px;"><span class="btn btn-secondary" style="cursor:default;">Subir logotipo</span></div>
+          </div>
+
+          <div class="config-section" data-section="dominio">
+            <h2><i class="fas fa-globe" style="margin-right:10px;"></i> Dominio personalizado</h2>
+            <p>Configura un dominio propio para tu portal de clientes.</p>
+          </div>
+
+          <div class="config-section" data-section="ubicaciones">
+            <h2><i class="fas fa-map-marker-alt" style="margin-right:10px;"></i> Ubicaciones</h2>
+            <p>Gestiona las direcciones y sucursales de tu negocio.</p>
+          </div>
+
+          <div class="config-section" data-section="usuarios">
+            <h2><i class="fas fa-users" style="margin-right:10px;"></i> Usuarios</h2>
+            <p>Lista de empleados con acceso al sistema. Invita nuevos usuarios.</p>
+          </div>
+
+          <div class="config-section" data-section="roles">
+            <h2><i class="fas fa-user-tag" style="margin-right:10px;"></i> Roles</h2>
+            <p>Define los permisos y responsabilidades de cada rol.</p>
+          </div>
+
+          <div class="config-section" data-section="impuestos">
+            <h2><i class="fas fa-receipt" style="margin-right:10px;"></i> Impuestos</h2>
+            <p>Configura las tasas impositivas, exenciones y reglas de cumplimiento.</p>
+          </div>
+
+          <div class="config-section" data-section="general">
+            <h2><i class="fas fa-cogs" style="margin-right:10px;"></i> General</h2>
+            <p>Ajustes generales de la aplicación (zona horaria, formato de fecha, etc.).</p>
+          </div>
+
+          <div class="config-section" data-section="monedas">
+            <h2><i class="fas fa-dollar-sign" style="margin-right:10px;"></i> Monedas</h2>
+            <p>Administra las monedas que usas en tus transacciones.</p>
+          </div>
+
+          <div class="config-section" data-section="pagos">
+            <h2><i class="fas fa-credit-card" style="margin-right:10px;"></i> Términos de pago</h2>
+            <p>Define plazos y condiciones de pago para tus clientes.</p>
+          </div>
+
+          <div class="config-section" data-section="numeracion">
+            <h2><i class="fas fa-sort-numeric-up" style="margin-right:10px;"></i> Series de números</h2>
+            <p>Configura las secuencias de numeración para facturas, pedidos, etc.</p>
+          </div>
+
+          <div class="config-section" data-section="plantillas">
+            <h2><i class="fas fa-file-pdf" style="margin-right:10px;"></i> Plantillas PDF</h2>
+            <p>Personaliza el diseño de tus documentos en PDF.</p>
+          </div>
+
+          <div class="config-section" data-section="notificaciones">
+            <h2><i class="fas fa-envelope" style="margin-right:10px;"></i> Notificaciones por email</h2>
+            <p>Configura los correos automáticos que se envían a clientes y empleados.</p>
+          </div>
+
+          <div class="config-section" data-section="workflows">
+            <h2><i class="fas fa-project-diagram" style="margin-right:10px;"></i> Reglas del flujo de trabajo</h2>
+            <p>Automatiza tareas con reglas personalizadas.</p>
+          </div>
+
+          <div class="config-section" data-section="facturas">
+            <h2><i class="fas fa-file-invoice" style="margin-right:10px;"></i> Facturas</h2>
+            <p>Configuración de facturación: formatos, campos, etc.</p>
+          </div>
+
+          <div class="config-section" data-section="pagos-recibidos">
+            <h2><i class="fas fa-hand-holding-usd" style="margin-right:10px;"></i> Pagos recibidos</h2>
+            <p>Gestiona la forma en que registras los pagos de clientes.</p>
+          </div>
+
+          <div class="config-section" data-section="ordenes-compra">
+            <h2><i class="fas fa-shopping-cart" style="margin-right:10px;"></i> Órdenes de compra</h2>
+            <p>Configura el proceso de compras a proveedores.</p>
+          </div>
+
+          <div class="config-section" data-section="zoho-apps">
+            <h2><i class="fas fa-cubes" style="margin-right:10px;"></i> Aplicaciones de Zoho</h2>
+            <p>Integra otras apps de Zoho como CRM, Projects, etc.</p>
+          </div>
+
+          <div class="config-section" data-section="whatsapp">
+            <h2><i class="fab fa-whatsapp" style="margin-right:10px;"></i> WhatsApp</h2>
+            <p>Conecta WhatsApp para enviar notificaciones a tus clientes.</p>
+          </div>
+
+          <div class="config-section" data-section="webhooks">
+            <h2><i class="fas fa-webhook" style="margin-right:10px;"></i> Webhooks entrantes</h2>
+            <p>Recibe eventos externos a través de webhooks.</p>
+          </div>
+
+          <div class="config-section" data-section="api">
+            <h2><i class="fas fa-code" style="margin-right:10px;"></i> Uso de API</h2>
+            <p>Consulta el uso y los límites de tu API de Zoho Books.</p>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 
-  <!-- ===== MODAL ===== -->
+  <!-- ==========================================================
+  MODAL (para reservas)
+  ========================================================== -->
   <div class="modal-overlay" id="modalReserva">
     <div class="modal">
       <h2>
@@ -438,27 +1140,27 @@
         <button class="modal-close" id="modalCloseBtn">&times;</button>
       </h2>
       <form id="reservaForm">
-        <input type="hidden" id="reservaId" value="">
+        <input type="hidden" id="reservaId" value="" />
         <div class="form-group">
           <label>Nombre del cliente *</label>
-          <input type="text" id="clienteNombre" placeholder="Ej: María González" required>
+          <input type="text" id="clienteNombre" placeholder="Ej: María González" required />
         </div>
         <div class="form-group">
           <label>Teléfono *</label>
-          <input type="tel" id="clienteTelefono" placeholder="7000-0000" required>
+          <input type="tel" id="clienteTelefono" placeholder="7000-0000" required />
         </div>
         <div class="form-group">
           <label>Correo electrónico</label>
-          <input type="email" id="clienteEmail" placeholder="cliente@correo.com">
+          <input type="email" id="clienteEmail" placeholder="cliente@correo.com" />
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Fecha *</label>
-            <input type="date" id="reservaFecha" required>
+            <input type="date" id="reservaFecha" required />
           </div>
           <div class="form-group">
             <label>Hora *</label>
-            <input type="time" id="reservaHora" required>
+            <input type="time" id="reservaHora" required />
           </div>
         </div>
         <div class="form-group">
@@ -490,9 +1192,12 @@
     </div>
   </div>
 
+  <!-- ==========================================================
+  SCRIPTS
+  ========================================================== -->
   <script>
     // ============================================
-    // 1. CONFIGURACIÓN DE FIREBASE
+    // 1. FIREBASE CONFIG (tu proyecto)
     // ============================================
     const firebaseConfig = {
       apiKey: "AIzaSyDpRltXZjEBjlq-4vKDlzL5Fgc5NcKr0_8",
@@ -507,7 +1212,7 @@
     const db = firebase.firestore();
 
     // ============================================
-    // 2. VERIFICAR SESIÓN Y CARGAR NOMBRE
+    // 2. SESSION Y NOMBRE DE USUARIO
     // ============================================
     let userName = 'Empleado';
     auth.onAuthStateChanged((user) => {
@@ -533,20 +1238,186 @@
     });
 
     // ============================================
-    // 3. CERRAR SESIÓN
+    // 3. LOGOUT
     // ============================================
     document.getElementById('logoutBtn').addEventListener('click', () => {
       auth.signOut().then(() => { window.location.href = 'login-empleados.html'; });
     });
 
     // ============================================
-    // 4. REFERENCIAS DOM
+    // 4. NAVEGACIÓN ENTRE VISTAS
+    // ============================================
+    const views = {
+      dashboard: document.getElementById('view-dashboard'),
+      reservas: document.getElementById('view-reservas'),
+      empleados: document.getElementById('view-empleados'),
+      config: document.getElementById('view-config')
+    };
+
+    // items principales
+    document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+      item.addEventListener('click', function(e) {
+        const view = this.dataset.view;
+        if (view === 'config') return; // lo manejamos con el toggle
+        showView(view);
+      });
+    });
+
+    // items de configuración (submenú)
+    document.querySelectorAll('.config-option').forEach(item => {
+      item.addEventListener('click', function(e) {
+        const section = this.dataset.section;
+        showView('config');
+        // Activar sección en el sidebar de configuración
+        document.querySelectorAll('.config-sidebar .config-item').forEach(el => el.classList.remove('active'));
+        const target = document.querySelector(`.config-sidebar .config-item[data-section="${section}"]`);
+        if (target) target.classList.add('active');
+        // Mostrar contenido
+        document.querySelectorAll('.config-content .config-section').forEach(el => el.classList.remove('active'));
+        const contentSection = document.querySelector(`.config-content .config-section[data-section="${section}"]`);
+        if (contentSection) contentSection.classList.add('active');
+        // Cerrar submenú en móvil si está abierto
+        if (window.innerWidth <= 768) {
+          document.getElementById('configSubMenu').classList.remove('open');
+        }
+      });
+    });
+
+    // Toggle del submenú de configuración
+    document.getElementById('configToggle').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const sub = document.getElementById('configSubMenu');
+      const chevron = document.getElementById('configChevron');
+      sub.classList.toggle('open');
+      chevron.classList.toggle('open');
+    });
+
+    // Cerrar configuración
+    document.getElementById('closeConfig').addEventListener('click', function() {
+      showView('dashboard');
+      // Cerrar submenú
+      document.getElementById('configSubMenu').classList.remove('open');
+      document.getElementById('configChevron').classList.remove('open');
+    });
+
+    function showView(viewName) {
+      // Ocultar todas
+      Object.keys(views).forEach(key => {
+        views[key].style.display = 'none';
+      });
+      // Mostrar la seleccionada
+      if (views[viewName]) {
+        views[viewName].style.display = 'block';
+      }
+      // Actualizar clase active en sidebar
+      document.querySelectorAll('.nav-item[data-view]').forEach(el => {
+        el.classList.remove('active');
+      });
+      const activeItem = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+      if (activeItem) activeItem.classList.add('active');
+      // Si es config, activar el primer item del sidebar de configuración
+      if (viewName === 'config') {
+        const firstConfigItem = document.querySelector('.config-sidebar .config-item');
+        if (firstConfigItem) {
+          firstConfigItem.click();
+        }
+      }
+    }
+
+    // Por defecto mostrar dashboard
+    showView('dashboard');
+
+    // ============================================
+    // 5. TEMA OSCURO/CLARO
+    // ============================================
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Cargar preferencia guardada
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-theme');
+    }
+
+    themeToggle.addEventListener('click', function() {
+      body.classList.toggle('dark-theme');
+      const isDark = body.classList.contains('dark-theme');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ============================================
+    // 6. LÓGICA DE RESERVAS (compartida)
     // ============================================
     const tbody = document.getElementById('reservasBody');
+    const tbody2 = document.getElementById('reservasBody2');
     const totalReservas = document.getElementById('totalReservas');
     const reservasHoy = document.getElementById('reservasHoy');
     const reservasPendientes = document.getElementById('reservasPendientes');
 
+    let unsubscribe = null;
+
+    function renderizarTabla(reservas, tbodyElement) {
+      if (!reservas || reservas.length === 0) {
+        tbodyElement.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No hay reservas registradas</td></tr>';
+        return;
+      }
+      let html = '';
+      reservas.forEach((r) => {
+        const estadoClass = r.estado === 'Pendiente' ? 'badge-pendiente' :
+                            r.estado === 'Confirmada' ? 'badge-confirmada' : 'badge-cancelada';
+        html += `
+          <tr>
+            <td><strong>${r.cliente}</strong>${r.email ? `<br><small style="color:var(--text-muted);">${r.email}</small>` : ''}</td>
+            <td>${r.telefono}</td>
+            <td>${r.fecha}</td>
+            <td>${r.hora}</td>
+            <td>${r.paquete}</td>
+            <td><span class="badge-status ${estadoClass}">${r.estado}</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-edit" onclick="editarReserva('${r.id}')" style="padding:4px 12px; font-size:12px;"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger" onclick="eliminarReserva('${r.id}')" style="padding:4px 12px; font-size:12px;"><i class="fas fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      tbodyElement.innerHTML = html;
+    }
+
+    function actualizarEstadisticas(reservas) {
+      const total = reservas.length;
+      const hoy = new Date().toISOString().slice(0, 10);
+      const hoyCount = reservas.filter(r => r.fecha === hoy).length;
+      const pendientes = reservas.filter(r => r.estado === 'Pendiente').length;
+      totalReservas.textContent = total;
+      reservasHoy.textContent = hoyCount;
+      reservasPendientes.textContent = pendientes;
+    }
+
+    function iniciarEscuchaReservas() {
+      if (unsubscribe) unsubscribe();
+      unsubscribe = db.collection('reservas')
+        .onSnapshot((snapshot) => {
+          const reservas = [];
+          snapshot.forEach((doc) => {
+            reservas.push({ id: doc.id, ...doc.data() });
+          });
+          reservas.sort((a, b) => {
+            if (a.fecha !== b.fecha) return b.fecha.localeCompare(a.fecha);
+            return b.hora.localeCompare(a.hora);
+          });
+          renderizarTabla(reservas, tbody);
+          renderizarTabla(reservas, tbody2);
+          actualizarEstadisticas(reservas);
+        }, (error) => {
+          console.error('Error al escuchar reservas:', error);
+          const msg = '<tr><td colspan="7" style="text-align:center; color:#b91c1c; padding:30px;">Error al cargar reservas. Verifica tu conexión.</td></tr>';
+          tbody.innerHTML = msg;
+          tbody2.innerHTML = msg;
+        });
+    }
+
+    // CRUD
     const modal = document.getElementById('modalReserva');
     const modalTitle = document.getElementById('modalTitle');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
@@ -562,106 +1433,46 @@
     const reservaPaquete = document.getElementById('reservaPaquete');
     const reservaEstado = document.getElementById('reservaEstado');
     const reservaComentarios = document.getElementById('reservaComentarios');
-
     let editandoId = null;
-    let unsubscribe = null;
 
-    // ============================================
-    // 5. ESCUCHA EN TIEMPO REAL (sin orderBy para evitar índices)
-    // ============================================
-    function iniciarEscuchaReservas() {
-      if (unsubscribe) unsubscribe();
-      unsubscribe = db.collection('reservas')
-        .onSnapshot((snapshot) => {
-          const reservas = [];
-          snapshot.forEach((doc) => {
-            reservas.push({ id: doc.id, ...doc.data() });
-          });
-          // Ordenar manualmente por fecha y hora descendente
-          reservas.sort((a, b) => {
-            if (a.fecha !== b.fecha) return b.fecha.localeCompare(a.fecha);
-            return b.hora.localeCompare(a.hora);
-          });
-          renderizarTabla(reservas);
-          actualizarEstadisticas(reservas);
-        }, (error) => {
-          console.error('Error al escuchar reservas:', error);
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#b91c1c; padding:30px;">Error al cargar reservas. Verifica tu conexión.</td></tr>';
-        });
-    }
-
-    function renderizarTabla(reservas) {
-      if (!reservas || reservas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#8a94a6; padding:30px;">No hay reservas registradas</td></tr>';
-        return;
+    function abrirModal(titulo, btnTexto, data = null) {
+      if (data) {
+        editandoId = data.id;
+        reservaId.value = data.id;
+        clienteNombre.value = data.cliente || '';
+        clienteTelefono.value = data.telefono || '';
+        clienteEmail.value = data.email || '';
+        reservaFecha.value = data.fecha || '';
+        reservaHora.value = data.hora || '';
+        reservaPaquete.value = data.paquete || 'Básico';
+        reservaEstado.value = data.estado || 'Pendiente';
+        reservaComentarios.value = data.comentarios || '';
+      } else {
+        editandoId = null;
+        reservaId.value = '';
+        reservaForm.reset();
+        const hoy = new Date().toISOString().slice(0, 10);
+        reservaFecha.value = hoy;
+        reservaEstado.value = 'Pendiente';
       }
-      let html = '';
-      reservas.forEach((r) => {
-        const estadoClass = r.estado === 'Pendiente' ? 'badge-pendiente' :
-                            r.estado === 'Confirmada' ? 'badge-confirmada' : 'badge-cancelada';
-        html += `
-          <tr>
-            <td><strong>${r.cliente}</strong>${r.email ? `<br><small style="color:#8a94a6;">${r.email}</small>` : ''}</td>
-            <td>${r.telefono}</td>
-            <td>${r.fecha}</td>
-            <td>${r.hora}</td>
-            <td>${r.paquete}</td>
-            <td><span class="badge-status ${estadoClass}">${r.estado}</span></td>
-            <td>
-              <div class="actions-cell">
-                <button class="btn btn-edit" onclick="editarReserva('${r.id}')" style="padding:4px 12px; font-size:12px;">✎ Editar</button>
-                <button class="btn btn-danger" onclick="eliminarReserva('${r.id}')" style="padding:4px 12px; font-size:12px;">✕ Eliminar</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      });
-      tbody.innerHTML = html;
-    }
-
-    function actualizarEstadisticas(reservas) {
-      const total = reservas.length;
-      const hoy = new Date().toISOString().slice(0,10);
-      const hoyCount = reservas.filter(r => r.fecha === hoy).length;
-      const pendientes = reservas.filter(r => r.estado === 'Pendiente').length;
-      totalReservas.textContent = total;
-      reservasHoy.textContent = hoyCount;
-      reservasPendientes.textContent = pendientes;
-    }
-
-    // ============================================
-    // 6. CRUD: CREAR, EDITAR, ELIMINAR
-    // ============================================
-    document.getElementById('btnNuevaReserva').addEventListener('click', () => {
-      editandoId = null;
-      modalTitle.textContent = 'Nueva Reserva';
-      modalSubmitBtn.textContent = 'Guardar reserva';
-      reservaForm.reset();
-      reservaId.value = '';
-      const hoy = new Date().toISOString().slice(0,10);
-      reservaFecha.value = hoy;
-      reservaEstado.value = 'Pendiente';
+      modalTitle.textContent = titulo;
+      modalSubmitBtn.textContent = btnTexto;
       modal.classList.add('active');
-    });
+    }
+
+    function cerrarModal() {
+      modal.classList.remove('active');
+    }
+
+    document.getElementById('btnNuevaReserva').addEventListener('click', () => abrirModal('Nueva Reserva', 'Guardar reserva'));
+    document.getElementById('btnNuevaReserva2').addEventListener('click', () => abrirModal('Nueva Reserva', 'Guardar reserva'));
 
     window.editarReserva = function(id) {
       db.collection('reservas').doc(id).get()
         .then((doc) => {
           if (!doc.exists) return;
           const r = doc.data();
-          editandoId = id;
-          modalTitle.textContent = 'Editar Reserva';
-          modalSubmitBtn.textContent = 'Actualizar reserva';
-          reservaId.value = id;
-          clienteNombre.value = r.cliente || '';
-          clienteTelefono.value = r.telefono || '';
-          clienteEmail.value = r.email || '';
-          reservaFecha.value = r.fecha || '';
-          reservaHora.value = r.hora || '';
-          reservaPaquete.value = r.paquete || 'Básico';
-          reservaEstado.value = r.estado || 'Pendiente';
-          reservaComentarios.value = r.comentarios || '';
-          modal.classList.add('active');
+          abrirModal('Editar Reserva', 'Actualizar reserva', { id, ...r });
         })
         .catch((err) => alert('Error al cargar la reserva: ' + err.message));
     };
@@ -672,9 +1483,6 @@
         .catch((err) => alert('Error al eliminar: ' + err.message));
     };
 
-    // ============================================
-    // 7. GUARDAR RESERVA (CREAR O EDITAR)
-    // ============================================
     reservaForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const cliente = clienteNombre.value.trim();
@@ -695,47 +1503,70 @@
 
       if (editandoId) {
         db.collection('reservas').doc(editandoId).update(data)
-          .then(() => cerrarModal())
+          .then(cerrarModal)
           .catch((err) => alert('Error al actualizar: ' + err.message));
       } else {
         db.collection('reservas').add({
           ...data,
           creado: firebase.firestore.FieldValue.serverTimestamp()
         })
-        .then(() => cerrarModal())
+        .then(cerrarModal)
         .catch((err) => alert('Error al crear: ' + err.message));
       }
     });
 
-    // ============================================
-    // 8. CERRAR MODAL
-    // ============================================
-    function cerrarModal() {
-      modal.classList.remove('active');
-    }
     modalCloseBtn.addEventListener('click', cerrarModal);
     modalCancelBtn.addEventListener('click', cerrarModal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) cerrarModal();
     });
 
-    // ============================================
-    // 9. FILTRO: MOSTRAR TODAS
-    // ============================================
     document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
       if (unsubscribe) {
         unsubscribe();
         iniciarEscuchaReservas();
       }
     });
+    document.getElementById('btnLimpiarFiltros2').addEventListener('click', () => {
+      if (unsubscribe) {
+        unsubscribe();
+        iniciarEscuchaReservas();
+      }
+    });
 
-    // ============================================
-    // 10. INICIALIZAR
-    // ============================================
+    // Iniciar escucha
     auth.onAuthStateChanged((user) => {
       if (user) {
         iniciarEscuchaReservas();
       }
+    });
+
+    // ============================================
+    // 7. FILTRO DE BÚSQUEDA EN CONFIGURACIÓN
+    // ============================================
+    document.getElementById('configSearch').addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      document.querySelectorAll('.config-sidebar .config-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+
+    // Click en items del sidebar de configuración
+    document.querySelectorAll('.config-sidebar .config-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        document.querySelectorAll('.config-sidebar .config-item').forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.config-content .config-section').forEach(el => el.classList.remove('active'));
+        const contentSection = document.querySelector(`.config-content .config-section[data-section="${section}"]`);
+        if (contentSection) contentSection.classList.add('active');
+      });
     });
   </script>
 </body>
