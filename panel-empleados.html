@@ -6,10 +6,11 @@
   <title>Panel de Empleados · Heliot Media</title>
   <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'/>
   <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ============================================
-       ESTILOS GENERALES (igual que el sitio)
-       ============================================ */
     :root {
       --primary-color: #00406e;
       --secondary-color: #FFD700;
@@ -36,7 +37,7 @@
       padding: 0 15px;
     }
 
-    /* ===== HEADER DEL PANEL ===== */
+    /* HEADER */
     .panel-header {
       display: flex;
       justify-content: space-between;
@@ -90,7 +91,7 @@
       transform: translateY(-2px);
     }
 
-    /* ===== ESTADÍSTICAS ===== */
+    /* ESTADÍSTICAS */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -115,7 +116,7 @@
       margin-top: 4px;
     }
 
-    /* ===== BARRA DE ACCIONES ===== */
+    /* ACCIONES */
     .actions-bar {
       display: flex;
       flex-wrap: wrap;
@@ -185,7 +186,7 @@
       background: #1e5a3a;
     }
 
-    /* ===== TABLA DE RESERVAS ===== */
+    /* TABLA */
     .table-wrapper {
       background: white;
       border-radius: 16px;
@@ -229,7 +230,7 @@
     .badge-confirmada { background: #d4edda; color: #155724; }
     .badge-cancelada { background: #f8d7da; color: #721c24; }
 
-    /* ===== MODAL (para crear/editar) ===== */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -244,9 +245,7 @@
       z-index: 9999;
       padding: 20px;
     }
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
     .modal {
       background: white;
       max-width: 540px;
@@ -333,7 +332,6 @@
       background: #d5dce6;
     }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .panel-header { flex-direction: column; align-items: stretch; text-align: center; }
       .panel-header .user-info { justify-content: center; }
@@ -387,7 +385,7 @@
       <button class="btn-secondary" id="btnLimpiarFiltros">🔄 Mostrar todas</button>
     </div>
 
-    <!-- TABLA DE RESERVAS -->
+    <!-- TABLA -->
     <div class="table-wrapper">
       <table>
         <thead>
@@ -402,14 +400,14 @@
           </tr>
         </thead>
         <tbody id="reservasBody">
-          <tr><td colspan="7" style="text-align:center; color:#8a9aa8; padding:30px;">No hay reservas registradas</td></tr>
+          <tr><td colspan="7" style="text-align:center; color:#8a9aa8; padding:30px;">Cargando reservas...</td></tr>
         </tbody>
       </table>
     </div>
 
   </div>
 
-  <!-- ===== MODAL PARA CREAR/EDITAR RESERVA ===== -->
+  <!-- MODAL -->
   <div class="modal-overlay" id="modalReserva">
     <div class="modal">
       <h2>
@@ -473,52 +471,64 @@
 
   <script>
     // ============================================
-    // SISTEMA DE RESERVAS CON LOCALSTORAGE
+    // 1. CONFIGURACIÓN DE FIREBASE (TU PROYECTO)
     // ============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDpRltXZjEBjlq-4vKDlzL5Fgc5NcKr0_8",
+      authDomain: "heliotmediaadmin.firebaseapp.com",
+      projectId: "heliotmediaadmin",
+      storageBucket: "heliotmediaadmin.firebasestorage.app",
+      messagingSenderId: "137792880519",
+      appId: "1:137792880519:web:8bf42511db838241eddd22"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    const RESERVAS_KEY = 'heliot_reservas';
-    const SESSION_KEY = 'heliot_empleado_sesion';
+    // ============================================
+    // 2. VERIFICAR SESIÓN
+    // ============================================
+    let userEmail = '';
+    let userName = '';
 
-    // ----- Utilidades -----
-    function getReservas() {
-      try {
-        return JSON.parse(localStorage.getItem(RESERVAS_KEY)) || [];
-      } catch { return []; }
-    }
-    function saveReservas(reservas) {
-      localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservas));
-    }
-
-    // ----- Verificar sesión -----
-    function getSession() {
-      try {
-        return JSON.parse(localStorage.getItem(SESSION_KEY));
-      } catch { return null; }
-    }
-    const session = getSession();
-    if (!session) {
-      // No hay sesión, redirigir al login
-      window.location.href = 'login-empleados.html';
-    }
-    document.getElementById('userName').textContent = session.name || 'Empleado';
-
-    // ----- Cerrar sesión -----
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem(SESSION_KEY);
-      window.location.href = 'login-empleados.html';
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = 'login-empleados.html';
+        return;
+      }
+      userEmail = user.email;
+      db.collection('users').doc(user.uid).get()
+        .then((doc) => {
+          if (doc.exists) {
+            userName = doc.data().name || 'Empleado';
+          } else {
+            userName = userEmail.split('@')[0] || 'Empleado';
+          }
+          document.getElementById('userName').textContent = userName;
+        })
+        .catch(() => {
+          userName = userEmail.split('@')[0] || 'Empleado';
+          document.getElementById('userName').textContent = userName;
+        });
     });
 
-    // ----- Variables globales -----
-    let reservas = getReservas();
-    let editandoId = null;
+    // ============================================
+    // 3. CERRAR SESIÓN
+    // ============================================
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login-empleados.html';
+      });
+    });
 
-    // ----- Referencias DOM -----
+    // ============================================
+    // 4. VARIABLES Y REFERENCIAS
+    // ============================================
     const tbody = document.getElementById('reservasBody');
     const totalReservas = document.getElementById('totalReservas');
     const reservasHoy = document.getElementById('reservasHoy');
     const reservasPendientes = document.getElementById('reservasPendientes');
 
-    // Modal
     const modal = document.getElementById('modalReserva');
     const modalTitle = document.getElementById('modalTitle');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
@@ -535,17 +545,37 @@
     const reservaEstado = document.getElementById('reservaEstado');
     const reservaComentarios = document.getElementById('reservaComentarios');
 
-    // ----- Renderizar tabla -----
-    function renderReservas(lista) {
-      if (!lista) lista = reservas;
-      if (lista.length === 0) {
+    let editandoId = null;
+    let unsubscribe = null;
+
+    // ============================================
+    // 5. FUNCIÓN: RENDERIZAR RESERVAS (en tiempo real)
+    // ============================================
+    function iniciarEscuchaReservas() {
+      if (unsubscribe) unsubscribe();
+      unsubscribe = db.collection('reservas')
+        .orderBy('fecha', 'desc')
+        .orderBy('hora', 'desc')
+        .onSnapshot((snapshot) => {
+          const reservas = [];
+          snapshot.forEach((doc) => {
+            reservas.push({ id: doc.id, ...doc.data() });
+          });
+          renderizarTabla(reservas);
+          actualizarEstadisticas(reservas);
+        }, (error) => {
+          console.error('Error al escuchar reservas:', error);
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#c62828; padding:30px;">Error al cargar reservas. Verifica tu conexión.</td></tr>';
+        });
+    }
+
+    function renderizarTabla(reservas) {
+      if (!reservas || reservas.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#8a9aa8; padding:30px;">No hay reservas registradas</td></tr>';
         return;
       }
-      // Ordenar por fecha más reciente
-      const sorted = [...lista].sort((a, b) => new Date(b.fecha + 'T' + b.hora) - new Date(a.fecha + 'T' + a.hora));
       let html = '';
-      sorted.forEach((r, index) => {
+      reservas.forEach((r) => {
         const estadoClass = r.estado === 'Pendiente' ? 'badge-pendiente' :
                             r.estado === 'Confirmada' ? 'badge-confirmada' : 'badge-cancelada';
         html += `
@@ -566,11 +596,9 @@
         `;
       });
       tbody.innerHTML = html;
-      actualizarEstadisticas();
     }
 
-    // ----- Actualizar estadísticas -----
-    function actualizarEstadisticas() {
+    function actualizarEstadisticas(reservas) {
       const total = reservas.length;
       const hoy = new Date().toISOString().slice(0,10);
       const hoyCount = reservas.filter(r => r.fecha === hoy).length;
@@ -580,63 +608,53 @@
       reservasPendientes.textContent = pendientes;
     }
 
-    // ----- Generar ID único -----
-    function generarId() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    }
+    // ============================================
+    // 6. CRUD: CREAR, EDITAR, ELIMINAR
+    // ============================================
 
-    // ----- Abrir modal para nueva reserva -----
     document.getElementById('btnNuevaReserva').addEventListener('click', () => {
       editandoId = null;
       modalTitle.textContent = 'Nueva Reserva';
       modalSubmitBtn.textContent = 'Guardar reserva';
       reservaForm.reset();
       reservaId.value = '';
-      // Fecha por defecto: hoy
       const hoy = new Date().toISOString().slice(0,10);
       reservaFecha.value = hoy;
       reservaEstado.value = 'Pendiente';
       modal.classList.add('active');
     });
 
-    // ----- Editar reserva -----
     window.editarReserva = function(id) {
-      const r = reservas.find(res => res.id === id);
-      if (!r) return;
-      editandoId = id;
-      modalTitle.textContent = 'Editar Reserva';
-      modalSubmitBtn.textContent = 'Actualizar reserva';
-      reservaId.value = r.id;
-      clienteNombre.value = r.cliente;
-      clienteTelefono.value = r.telefono;
-      clienteEmail.value = r.email || '';
-      reservaFecha.value = r.fecha;
-      reservaHora.value = r.hora;
-      reservaPaquete.value = r.paquete;
-      reservaEstado.value = r.estado;
-      reservaComentarios.value = r.comentarios || '';
-      modal.classList.add('active');
+      db.collection('reservas').doc(id).get()
+        .then((doc) => {
+          if (!doc.exists) return;
+          const r = doc.data();
+          editandoId = id;
+          modalTitle.textContent = 'Editar Reserva';
+          modalSubmitBtn.textContent = 'Actualizar reserva';
+          reservaId.value = id;
+          clienteNombre.value = r.cliente || '';
+          clienteTelefono.value = r.telefono || '';
+          clienteEmail.value = r.email || '';
+          reservaFecha.value = r.fecha || '';
+          reservaHora.value = r.hora || '';
+          reservaPaquete.value = r.paquete || 'Básico';
+          reservaEstado.value = r.estado || 'Pendiente';
+          reservaComentarios.value = r.comentarios || '';
+          modal.classList.add('active');
+        })
+        .catch((err) => alert('Error al cargar la reserva: ' + err.message));
     };
 
-    // ----- Eliminar reserva -----
     window.eliminarReserva = function(id) {
       if (!confirm('¿Eliminar esta reserva permanentemente?')) return;
-      reservas = reservas.filter(r => r.id !== id);
-      saveReservas(reservas);
-      renderReservas();
+      db.collection('reservas').doc(id).delete()
+        .catch((err) => alert('Error al eliminar: ' + err.message));
     };
 
-    // ----- Cerrar modal -----
-    function cerrarModal() {
-      modal.classList.remove('active');
-    }
-    modalCloseBtn.addEventListener('click', cerrarModal);
-    modalCancelBtn.addEventListener('click', cerrarModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) cerrarModal();
-    });
-
-    // ----- Guardar reserva (crear o editar) -----
+    // ============================================
+    // 7. GUARDAR RESERVA (CREAR O EDITAR)
+    // ============================================
     reservaForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const cliente = clienteNombre.value.trim();
@@ -653,51 +671,52 @@
         return;
       }
 
+      const data = { cliente, telefono, email, fecha, hora, paquete, estado, comentarios };
+
       if (editandoId) {
-        // Editar
-        const index = reservas.findIndex(r => r.id === editandoId);
-        if (index !== -1) {
-          reservas[index] = {
-            ...reservas[index],
-            cliente,
-            telefono,
-            email,
-            fecha,
-            hora,
-            paquete,
-            estado,
-            comentarios
-          };
-        }
+        db.collection('reservas').doc(editandoId).update(data)
+          .then(() => cerrarModal())
+          .catch((err) => alert('Error al actualizar: ' + err.message));
       } else {
-        // Nueva
-        const nueva = {
-          id: generarId(),
-          cliente,
-          telefono,
-          email,
-          fecha,
-          hora,
-          paquete,
-          estado,
-          comentarios,
-          creado: new Date().toISOString()
-        };
-        reservas.push(nueva);
+        db.collection('reservas').add({
+          ...data,
+          creado: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => cerrarModal())
+        .catch((err) => alert('Error al crear: ' + err.message));
       }
-
-      saveReservas(reservas);
-      renderReservas();
-      cerrarModal();
     });
 
-    // ----- Filtro: mostrar todas -----
+    // ============================================
+    // 8. CERRAR MODAL
+    // ============================================
+    function cerrarModal() {
+      modal.classList.remove('active');
+    }
+    modalCloseBtn.addEventListener('click', cerrarModal);
+    modalCancelBtn.addEventListener('click', cerrarModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) cerrarModal();
+    });
+
+    // ============================================
+    // 9. FILTRO: MOSTRAR TODAS
+    // ============================================
     document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
-      renderReservas();
+      if (unsubscribe) {
+        unsubscribe();
+        iniciarEscuchaReservas();
+      }
     });
 
-    // ----- Inicializar -----
-    renderReservas();
+    // ============================================
+    // 10. INICIALIZAR
+    // ============================================
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        iniciarEscuchaReservas();
+      }
+    });
   </script>
 </body>
 </html>
