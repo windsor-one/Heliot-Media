@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso Empleados · Heliot Media</title>
+  <link href='https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'/>
+  <link href='https://use.typekit.net/yyi3lii.css' rel='stylesheet'/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Kumbh Sans', sans-serif;
+      background: #F5F7FA;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-container {
+      max-width: 420px;
+      width: 100%;
+      background: white;
+      border-radius: 28px;
+      padding: 40px 35px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border: 1px solid #eaedf2;
+    }
+    .login-container h1 {
+      font-family: 'semplicitapro', 'Playfair Display', serif;
+      font-size: 28px;
+      color: #00406e;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .login-container .sub {
+      text-align: center;
+      color: #5a6c7d;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e2a3e;
+      margin-bottom: 4px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #eaedf2;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: 0.2s;
+      background: #f8fafc;
+    }
+    .form-group input:focus {
+      border-color: #00406e;
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0,64,110,0.08);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: #00406e;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover {
+      background: #00345a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,64,110,0.25);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: none;
+      color: #00406e;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px;
+      text-decoration: underline;
+    }
+    .toggle-link {
+      text-align: center;
+      margin-top: 16px;
+    }
+    .toggle-link span {
+      color: #5a6c7d;
+    }
+    .toggle-link button {
+      background: none;
+      border: none;
+      color: #00406e;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: underline;
+    }
+    .error-msg {
+      background: #fed7d7;
+      color: #c62828;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .success-msg {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .logo-area {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-area img {
+      height: 50px;
+      width: auto;
+    }
+    .separator {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0 18px;
+      color: #8a9aa8;
+      font-size: 12px;
+    }
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eaedf2;
+    }
+    .empleado-code-hint {
+      font-size: 12px;
+      color: #8a9aa8;
+      margin-top: 4px;
+    }
+    @media (max-width: 480px) {
+      .login-container { padding: 30px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-area">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgjN90ubujO6aF76PMuNTY7el1YR7BDF-CsXglaMEAB_FSzryOks4Zflmnn0fZlXBulUQtp64A5ZJt8IalatFXCNNV2K-qI09uqllYLvcsA_maBOKJ8pggVjMz4OMdG8HZTr2Lyj0dJlThvA37O3PN1IF9BYtaQigzIOVnh9Jovq5FY26YVU_uwK0p0nMuw" alt="Heliot Media" style="height:50px;">
+    </div>
+    <h1>Área de Empleados</h1>
+    <p class="sub" id="formSub">Accede para gestionar reservas</p>
+
+    <div id="errorMsg" class="error-msg"></div>
+    <div id="successMsg" class="success-msg"></div>
+
+    <!-- Login -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="empleado@heliot.com" required>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-primary">Iniciar sesión</button>
+    </form>
+
+    <div class="separator">o</div>
+
+    <!-- Registro -->
+    <form id="registerForm" style="display:none;">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="registerEmail" placeholder="empleado@heliot.com" required>
+      </div>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="registerName" placeholder="Tu nombre" required>
+      </div>
+      <div class="form-group">
+        <label>Contraseña (mínimo 6 caracteres)</label>
+        <input type="password" id="registerPassword" placeholder="••••••••" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label>Código de empleado</label>
+        <input type="text" id="registerCode" placeholder="Código secreto" required>
+        <div class="empleado-code-hint">Pide el código a tu supervisor.</div>
+      </div>
+      <button type="submit" class="btn-primary">Registrarse</button>
+    </form>
+
+    <div class="toggle-link">
+      <span id="toggleText">¿No tienes cuenta? </span>
+      <button id="toggleBtn">Regístrate</button>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // SISTEMA DE AUTENTICACIÓN CON LOCALSTORAGE
+    // ============================================
+
+    // Claves para localStorage
+    const USERS_KEY = 'heliot_empleados_usuarios';
+    const SESSION_KEY = 'heliot_empleado_sesion';
+
+    // Código de empleado fijo (cámbialo si quieres)
+    const EMPLOYEE_CODE = 'HELIOT2026';
+
+    // ----- Utilidades -----
+    function getUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+      } catch { return []; }
+    }
+    function saveUsers(users) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+      } catch { return null; }
+    }
+    function saveSession(user) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    }
+    function clearSession() {
+      localStorage.removeItem(SESSION_KEY);
+    }
+
+    // Si ya hay sesión activa, redirigir al panel
+    if (getSession()) {
+      window.location.href = 'panel-empleados.html';
+    }
+
+    // ----- Elementos DOM -----
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleText = document.getElementById('toggleText');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const formSub = document.getElementById('formSub');
+
+    let isLogin = true;
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
+    }
+    function showSuccess(msg) {
+      successMsg.textContent = msg;
+      successMsg.style.display = 'block';
+      errorMsg.style.display = 'none';
+    }
+    function hideMessages() {
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+    }
+
+    // ----- Toggle entre Login y Registro -----
+    toggleBtn.addEventListener('click', () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        toggleBtn.textContent = 'Regístrate';
+        toggleText.textContent = '¿No tienes cuenta? ';
+        formSub.textContent = 'Accede para gestionar reservas';
+        hideMessages();
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        toggleBtn.textContent = 'Inicia sesión';
+        toggleText.textContent = '¿Ya tienes cuenta? ';
+        formSub.textContent = 'Crea tu cuenta de empleado';
+        hideMessages();
+      }
+    });
+
+    // ----- Login -----
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) {
+        showError('Completa todos los campos.');
+        return;
+      }
+      const users = getUsers();
+      const found = users.find(u => u.email === email && u.password === password);
+      if (!found) {
+        showError('Correo o contraseña incorrectos.');
+        return;
+      }
+      // Iniciar sesión
+      saveSession({ email: found.email, name: found.name });
+      window.location.href = 'panel-empleados.html';
+    });
+
+    // ----- Registro -----
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('registerEmail').value.trim();
+      const name = document.getElementById('registerName').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const code = document.getElementById('registerCode').value.trim();
+
+      if (!email || !name || !password || !code) {
+        showError('Completa todos los campos.');
+        return;
+      }
+      if (code !== EMPLOYEE_CODE) {
+        showError('Código de empleado incorrecto.');
+        return;
+      }
+      if (password.length < 6) {
+        showError('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+      const users = getUsers();
+      if (users.some(u => u.email === email)) {
+        showError('Este correo ya está registrado.');
+        return;
+      }
+      // Guardar nuevo empleado
+      users.push({ email, name, password });
+      saveUsers(users);
+      showSuccess('¡Cuenta creada! Ahora inicia sesión.');
+      // Autocompletar login
+      setTimeout(() => {
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = password;
+        isLogin = true;
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        toggleBtn.textContent = 'Regístrate';
+        toggleText.textContent = '¿No tienes cuenta? ';
+        formSub.textContent = 'Accede para gestionar reservas';
+        hideMessages();
+      }, 1200);
+    });
+  </script>
+</body>
+</html>
