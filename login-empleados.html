@@ -10,7 +10,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* (mismo estilo que antes) */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Inter', sans-serif;
@@ -110,32 +109,52 @@
   const formSub = document.getElementById('formSub');
   let isLogin = true;
 
-  function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; successMsg.style.display = 'none'; }
-  function showSuccess(msg) { successMsg.textContent = msg; successMsg.style.display = 'block'; errorMsg.style.display = 'none'; }
-  function hideMessages() { errorMsg.style.display = 'none'; successMsg.style.display = 'none'; }
+  function showError(msg) { 
+    errorMsg.textContent = msg; 
+    errorMsg.style.display = 'block'; 
+    successMsg.style.display = 'none'; 
+  }
+  function showSuccess(msg) { 
+    successMsg.textContent = msg; 
+    successMsg.style.display = 'block'; 
+    errorMsg.style.display = 'none'; 
+  }
+  function hideMessages() { 
+    errorMsg.style.display = 'none'; 
+    successMsg.style.display = 'none'; 
+  }
 
   toggleBtn.addEventListener('click', () => {
     isLogin = !isLogin;
     if (isLogin) {
-      loginForm.style.display = 'block'; registerForm.style.display = 'none';
-      toggleBtn.textContent = 'Regístrate'; toggleText.textContent = '¿No tienes cuenta? ';
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      toggleBtn.textContent = 'Regístrate';
+      toggleText.textContent = '¿No tienes cuenta? ';
       formSub.textContent = 'Accede para gestionar reservas';
     } else {
-      loginForm.style.display = 'none'; registerForm.style.display = 'block';
-      toggleBtn.textContent = 'Inicia sesión'; toggleText.textContent = '¿Ya tienes cuenta? ';
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      toggleBtn.textContent = 'Inicia sesión';
+      toggleText.textContent = '¿Ya tienes cuenta? ';
       formSub.textContent = 'Crea tu cuenta de empleado';
     }
     hideMessages();
   });
 
-  // Login
+  // ============================================================
+  // LOGIN
+  // ============================================================
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     if (!email || !password) { showError('Completa todos los campos.'); return; }
+    
     auth.signInWithEmailAndPassword(email, password)
-      .then(() => { window.location.href = 'panel-empleados.html'; })
+      .then(() => { 
+        window.location.href = 'panel-empleados.html'; 
+      })
       .catch((err) => {
         let msg = 'Error al iniciar sesión. Verifica tus credenciales.';
         if (err.code === 'auth/user-not-found') msg = 'Usuario no encontrado.';
@@ -146,43 +165,66 @@
       });
   });
 
-  // Registro
+  // ============================================================
+  // REGISTRO (CREACIÓN AUTOMÁTICA DE DOCUMENTO EN FIRESTORE)
+  // ============================================================
   registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('registerEmail').value.trim();
     const name = document.getElementById('registerName').value.trim();
     const password = document.getElementById('registerPassword').value;
     const code = document.getElementById('registerCode').value.trim();
-    if (!email || !name || !password || !code) { showError('Completa todos los campos.'); return; }
-    if (code !== EMPLOYEE_CODE) { showError('Código de empleado incorrecto.'); return; }
-    if (password.length < 6) { showError('La contraseña debe tener al menos 6 caracteres.'); return; }
+    
+    if (!email || !name || !password || !code) { 
+      showError('Completa todos los campos.'); 
+      return; 
+    }
+    if (code !== EMPLOYEE_CODE) { 
+      showError('Código de empleado incorrecto.'); 
+      return; 
+    }
+    if (password.length < 6) { 
+      showError('La contraseña debe tener al menos 6 caracteres.'); 
+      return; 
+    }
+    
+    // CREAR USUARIO EN AUTHENTICATION
     auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        console.log('✅ Usuario creado en Auth:', user.uid);
+        
+        // CREAR DOCUMENTO EN FIRESTORE CON EL MISMO UID
         return db.collection('users').doc(user.uid).set({
           email: email,
           name: name,
-          rol: 'Recepcionista', // rol por defecto
+          rol: 'Recepcionista', // Rol por defecto
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       })
       .then(() => {
-        showSuccess('¡Cuenta creada! Ahora inicia sesión.');
+        console.log('✅ Documento creado en Firestore automáticamente');
+        showSuccess('¡Cuenta creada exitosamente! Ahora inicia sesión.');
         setTimeout(() => {
+          // Autocompletar el login con los datos del nuevo usuario
           document.getElementById('loginEmail').value = email;
           document.getElementById('loginPassword').value = password;
-          isLogin = true;
-          loginForm.style.display = 'block'; registerForm.style.display = 'none';
-          toggleBtn.textContent = 'Regístrate'; toggleText.textContent = '¿No tienes cuenta? ';
+          // Cambiar a la vista de login
+          loginForm.style.display = 'block';
+          registerForm.style.display = 'none';
+          toggleBtn.textContent = 'Regístrate';
+          toggleText.textContent = '¿No tienes cuenta? ';
           formSub.textContent = 'Accede para gestionar reservas';
           hideMessages();
-        }, 1500);
+        }, 2000);
       })
       .catch((err) => {
+        console.error('❌ Error en registro:', err);
         let msg = 'Error al registrar.';
         if (err.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado.';
         else if (err.code === 'auth/invalid-email') msg = 'Correo inválido.';
         else if (err.code === 'auth/weak-password') msg = 'Contraseña demasiado débil.';
+        else if (err.code === 'permission-denied') msg = 'Error de permisos en Firestore. Verifica las reglas de seguridad.';
         showError(msg);
       });
   });
