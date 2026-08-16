@@ -538,7 +538,10 @@
   let currentUserRol = 'Recepcionista';
 
   auth.onAuthStateChanged(async (user) => {
-    if (!user) { window.location.href = 'login-empleados.html'; return; }
+    if (!user) { 
+      window.location.href = 'login-empleados.html'; 
+      return; 
+    }
     currentUser = user;
     try {
       const doc = await db.collection('users').doc(user.uid).get();
@@ -550,16 +553,23 @@
       document.getElementById('userEmail').textContent = email;
       document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
 
-      if (currentUserRol !== 'Admin') {
+      // Si es ADMIN: muestra todo
+      if (currentUserRol === 'Admin') {
+        document.getElementById('navEmpleados').style.display = 'block';
+        document.getElementById('btnInvitarEmpleado').style.display = 'block';
+        document.querySelector('[data-section="usuarios-roles"]').style.display = 'block';
+        cargarEmpleados();
+      } else {
+        // Si es RECEPCIONISTA: oculta opciones de admin
         document.getElementById('navEmpleados').style.display = 'none';
         document.getElementById('btnInvitarEmpleado').style.display = 'none';
         document.querySelector('[data-section="usuarios-roles"]').style.display = 'none';
       }
 
       cargarConfiguracion();
-      if (currentUserRol === 'Admin') cargarEmpleados();
       iniciarEscuchaReservas();
     } catch (err) {
+      console.error('Error al cargar perfil:', err);
       showToast('Error al cargar perfil: ' + err.message, 'error');
     }
   });
@@ -682,7 +692,7 @@
       if (data.notificationEmail) document.getElementById('notificationEmail').value = data.notificationEmail;
       renderTaxes(data.taxes || []);
     } catch (e) {
-      showToast('Error cargando configuración: ' + e.message, 'error');
+      console.warn('Error cargando configuración:', e);
     }
   }
 
