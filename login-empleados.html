@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Acceso Empleados · Heliot Media</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -40,7 +39,6 @@
     .btn-primary { width:100%; padding:12px; background:#066CFF; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:0.2s; font-family:'Inter',sans-serif; margin-top:6px; }
     .btn-primary:hover { background:#0052cc; }
     .btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
-    .btn-secondary { background:transparent; border:none; color:#066CFF; font-weight:600; cursor:pointer; font-size:14px; padding:6px; font-family:'Inter',sans-serif; }
     .toggle-link { text-align:center; margin-top:16px; font-size:14px; color:#5f6b7a; }
     .toggle-link button { background:none; border:none; color:#066CFF; font-weight:600; cursor:pointer; font-size:14px; font-family:'Inter',sans-serif; }
     .error-msg, .success-msg, .info-msg { padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; display:none; }
@@ -67,9 +65,6 @@
   <div id="successMsg" class="success-msg"></div>
   <div id="infoMsg" class="info-msg"></div>
 
-  <!-- ============================================================
-  FORMULARIO DE LOGIN
-  ============================================================ -->
   <form id="loginForm">
     <div class="form-group">
       <label>Correo electrónico</label>
@@ -84,9 +79,6 @@
 
   <div class="separator">o</div>
 
-  <!-- ============================================================
-  FORMULARIO DE REGISTRO
-  ============================================================ -->
   <form id="registerForm" style="display:none;">
     <div class="form-group">
       <label>Correo electrónico</label>
@@ -147,9 +139,6 @@
 
   let isLogin = true;
 
-  // ============================================================
-  // FUNCIONES DE UTILIDAD
-  // ============================================================
   function showError(msg) { 
     errorMsg.textContent = msg; 
     errorMsg.style.display = 'block'; 
@@ -212,51 +201,26 @@
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    
-    if (!email || !password) { 
-      showError('Completa todos los campos.'); 
-      return; 
-    }
-    
+    if (!email || !password) { showError('Completa todos los campos.'); return; }
     setLoading(loginBtn, true);
     hideMessages();
-    
     auth.signInWithEmailAndPassword(email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        console.log('✅ Usuario autenticado:', user.uid);
-        
-        // Verificar si existe el documento en Firestore
-        try {
-          const doc = await db.collection('users').doc(user.uid).get();
-          if (!doc.exists) {
-            console.warn('⚠️ El usuario no tiene documento en Firestore');
-            showInfo('⚠️ Tu perfil está incompleto. Contacta al administrador.');
-            // Aun así, redirigimos pero mostrará error de permisos
-          } else {
-            console.log('✅ Documento encontrado:', doc.data());
-          }
-        } catch (err) {
-          console.warn('⚠️ Error al verificar documento:', err);
-        }
-        
+      .then(() => {
         window.location.href = 'panel-empleados.html';
       })
       .catch((err) => {
-        console.error('❌ Error en login:', err);
         let msg = 'Error al iniciar sesión. Verifica tus credenciales.';
         if (err.code === 'auth/user-not-found') msg = 'Usuario no encontrado.';
         else if (err.code === 'auth/wrong-password') msg = 'Contraseña incorrecta.';
         else if (err.code === 'auth/invalid-email') msg = 'Correo inválido.';
         else if (err.code === 'auth/too-many-requests') msg = 'Demasiados intentos. Espera un momento.';
-        else if (err.code === 'auth/network-request-failed') msg = 'Error de red. Verifica tu conexión.';
         showError(msg);
         setLoading(loginBtn, false);
       });
   });
 
   // ============================================================
-  // REGISTRO (CREACIÓN AUTOMÁTICA EN FIRESTORE)
+  // REGISTRO (AUTOMÁTICO CON FIRESTORE)
   // ============================================================
   registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -265,44 +229,26 @@
     const password = document.getElementById('registerPassword').value;
     const code = document.getElementById('registerCode').value.trim();
     
-    // Validaciones
-    if (!email || !name || !password || !code) { 
-      showError('Completa todos los campos.'); 
-      return; 
-    }
-    if (code !== EMPLOYEE_CODE) { 
-      showError('❌ Código de empleado incorrecto.'); 
-      return; 
-    }
-    if (password.length < 6) { 
-      showError('La contraseña debe tener al menos 6 caracteres.'); 
-      return; 
-    }
-    if (!email.includes('@') || !email.includes('.')) {
-      showError('Correo electrónico inválido.');
-      return;
-    }
+    if (!email || !name || !password || !code) { showError('Completa todos los campos.'); return; }
+    if (code !== EMPLOYEE_CODE) { showError('Código de empleado incorrecto.'); return; }
+    if (password.length < 6) { showError('La contraseña debe tener al menos 6 caracteres.'); return; }
     
     setLoading(registerBtn, true);
     hideMessages();
     showInfo('📝 Creando cuenta...');
     
-    // ============================================================
-    // PASO 1: CREAR USUARIO EN AUTHENTICATION
-    // ============================================================
+    // PASO 1: Crear en Authentication
     auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log('✅ Usuario creado en Auth:', user.uid);
         showInfo('✅ Usuario creado. Creando perfil en Firestore...');
         
-        // ============================================================
-        // PASO 2: CREAR DOCUMENTO EN FIRESTORE
-        // ============================================================
+        // PASO 2: Crear documento en Firestore
         return db.collection('users').doc(user.uid).set({
           email: email,
           name: name,
-          rol: 'Recepcionista', // Rol por defecto
+          rol: 'Recepcionista',
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       })
@@ -310,12 +256,8 @@
         console.log('✅ Documento creado en Firestore');
         showSuccess('🎉 ¡Cuenta creada exitosamente! Ahora inicia sesión.');
         setLoading(registerBtn, false);
-        
-        // Autocompletar el formulario de login
         document.getElementById('loginEmail').value = email;
         document.getElementById('loginPassword').value = password;
-        
-        // Cambiar a login después de 2 segundos
         setTimeout(() => {
           loginForm.style.display = 'block';
           registerForm.style.display = 'none';
@@ -329,12 +271,11 @@
       .catch((err) => {
         console.error('❌ Error en registro:', err);
         let msg = 'Error al registrar.';
-        if (err.code === 'auth/email-already-in-use') msg = '❌ Este correo ya está registrado.';
-        else if (err.code === 'auth/invalid-email') msg = '❌ Correo inválido.';
-        else if (err.code === 'auth/weak-password') msg = '❌ Contraseña demasiado débil.';
+        if (err.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado.';
+        else if (err.code === 'auth/invalid-email') msg = 'Correo inválido.';
+        else if (err.code === 'auth/weak-password') msg = 'Contraseña demasiado débil.';
         else if (err.code === 'permission-denied') {
-          msg = '❌ Error de permisos en Firestore. ';
-          msg += 'Verifica que las reglas de seguridad estén publicadas correctamente.';
+          msg = '❌ Error de permisos en Firestore. Asegúrate de que las reglas de seguridad permitan la creación.';
         }
         showError(msg);
         setLoading(registerBtn, false);
@@ -346,7 +287,6 @@
   // ============================================================
   auth.onAuthStateChanged((user) => {
     if (user) {
-      console.log('👤 Usuario ya autenticado, redirigiendo...');
       window.location.href = 'panel-empleados.html';
     }
   });
@@ -358,7 +298,7 @@
     const code = this.value.trim();
     const hint = document.querySelector('.empleado-code-hint');
     if (code.length > 0 && code !== EMPLOYEE_CODE) {
-      hint.textContent = '❌ Código incorrecto. Pide el código a tu supervisor.';
+      hint.textContent = '❌ Código incorrecto.';
       hint.style.color = '#b91c1c';
     } else if (code === EMPLOYEE_CODE) {
       hint.textContent = '✅ Código correcto.';
@@ -368,9 +308,6 @@
       hint.style.color = '#8a94a6';
     }
   });
-
-  console.log('🚀 login-empleados.html cargado correctamente');
-  console.log('📌 Código de empleado:', EMPLOYEE_CODE);
 </script>
 </body>
 </html>
