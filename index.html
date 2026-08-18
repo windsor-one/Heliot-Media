@@ -8,27 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://use.typekit.net/yyi3lii.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
 </head>
 <body class="studio-home">
   <a class="skip-link" href="#contenido">Ir al contenido principal</a>
 
-  <header class="header studio-header" id="mainHeader">
-    <div class="header-inner">
-      <a class="studio-logo" href="index.html" aria-label="Heliot Media, inicio"><span class="studio-logo-mark" aria-hidden="true">hm</span><span><strong>Heliot</strong><small>Media</small></span></a>
-      <button class="studio-menu-toggle" id="mobileToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
-      <nav class="studio-nav-wrap" aria-label="Navegación principal">
-        <ul class="studio-nav" id="navMain">
-          <li><a class="active" href="index.html">Inicio</a></li>
-          <li><a href="#portafolio">Portafolio</a></li>
-          <li><a href="#servicios">Servicios</a></li>
-          <li><a href="sobre-nosotros.html">El estudio</a></li>
-          <li class="studio-nav-more"><button type="button" aria-expanded="false">Más <span class="ui-icon ui-icon-plus" aria-hidden="true"></span></button><ul><li><a href="beneficios.html">Beneficios</a></li><li><a href="cide-heliot.html">CIDE</a></li><li><a href="el-tiempo.html">El tiempo</a></li><li><a href="promociones.html">Promociones</a></li><li><a href="aranceles.html">Aranceles</a></li></ul></li>
-          <li><a href="contactanos.html">Contacto</a></li>
-        </ul>
-      </nav>
-      <a class="studio-header-cta" href="contratar.html">Solicitar cotización <span aria-hidden="true">↗</span></a>
-    </div>
-  </header>
+  <header class="header" id="mainHeader"></header>
 
   <main id="contenido">
     <section class="studio-hero" aria-labelledby="hero-title">
@@ -36,7 +21,7 @@
         <p class="studio-eyebrow"><span></span> Estudio fotográfico · San Miguel, El Salvador</p>
         <h1 id="hero-title">Imágenes con <i>intención.</i></h1>
         <p class="studio-hero-lead">Fotografía y producción visual para personas, marcas y proyectos que quieren mostrarse con claridad, personalidad y belleza.</p>
-        <div class="studio-actions"><a class="studio-button studio-button-dark" href="#portafolio">Ver portafolio <span aria-hidden="true">↘</span></a><a class="studio-button studio-button-line" href="contratar.html">Cotiza tu proyecto <span aria-hidden="true">↗</span></a></div>
+        <div class="studio-actions"><a class="studio-button studio-button-dark" href="#portafolio">Ver portafolio <span aria-hidden="true"><span class="ui-icon ui-icon-arrow-down-right" aria-hidden="true"></span></span></a><a class="studio-button studio-button-line" href="contratar.html">Cotiza tu proyecto <span aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a></div>
       </div>
       <div class="studio-hero-visual">
         <div class="studio-hero-image"><img src="assets/portfolio-fashion.jpg" alt="Retrato editorial realizado en estudio" fetchpriority="high"><span class="studio-image-index">01 / 03</span></div>
@@ -47,49 +32,36 @@
 
     <section class="studio-intro" id="estudio" aria-labelledby="intro-title">
       <p class="studio-section-label">Lo que hacemos</p>
-      <div><h2 id="intro-title">Tu imagen merece algo más que una foto bonita.</h2><p>Construimos imágenes que se sienten propias. Desde una sesión de retrato hasta el contenido visual de una marca, trabajamos cada proyecto con dirección, detalle y una mirada que entiende lo que quieres comunicar.</p><a class="studio-text-link" href="sobre-nosotros.html">Conoce el estudio <span aria-hidden="true">↗</span></a></div>
-      <div class="studio-intro-note"><span>01</span><p>Idea<br>→ Imagen<br>→ Conexión</p></div>
+      <div><h2 id="intro-title">Tu imagen merece algo más que una foto bonita.</h2><p>Construimos imágenes que se sienten propias. Desde una sesión de retrato hasta el contenido visual de una marca, trabajamos cada proyecto con dirección, detalle y una mirada que entiende lo que quieres comunicar.</p><a class="studio-text-link" href="sobre-nosotros.html">Conoce el estudio <span aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a></div>
+      <div class="studio-intro-note"><span>01</span><p>Idea<br><span class="ui-icon ui-icon-arrow-right" aria-hidden="true"></span> Imagen<br><span class="ui-icon ui-icon-arrow-right" aria-hidden="true"></span> Conexión</p></div>
     </section>
 
     <section class="studio-portfolio" id="portafolio" aria-labelledby="portfolio-title">
       <div class="studio-section-head"><div><p class="studio-eyebrow studio-eyebrow-dark"><span></span> Trabajo seleccionado</p><h2 id="portfolio-title">Una imagen dice<br><i>mucho de ti.</i></h2></div><p>Explora algunas de las áreas en las que convertimos ideas en imágenes que se recuerdan.</p></div>
       <div class="studio-gallery">
-        <a class="studio-project project-tall" href="contratar.html"><figure><img src="assets/portfolio-fashion.jpg" alt="Fotografía de moda y retrato editorial"><figcaption><span>01 · Moda</span><strong>Presencia que se nota <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
-        <a class="studio-project project-standard" href="contratar.html"><figure><img src="assets/portfolio-portrait.jpg" alt="Retrato profesional para marca personal"><figcaption><span>02 · Retrato</span><strong>Tu historia, en primer plano <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
-        <a class="studio-project project-product" href="contratar.html"><figure><img src="assets/portfolio-product.jpg" alt="Fotografía de producto para una marca"><figcaption><span>03 · Producto</span><strong>Detalles que venden <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
+        <a class="studio-project project-tall" href="contratar.html"><figure><img src="assets/portfolio-fashion.jpg" alt="Fotografía de moda y retrato editorial"><figcaption><span>01 · Moda</span><strong>Presencia que se nota <b aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></b></strong></figcaption></figure></a>
+        <a class="studio-project project-standard" href="contratar.html"><figure><img src="assets/portfolio-portrait.jpg" alt="Retrato profesional para marca personal"><figcaption><span>02 · Retrato</span><strong>Tu historia, en primer plano <b aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></b></strong></figcaption></figure></a>
+        <a class="studio-project project-product" href="contratar.html"><figure><img src="assets/portfolio-product.jpg" alt="Fotografía de producto para una marca"><figcaption><span>03 · Producto</span><strong>Detalles que venden <b aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></b></strong></figcaption></figure></a>
       </div>
     </section>
 
     <section class="studio-services" id="servicios" aria-labelledby="services-title">
       <div class="studio-section-head"><div><p class="studio-eyebrow"><span></span> Servicios</p><h2 id="services-title">De la idea<br><i>al resultado.</i></h2></div><p>Elige el punto de partida. Nosotros nos encargamos de construir la imagen completa.</p></div>
       <div class="studio-service-list">
-        <a href="contratar.html" class="studio-service"><span class="service-number">01</span><div><h3>Fotografía</h3><p>Retrato, moda, producto, eventos y sesiones para marcas personales.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
-        <a href="contratar.html" class="studio-service"><span class="service-number">02</span><div><h3>Producción audiovisual</h3><p>Contenido para redes, piezas de campaña y videos con dirección visual.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
-        <a href="contratar.html" class="studio-service"><span class="service-number">03</span><div><h3>Diseño y branding</h3><p>Identidad visual, piezas gráficas y sistemas que hacen reconocible tu marca.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
+        <a href="contratar.html" class="studio-service"><span class="service-number">01</span><div><h3>Fotografía</h3><p>Retrato, moda, producto, eventos y sesiones para marcas personales.</p></div><span class="service-arrow" aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a>
+        <a href="contratar.html" class="studio-service"><span class="service-number">02</span><div><h3>Producción audiovisual</h3><p>Contenido para redes, piezas de campaña y videos con dirección visual.</p></div><span class="service-arrow" aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a>
+        <a href="contratar.html" class="studio-service"><span class="service-number">03</span><div><h3>Diseño y branding</h3><p>Identidad visual, piezas gráficas y sistemas que hacen reconocible tu marca.</p></div><span class="service-arrow" aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a>
       </div>
     </section>
 
     <section class="studio-process" aria-labelledby="process-title">
       <div class="studio-process-image"><img src="assets/portfolio-product.jpg" alt="Detalle visual de producción fotográfica"></div>
-      <div class="studio-process-copy"><p class="studio-eyebrow studio-eyebrow-dark"><span></span> Trabajemos juntos</p><h2 id="process-title">Una buena sesión empieza antes de encender la cámara.</h2><p>Escuchamos la idea, definimos el lenguaje visual y cuidamos cada detalle para que el resultado se sienta auténtico. Sin fórmulas genéricas, sin improvisar lo importante.</p><a class="studio-button studio-button-dark" href="contactanos.html">Cuéntanos tu idea <span aria-hidden="true">↗</span></a></div>
+      <div class="studio-process-copy"><p class="studio-eyebrow studio-eyebrow-dark"><span></span> Trabajemos juntos</p><h2 id="process-title">Una buena sesión empieza antes de encender la cámara.</h2><p>Escuchamos la idea, definimos el lenguaje visual y cuidamos cada detalle para que el resultado se sienta auténtico. Sin fórmulas genéricas, sin improvisar lo importante.</p><a class="studio-button studio-button-dark" href="contactanos.html">Cuéntanos tu idea <span aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a></div>
     </section>
 
-    <section class="studio-cta" aria-labelledby="cta-title"><p class="studio-eyebrow"><span></span> ¿Tienes un proyecto?</p><h2 id="cta-title">Hagamos algo<br><i>que se vea.</i></h2><a class="studio-button studio-button-light" href="contratar.html">Solicitar cotización <span aria-hidden="true">↗</span></a></section>
+    <section class="studio-cta" aria-labelledby="cta-title"><p class="studio-eyebrow"><span></span> ¿Tienes un proyecto?</p><h2 id="cta-title">Hagamos algo<br><i>que se vea.</i></h2><a class="studio-button studio-button-light" href="contratar.html">Solicitar cotización <span aria-hidden="true"><span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></span></a></section>
   </main>
 
-  <footer class="studio-footer"><div class="studio-footer-grid"><div><a class="studio-logo studio-footer-logo" href="index.html"><span class="studio-logo-mark" aria-hidden="true">hm</span><span><strong>Heliot</strong><small>Media</small></span></a><p>Estudio fotográfico y de producción visual para ideas con intención.</p></div><div><h3>Explora</h3><a href="#portafolio">Portafolio</a><a href="#servicios">Servicios</a><a href="sobre-nosotros.html">El estudio</a></div><div><h3>Conecta</h3><a href="contratar.html">Cotizar proyecto</a><a href="contactanos.html">Contacto</a><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div><div><h3>Legal</h3><a href="politica-de-privacidad.html">Privacidad</a><a href="politica-de-cookies.html">Cookies</a><a href="aviso-legal.html">Aviso legal</a></div></div><div class="studio-footer-bottom"><span>© 2026 Heliot Media</span><span>Fotografía · Video · Diseño</span></div></footer>
-
-  <script>
-    (function () {
-      var toggle = document.getElementById('mobileToggle');
-      var nav = document.getElementById('navMain');
-      toggle.addEventListener('click', function () { var open = nav.classList.toggle('active'); toggle.setAttribute('aria-expanded', open ? 'true' : 'false'); toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú'); });
-      nav.querySelectorAll('a').forEach(function (link) { link.addEventListener('click', function () { nav.classList.remove('active'); toggle.setAttribute('aria-expanded', 'false'); }); });
-      var more = document.querySelector('.studio-nav-more');
-      if (more) { var moreButton = more.querySelector('button'); moreButton.addEventListener('click', function () { var open = more.classList.toggle('open'); moreButton.setAttribute('aria-expanded', open ? 'true' : 'false'); }); }
-      var header = document.getElementById('mainHeader');
-      window.addEventListener('scroll', function () { header.classList.toggle('is-scrolled', window.scrollY > 20); }, { passive: true });
-    }());
-  </script>
+    <div class="footer"></div>
 </body>
 </html>
