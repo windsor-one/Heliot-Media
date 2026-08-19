@@ -85,13 +85,13 @@
   <div class="container" style="margin-top:30px;">
     <div class="weather-container">
       <div class="weather-widget" id="weatherWidget">
-        <div id="forecastSection"><div class="weather-loading"><div class="loading-dots"><span class="ui-icon ui-icon-search" aria-hidden="true"></span> Detectando tu ubicación...</div></div></div>
+        <div id="forecastSection"><div class="weather-loading"><div class="loading-dots">🔍 Detectando tu ubicación...</div></div></div>
         <div class="section-divider"><span>✦ Detalles del día ✦</span></div>
         <div id="detailsSection"><div style="opacity:0.4; padding:20px; font-size:14px;">Selecciona un día para ver los detalles</div></div>
       </div>
       <div class="vertical-switch">
-        <button class="switch-vertical-btn active" id="btnTendencia" onclick="setModo('tendencia')"><span class="ui-icon ui-icon-trend" aria-hidden="true"></span></button>
-        <button class="switch-vertical-btn" id="btnHoy" onclick="setModo('hoy')"><span class="ui-icon ui-icon-target" aria-hidden="true"></span></button>
+        <button class="switch-vertical-btn active" id="btnTendencia" onclick="setModo('tendencia')">📈</button>
+        <button class="switch-vertical-btn" id="btnHoy" onclick="setModo('hoy')">🎯</button>
       </div>
     </div>
   </div>
@@ -180,8 +180,7 @@
       function guardarEnCache(datos, lat, lon, ciudad) { cacheClima.datos = datos; cacheClima.lat = lat; cacheClima.lon = lon; cacheClima.ciudad = ciudad; cacheClima.timestamp = Date.now(); guardarCacheEnStorage(); }
       function obtenerTiempoRestanteCache() { if (!cacheClima.timestamp) return null; var edad = Date.now() - cacheClima.timestamp; var restante = cacheClima.TTL - edad; return Math.max(0, Math.floor(restante / 60000)); }
 
-      function iconSvg(name) { return '<span class="weather-svg-icon weather-' + name + '" aria-hidden="true"></span>'; }
-      var weatherCodeMap = { 0: { icon: 'sun', desc: 'Despejado' }, 1: { icon: 'partly', desc: 'Mayormente despejado' }, 2: { icon: 'partly', desc: 'Parcialmente nublado' }, 3: { icon: 'cloud', desc: 'Nublado' }, 45: { icon: 'fog', desc: 'Niebla' }, 48: { icon: 'fog', desc: 'Niebla con escarcha' }, 51: { icon: 'drizzle', desc: 'Llovizna ligera' }, 53: { icon: 'drizzle', desc: 'Llovizna moderada' }, 55: { icon: 'rain', desc: 'Llovizna densa' }, 61: { icon: 'drizzle', desc: 'Lluvia ligera' }, 63: { icon: 'rain', desc: 'Lluvia moderada' }, 65: { icon: 'rain', desc: 'Lluvia intensa' }, 71: { icon: 'thermometer', desc: 'Nieve ligera' }, 73: { icon: 'thermometer', desc: 'Nieve moderada' }, 75: { icon: 'thermometer', desc: 'Nieve intensa' }, 80: { icon: 'rain', desc: 'Chubascos ligeros' }, 81: { icon: 'rain', desc: 'Chubascos moderados' }, 82: { icon: 'storm', desc: 'Chubascos intensos' }, 95: { icon: 'storm', desc: 'Tormenta eléctrica' }, 96: { icon: 'storm', desc: 'Tormenta con granizo' }, 99: { icon: 'storm', desc: 'Tormenta con granizo intenso' } };
+      var weatherCodeMap = { 0: { emoji: '☀️', desc: 'Despejado' }, 1: { emoji: '🌤️', desc: 'Mayormente despejado' }, 2: { emoji: '⛅', desc: 'Parcialmente nublado' }, 3: { emoji: '☁️', desc: 'Nublado' }, 45: { emoji: '🌫️', desc: 'Niebla' }, 48: { emoji: '🌫️', desc: 'Niebla con escarcha' }, 51: { emoji: '🌦️', desc: 'Llovizna ligera' }, 53: { emoji: '🌦️', desc: 'Llovizna moderada' }, 55: { emoji: '🌧️', desc: 'Llovizna densa' }, 61: { emoji: '🌦️', desc: 'Lluvia ligera' }, 63: { emoji: '🌧️', desc: 'Lluvia moderada' }, 65: { emoji: '🌧️', desc: 'Lluvia intensa' }, 71: { emoji: '❄️', desc: 'Nieve ligera' }, 73: { emoji: '❄️', desc: 'Nieve moderada' }, 75: { emoji: '❄️', desc: 'Nieve intensa' }, 80: { emoji: '🌧️', desc: 'Chubascos ligeros' }, 81: { emoji: '🌧️', desc: 'Chubascos moderados' }, 82: { emoji: '⛈️', desc: 'Chubascos intensos' }, 95: { emoji: '⛈️', desc: 'Tormenta eléctrica' }, 96: { emoji: '⛈️', desc: 'Tormenta con granizo' }, 99: { emoji: '⛈️', desc: 'Tormenta con granizo intenso' } };
       function formatearHora(fechaISO) { if (!fechaISO) return '--:--'; try { var fecha = new Date(fechaISO); return String(fecha.getHours()).padStart(2,'0') + ':' + String(fecha.getMinutes()).padStart(2,'0'); } catch(e) { return '--:--'; } }
 
       var datosClimaGlobal = null, modoComparacion = 'tendencia', diaSeleccionado = 0, timerActualizacion = null;
@@ -200,24 +199,24 @@
       function renderizarPronostico() {
         if (!datosClimaGlobal) return;
         var city = datosClimaGlobal.city, tempsMax = datosClimaGlobal.tempsMax, tempsMin = datosClimaGlobal.tempsMin, weatherCodes = datosClimaGlobal.weatherCodes;
-        var tempHoy = tempsMax[0], minutosRestantes = obtenerTiempoRestanteCache(), indicadorCache = (minutosRestantes !== null && minutosRestantes > 0) ? '<span class="cache-indicator"><span class="ui-icon ui-icon-save" aria-hidden="true"></span> ' + minutosRestantes + 'min</span>' : '';
+        var tempHoy = tempsMax[0], minutosRestantes = obtenerTiempoRestanteCache(), indicadorCache = (minutosRestantes !== null && minutosRestantes > 0) ? '<span class="cache-indicator">💾 ' + minutosRestantes + 'min</span>' : '';
         var forecastHTML = '<div class="weather-location">' + city + ', El Salvador' + indicadorCache + '</div><div class="forecast-grid">';
         var totalDias = Math.min(tempsMax.length, 7);
         for (var i = 0; i < totalDias; i++) {
-          var maxTemp = Math.round(tempsMax[i]), minTemp = Math.round(tempsMin[i]), code = weatherCodes[i], weatherInfo = weatherCodeMap[code] || { icon: 'thermometer', desc: 'Clima variable' };
+          var maxTemp = Math.round(tempsMax[i]), minTemp = Math.round(tempsMin[i]), code = weatherCodes[i], weatherInfo = weatherCodeMap[code] || { emoji: '🌡️', desc: 'Clima variable' };
           var dayName = (i === 0) ? 'HOY' : getDayName(i).toUpperCase();
           var selectedClass = (i === diaSeleccionado) ? ' selected' : '';
           var comparacion = null;
           if (i > 0 && i < tempsMax.length) {
-            if (modoComparacion === 'hoy') { var diff = maxTemp - tempHoy; var absDiff = Math.abs(diff).toFixed(1); comparacion = (diff > 0) ? { texto: '+' + absDiff + '°C <span class="ui-icon ui-icon-hot" aria-hidden="true"></span>', clase: 'comparison-hotter' } : (diff < 0) ? { texto: absDiff + '°C <span class="ui-icon ui-icon-cold" aria-hidden="true"></span>', clase: 'comparison-colder' } : { texto: '0°C ⏺️', clase: '' }; }
-            else { var diffPrev = maxTemp - tempsMax[i-1]; var absDiffPrev = Math.abs(diffPrev).toFixed(1); comparacion = (diffPrev > 0) ? { texto: '+' + absDiffPrev + '°C <span class="ui-icon ui-icon-hot" aria-hidden="true"></span>', clase: 'comparison-hotter' } : (diffPrev < 0) ? { texto: absDiffPrev + '°C <span class="ui-icon ui-icon-cold" aria-hidden="true"></span>', clase: 'comparison-colder' } : { texto: '0°C ⏺️', clase: '' }; }
+            if (modoComparacion === 'hoy') { var diff = maxTemp - tempHoy; var absDiff = Math.abs(diff).toFixed(1); comparacion = (diff > 0) ? { texto: '+' + absDiff + '°C 🔥', clase: 'comparison-hotter' } : (diff < 0) ? { texto: absDiff + '°C ❄️', clase: 'comparison-colder' } : { texto: '0°C ⏺️', clase: '' }; }
+            else { var diffPrev = maxTemp - tempsMax[i-1]; var absDiffPrev = Math.abs(diffPrev).toFixed(1); comparacion = (diffPrev > 0) ? { texto: '+' + absDiffPrev + '°C 🔥', clase: 'comparison-hotter' } : (diffPrev < 0) ? { texto: absDiffPrev + '°C ❄️', clase: 'comparison-colder' } : { texto: '0°C ⏺️', clase: '' }; }
           }
-          forecastHTML += '<div class="forecast-item' + selectedClass + '" onclick="seleccionarDia(' + i + ')"><div class="weather-day">' + dayName + '</div><div class="weather-icon">' + iconSvg(weatherInfo.icon) + '</div><div class="weather-temp">' + maxTemp + '°C</div><div class="weather-temp-min">↓ ' + minTemp + '°C</div><div class="weather-desc">' + weatherInfo.desc + '</div>';
+          forecastHTML += '<div class="forecast-item' + selectedClass + '" onclick="seleccionarDia(' + i + ')"><div class="weather-day">' + dayName + '</div><div class="weather-icon">' + weatherInfo.emoji + '</div><div class="weather-temp">' + maxTemp + '°C</div><div class="weather-temp-min">↓ ' + minTemp + '°C</div><div class="weather-desc">' + weatherInfo.desc + '</div>';
           if (comparacion) forecastHTML += '<div class="weather-comparison ' + comparacion.clase + '">' + comparacion.texto + '</div>';
           forecastHTML += '</div>';
         }
         forecastHTML += '</div>';
-        if (minutosRestantes !== null && minutosRestantes > 0) { var minutosPasados = Math.floor((cacheClima.TTL - minutosRestantes * 60000) / 60000); forecastHTML += '<div style="font-size:11px; opacity:0.3; margin-top:12px;"><span class="ui-icon ui-icon-clock" aria-hidden="true"></span> Actualizado hace ' + minutosPasados + ' min · Próxima actualización en ' + minutosRestantes + ' min</div>'; }
+        if (minutosRestantes !== null && minutosRestantes > 0) { var minutosPasados = Math.floor((cacheClima.TTL - minutosRestantes * 60000) / 60000); forecastHTML += '<div style="font-size:11px; opacity:0.3; margin-top:12px;">⏱️ Actualizado hace ' + minutosPasados + ' min · Próxima actualización en ' + minutosRestantes + ' min</div>'; }
         document.getElementById('forecastSection').innerHTML = forecastHTML;
         renderizarDetalles(diaSeleccionado);
       }
@@ -226,7 +225,7 @@
         if (!datosClimaGlobal) return;
         var tempsMax = datosClimaGlobal.tempsMax, tempsMin = datosClimaGlobal.tempsMin, weatherCodes = datosClimaGlobal.weatherCodes, detalles = datosClimaGlobal.detalles || {};
         if (index >= tempsMax.length) return;
-        var maxTemp = Math.round(tempsMax[index]), minTemp = Math.round(tempsMin[index]), avgTemp = Math.round((maxTemp + minTemp) / 2), code = weatherCodes[index], weatherInfo = weatherCodeMap[code] || { icon: 'thermometer', desc: 'Clima variable' };
+        var maxTemp = Math.round(tempsMax[index]), minTemp = Math.round(tempsMin[index]), avgTemp = Math.round((maxTemp + minTemp) / 2), code = weatherCodes[index], weatherInfo = weatherCodeMap[code] || { emoji: '🌡️', desc: 'Clima variable' };
         var dayName = (index === 0) ? 'Hoy' : getDayName(index), dateStr = getDateString(index);
         var sunrise = (detalles.sunrise && detalles.sunrise[index]) ? formatearHora(detalles.sunrise[index]) : '--:--';
         var sunset = (detalles.sunset && detalles.sunset[index]) ? formatearHora(detalles.sunset[index]) : '--:--';
@@ -235,16 +234,16 @@
         var windSpeed = (detalles.wind_speed && detalles.wind_speed[index] !== undefined) ? Math.round(detalles.wind_speed[index]) : '--';
         var uvIndex = (detalles.uv_index && detalles.uv_index[index] !== undefined) ? Math.round(detalles.uv_index[index]) : '--';
         var detailsHTML = '<div class="weather-details">' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-thermometer" aria-hidden="true"></span> Máxima</div><div class="detail-value temp-high">' + maxTemp + '°C</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-cold" aria-hidden="true"></span> Mínima</div><div class="detail-value temp-low">' + minTemp + '°C</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-chart" aria-hidden="true"></span> Promedio</div><div class="detail-value temp-avg">' + avgTemp + '°C</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-sunrise" aria-hidden="true"></span> Amanecer</div><div class="detail-value sunrise">' + sunrise + '</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-sunset" aria-hidden="true"></span> Atardecer</div><div class="detail-value sunset">' + sunset + '</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-rain" aria-hidden="true"></span> Lluvia</div><div class="detail-value precipitation">' + precipProb + '%</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-drop" aria-hidden="true"></span> Humedad</div><div class="detail-value humidity">' + humidity + '%</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-wind" aria-hidden="true"></span> Viento</div><div class="detail-value wind">' + windSpeed + ' km/h</div></div>' +
-          '<div class="detail-item"><div class="detail-label"><span class="ui-icon ui-icon-sun" aria-hidden="true"></span> UV</div><div class="detail-value uv">' + uvIndex + '</div></div>' +
-          '<div class="detail-item full-width" style="opacity:0.4; font-size:11px; grid-column:1/-1;">' + iconSvg(weatherInfo.icon) + ' ' + weatherInfo.desc + ' · ' + dateStr + ' · ' + dayName + '</div>' +
+          '<div class="detail-item"><div class="detail-label">🌡️ Máxima</div><div class="detail-value temp-high">' + maxTemp + '°C</div></div>' +
+          '<div class="detail-item"><div class="detail-label">❄️ Mínima</div><div class="detail-value temp-low">' + minTemp + '°C</div></div>' +
+          '<div class="detail-item"><div class="detail-label">📊 Promedio</div><div class="detail-value temp-avg">' + avgTemp + '°C</div></div>' +
+          '<div class="detail-item"><div class="detail-label">🌅 Amanecer</div><div class="detail-value sunrise">' + sunrise + '</div></div>' +
+          '<div class="detail-item"><div class="detail-label">🌇 Atardecer</div><div class="detail-value sunset">' + sunset + '</div></div>' +
+          '<div class="detail-item"><div class="detail-label">☔ Lluvia</div><div class="detail-value precipitation">' + precipProb + '%</div></div>' +
+          '<div class="detail-item"><div class="detail-label">💧 Humedad</div><div class="detail-value humidity">' + humidity + '%</div></div>' +
+          '<div class="detail-item"><div class="detail-label">💨 Viento</div><div class="detail-value wind">' + windSpeed + ' km/h</div></div>' +
+          '<div class="detail-item"><div class="detail-label">☀️ UV</div><div class="detail-value uv">' + uvIndex + '</div></div>' +
+          '<div class="detail-item full-width" style="opacity:0.4; font-size:11px; grid-column:1/-1;">' + weatherInfo.emoji + ' ' + weatherInfo.desc + ' · ' + dateStr + ' · ' + dayName + '</div>' +
           '</div>';
         document.getElementById('detailsSection').innerHTML = detailsHTML;
       }
@@ -252,28 +251,28 @@
       function obtenerClimaOpenMeteo(lat, lon, nombreCiudad, intento) {
         intento = intento || 1;
         if (esCacheValido(lat, lon)) {
-          console.log('[OK] Usando datos en caché para', nombreCiudad);
+          console.log('✅ Usando datos en caché para', nombreCiudad);
           datosClimaGlobal = JSON.parse(JSON.stringify(cacheClima.datos));
           datosClimaGlobal.city = nombreCiudad || cacheClima.ciudad || 'Tu ubicación';
           renderizarPronostico();
           programarActualizacion();
           return;
         }
-        console.log('[ACTUALIZACIÓN] Cache expirado o inválido. Consultando Open-Meteo...');
+        console.log('🔄 Cache expirado o inválido. Consultando Open-Meteo...');
         var apiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_mean,relative_humidity_2m_mean,wind_speed_10m_max,uv_index_max&timezone=auto&forecast_days=7';
-        console.log('[API] URL de la API:', apiUrl);
+        console.log('📡 URL de la API:', apiUrl);
         fetch(apiUrl)
           .then(function(response) { if (!response.ok) throw new Error('HTTP ' + response.status); return response.json(); })
           .then(function(data) {
-            console.log('[OK] Datos recibidos de Open-Meteo:', data);
+            console.log('✅ Datos recibidos de Open-Meteo:', data);
             if (data.daily && data.daily.time && data.daily.time.length > 0) {
               var tempsMax = data.daily.temperature_2m_max;
               var tempsMin = data.daily.temperature_2m_min;
               var weatherCodes = data.daily.weathercode;
-              console.log('[DATOS] Días recibidos:', tempsMax.length);
+              console.log('📊 Días recibidos:', tempsMax.length);
               var daysAvailable = tempsMax.length;
               if (daysAvailable < 7) {
-                console.log('[AVISO] Solo hay ' + daysAvailable + ' días, completando hasta 7...');
+                console.log('⚠️ Solo hay ' + daysAvailable + ' días, completando hasta 7...');
                 var ultimoIndex = daysAvailable - 1;
                 for (var i = daysAvailable; i < 7; i++) {
                   tempsMax.push(tempsMax[ultimoIndex]);
@@ -313,22 +312,22 @@
             } else { throw new Error('No se recibieron datos válidos'); }
           })
           .catch(function(error) {
-            console.error('[ERROR] Intento ' + intento + ' fallido:', error);
+            console.error('❌ Intento ' + intento + ' fallido:', error);
             if (cacheClima.datos) {
-              console.log('[AVISO] Mostrando caché expirado mientras se reintenta...');
+              console.log('⚠️ Mostrando caché expirado mientras se reintenta...');
               datosClimaGlobal = JSON.parse(JSON.stringify(cacheClima.datos));
               datosClimaGlobal.city = nombreCiudad || cacheClima.ciudad || 'Tu ubicación';
               renderizarPronostico();
               programarActualizacion();
             }
             var tiempoEspera = Math.min(3000 * intento, 20000);
-            var mensajeReintento = '<div class="weather-retrying">[ACTUALIZACIÓN] No se pudo actualizar el clima. Reintentando en ' + (tiempoEspera/1000) + ' segundos...<br>(Intento ' + intento + ')</div>';
+            var mensajeReintento = '<div class="weather-retrying">🔄 No se pudo actualizar el clima. Reintentando en ' + (tiempoEspera/1000) + ' segundos...<br>(Intento ' + intento + ')</div>';
             if (!cacheClima.datos) { document.getElementById('forecastSection').innerHTML = mensajeReintento; }
             if (intento < 5) {
               setTimeout(function() { obtenerClimaOpenMeteo(lat, lon, nombreCiudad, intento + 1); }, tiempoEspera);
             } else {
               if (!cacheClima.datos) {
-                document.getElementById('forecastSection').innerHTML = '<div class="weather-error">[ERROR] No se pudo obtener el clima después de varios intentos. Por favor, recarga la página.</div>';
+                document.getElementById('forecastSection').innerHTML = '<div class="weather-error">❌ No se pudo obtener el clima después de varios intentos. Por favor, recarga la página.</div>';
               }
             }
           });
@@ -341,7 +340,7 @@
           var tiempoEspera = minutosRestantes * 60000 + 1000;
           console.log('⏰ Próxima actualización en ' + minutosRestantes + ' minutos');
           timerActualizacion = setTimeout(function() {
-            console.log('[ACTUALIZACIÓN] Actualizando caché automáticamente...');
+            console.log('🔄 Actualizando caché automáticamente...');
             if (cacheClima.lat && cacheClima.lon) { obtenerClimaOpenMeteo(cacheClima.lat, cacheClima.lon, cacheClima.ciudad, 1); }
           }, tiempoEspera);
         }
@@ -352,21 +351,21 @@
         if (cacheClima.datos && cacheClima.lat && cacheClima.lon) {
           var lat = cacheClima.lat, lon = cacheClima.lon, ciudad = cacheClima.ciudad || 'Tu ubicación';
           if (esCacheValido(lat, lon)) {
-            console.log('[OK] Usando caché persistente para', ciudad);
+            console.log('✅ Usando caché persistente para', ciudad);
             datosClimaGlobal = JSON.parse(JSON.stringify(cacheClima.datos));
             datosClimaGlobal.city = ciudad;
             renderizarPronostico();
             programarActualizacion();
             var edad = Date.now() - cacheClima.timestamp;
             if (edad > 2700000) {
-              console.log('[ACTUALIZACIÓN] Actualizando caché en segundo plano (cerca de expirar)...');
+              console.log('🔄 Actualizando caché en segundo plano (cerca de expirar)...');
               setTimeout(function() { obtenerClimaOpenMeteo(lat, lon, ciudad, 1); }, 2000);
             }
             return;
           }
         }
         if (!navigator.geolocation) {
-          var mensajeError = '<div class="weather-retrying">[RED] Tu navegador no soporta geolocalización. Usando ubicación por defecto.</div>';
+          var mensajeError = '<div class="weather-retrying">🌐 Tu navegador no soporta geolocalización. Usando ubicación por defecto.</div>';
           document.getElementById('forecastSection').innerHTML = mensajeError;
           obtenerClimaOpenMeteo(40.4167, -3.7033, 'Madrid', 1);
           return;
@@ -374,7 +373,7 @@
         navigator.geolocation.getCurrentPosition(
           function(position) {
             var lat = position.coords.latitude, lon = position.coords.longitude;
-            document.getElementById('forecastSection').innerHTML = '<div class="weather-loading"><div class="loading-dots">[UBICACIÓN] Ubicación obtenida. Consultando clima de 7 días...</div></div>';
+            document.getElementById('forecastSection').innerHTML = '<div class="weather-loading"><div class="loading-dots">📍 Ubicación obtenida. Consultando clima de 7 días...</div></div>';
             fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&accept-language=es')
               .then(function(response) { return response.json(); })
               .then(function(locationData) {
@@ -384,7 +383,7 @@
               .catch(function() { obtenerClimaOpenMeteo(lat, lon, 'Tu ubicación', 1); });
           },
           function(error) {
-            var mensajeError = '<div class="weather-retrying">[UBICACIÓN] No se pudo acceder a tu ubicación. Reintentando en 5 segundos...<br><span class="ui-icon ui-icon-lock" aria-hidden="true"></span> Asegúrate de permitir la ubicación en tu navegador</div>';
+            var mensajeError = '<div class="weather-retrying">📍 No se pudo acceder a tu ubicación. Reintentando en 5 segundos...<br>🔒 Asegúrate de permitir la ubicación en tu navegador</div>';
             document.getElementById('forecastSection').innerHTML = mensajeError;
             setTimeout(function() { obtenerUbicacionYClima(); }, 5000);
           }

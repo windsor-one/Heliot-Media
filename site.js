@@ -25,14 +25,13 @@
   function headerMarkup() {
     return '<div class="header-inner site-header-inner">' +
       '<div class="site-brand">' + logoMarkup('') + '</div>' +
-      '<button class="menu-mobile-toggle site-menu-toggle" id="mobileToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewBox="0 0 24 24" width="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>' +
+      '<button class="menu-mobile-toggle site-menu-toggle" id="mobileToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>' +
       '<nav class="site-nav-wrap" aria-label="Navegación principal">' +
       '<ul class="nav-main site-nav" id="navMain">' +
       '<li><a href="index.html">Inicio</a></li>' +
       '<li><a href="index.html#portafolio">Portafolio</a></li>' +
       '<li><a href="index.html#servicios">Servicios</a></li>' +
       '<li><a href="sobre-nosotros.html">El estudio</a></li>' +
-      '<li class="dropdown site-nav-more"><button class="dropbtn" type="button" aria-expanded="false">Más <span aria-hidden="true">+</span></button><ul class="submenu"><li><a href="beneficios.html">Beneficios</a></li><li><a href="cide-heliot.html">CIDE</a></li><li><a href="el-tiempo.html">El tiempo</a></li><li><a href="promociones.html">Promociones</a></li><li><a href="aranceles.html">Aranceles</a></li></ul></li>' +
       '<li><a href="contactanos.html">Contacto</a></li>' +
       '</ul></nav>' +
       '<button class="search-toggle site-search-toggle" id="searchToggle" type="button" aria-label="Buscar en Heliot Media" aria-haspopup="dialog">' +
@@ -144,13 +143,6 @@
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && overlay.classList.contains('active')) closeSearch(); });
   }
 
-  function bindCursor() {
-    var cursor = document.getElementById('customCursor');
-    if (!cursor) return;
-    document.addEventListener('mousemove', function (event) { cursor.style.left = event.clientX + 'px'; cursor.style.top = event.clientY + 'px'; cursor.style.opacity = '0.9'; });
-    document.addEventListener('mouseleave', function () { cursor.style.opacity = '0'; });
-  }
-
   function bindScrollHeader() {
     var header = document.querySelector('.site-header');
     if (!header) return;
@@ -167,6 +159,5 @@
   renderShell();
   bindNavigation();
   bindSearch();
-  bindCursor();
   bindScrollHeader();
 }());
