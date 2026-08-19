@@ -3,89 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Heliot Media es un estudio fotográfico y de producción visual para personas, marcas y proyectos.">
-  <title>Heliot Media · Estudio fotográfico</title>
+  <meta name="description" content="Heliot Media: información, cultura, academia y sociedad desde una mirada independiente.">
+  <title>Heliot Media · Información que conecta</title>
   <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://use.typekit.net/yyi3lii.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="studio-home">
+<body class="home-page">
   <a class="skip-link" href="#contenido">Ir al contenido principal</a>
 
-  <header class="header studio-header" id="mainHeader">
+  <header class="header" id="mainHeader">
     <div class="header-inner">
-      <a class="studio-logo" href="index.html" aria-label="Heliot Media, inicio"><span class="studio-logo-mark" aria-hidden="true">hm</span><span><strong>Heliot</strong><small>Media</small></span></a>
-      <button class="studio-menu-toggle" id="mobileToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
-      <nav class="studio-nav-wrap" aria-label="Navegación principal">
-        <ul class="studio-nav" id="navMain">
-          <li><a class="active" href="index.html">Inicio</a></li>
-          <li><a href="#portafolio">Portafolio</a></li>
-          <li><a href="#servicios">Servicios</a></li>
-          <li><a href="sobre-nosotros.html">El estudio</a></li>
-          <li><a href="contactanos.html">Contacto</a></li>
+      <div class="logo home-logo">
+        <a href="index.html" aria-label="Heliot Media, inicio">
+          <span class="logo-mark" aria-hidden="true">hm</span>
+          <span class="logo-copy"><strong>Heliot</strong><small>Media</small></span>
+        </a>
+      </div>
+      <button aria-label="Abrir menú" aria-expanded="false" class="menu-mobile-toggle" id="mobileToggle">☰</button>
+      <nav aria-label="Navegación principal">
+        <ul class="nav-main" id="navMain">
+        <li class="dropdown">
+          <button class="dropbtn" aria-expanded="false">Nosotros</button>
+          <ul class="submenu">
+            <li><a href="sobre-nosotros.html">Quiénes somos</a></li>
+            <li><a href="politica-editorial.html">Política editorial</a></li>
+            <li><a href="https://heliotacademy.milaulas.com/">Campus virtual</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <button class="dropbtn" aria-expanded="false">Comunidad</button>
+          <ul class="submenu">
+            <li><a href="beneficios.html">Beneficios y alianzas</a></li>
+            <li><a href="cide-heliot.html">Centro de innovación</a></li>
+          </ul>
+        </li>
+        <li><a href="el-tiempo.html">El tiempo</a></li>
+        <li class="dropdown">
+          <button class="dropbtn" aria-expanded="false">Servicios</button>
+          <ul class="submenu">
+            <li><a href="aranceles.html">Aranceles</a></li>
+            <li><a href="promociones.html">Promociones</a></li>
+            <li><a href="reservas.html">Reservar</a></li>
+            <li><a href="contratar.html">Contratar</a></li>
+          </ul>
+        </li>
         </ul>
       </nav>
-      <a class="studio-header-cta" href="contratar.html">Solicitar cotización <span aria-hidden="true">↗</span></a>
+      <button aria-label="Buscar en Heliot Media" class="search-toggle" id="searchToggle">
+        <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="20" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+      </button>
     </div>
   </header>
 
   <main id="contenido">
-    <section class="studio-hero" aria-labelledby="hero-title">
-      <div class="studio-hero-copy">
-        <p class="studio-eyebrow"><span></span> Estudio fotográfico · San Miguel, El Salvador</p>
-        <h1 id="hero-title">Imágenes con <i>intención.</i></h1>
-        <p class="studio-hero-lead">Fotografía y producción visual para personas, marcas y proyectos que quieren mostrarse con claridad, personalidad y belleza.</p>
-        <div class="studio-actions"><a class="studio-button studio-button-dark" href="#portafolio">Ver portafolio <span aria-hidden="true">↘</span></a><a class="studio-button studio-button-line" href="contratar.html">Cotiza tu proyecto <span aria-hidden="true">↗</span></a></div>
+    <section class="home-hero" aria-labelledby="hero-title">
+      <div class="hero-orb hero-orb-one" aria-hidden="true"></div>
+      <div class="hero-orb hero-orb-two" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow"><span></span> Proyecto editorial independiente</p>
+        <h1 id="hero-title">Información que <em>conecta</em> con lo que importa.</h1>
+        <p class="hero-lead">Heliot Media reúne información, cultura, academia y sociedad para abrir conversaciones con contexto, sensibilidad y mirada propia.</p>
+        <div class="cta-buttons">
+          <a href="sobre-nosotros.html" class="cta-btn cta-btn-primary">Conoce Heliot Media <span aria-hidden="true">↗</span></a>
+          <a href="#explora" class="cta-btn cta-btn-light">Explora nuestras áreas</a>
+        </div>
+        <div class="hero-note"><span class="note-dot" aria-hidden="true"></span> Una mirada independiente desde El Salvador</div>
       </div>
-      <div class="studio-hero-visual">
-        <div class="studio-hero-image"><img src="assets/portfolio-fashion.jpg" alt="Retrato editorial realizado en estudio" fetchpriority="high"><span class="studio-image-index">01 / 03</span></div>
-        <div class="studio-hero-caption"><span>Dirección visual</span><strong>Foto · Video · Diseño</strong></div>
-        <div class="studio-hero-side">HELIOT MEDIA / ESTUDIO CREATIVO</div>
-      </div>
+      <aside class="hero-card" aria-label="Manifiesto de Heliot Media">
+        <div class="hero-card-top"><span>01</span><span>MANIFIESTO</span></div>
+        <p>“Contar lo que somos también es una forma de construir comunidad.”</p>
+        <div class="hero-card-line"></div>
+        <div class="hero-card-bottom"><span>Heliot Media</span><span>2026</span></div>
+      </aside>
     </section>
 
-    <section class="studio-intro" id="estudio" aria-labelledby="intro-title">
-      <p class="studio-section-label">Lo que hacemos</p>
-      <div><h2 id="intro-title">Tu imagen merece algo más que una foto bonita.</h2><p>Construimos imágenes que se sienten propias. Desde una sesión de retrato hasta el contenido visual de una marca, trabajamos cada proyecto con dirección, detalle y una mirada que entiende lo que quieres comunicar.</p><a class="studio-text-link" href="sobre-nosotros.html">Conoce el estudio <span aria-hidden="true">↗</span></a></div>
-      <div class="studio-intro-note"><span>01</span><p>Idea<br>→ Imagen<br>→ Conexión</p></div>
-    </section>
-
-    <section class="studio-portfolio" id="portafolio" aria-labelledby="portfolio-title">
-      <div class="studio-section-head"><div><p class="studio-eyebrow studio-eyebrow-dark"><span></span> Trabajo seleccionado</p><h2 id="portfolio-title">Una imagen dice<br><i>mucho de ti.</i></h2></div><p>Explora algunas de las áreas en las que convertimos ideas en imágenes que se recuerdan.</p></div>
-      <div class="studio-gallery">
-        <a class="studio-project project-tall" href="contratar.html"><figure><img src="assets/portfolio-fashion.jpg" alt="Fotografía de moda y retrato editorial"><figcaption><span>01 · Moda</span><strong>Presencia que se nota <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
-        <a class="studio-project project-standard" href="contratar.html"><figure><img src="assets/portfolio-portrait.jpg" alt="Retrato profesional para marca personal"><figcaption><span>02 · Retrato</span><strong>Tu historia, en primer plano <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
-        <a class="studio-project project-product" href="contratar.html"><figure><img src="assets/portfolio-product.jpg" alt="Fotografía de producto para una marca"><figcaption><span>03 · Producto</span><strong>Detalles que venden <b aria-hidden="true">↗</b></strong></figcaption></figure></a>
+    <section class="intro-section" aria-labelledby="intro-title">
+      <div class="section-label">Nuestra forma de mirar</div>
+      <div class="intro-copy">
+        <h2 id="intro-title">Una plataforma para descubrir, pensar y participar.</h2>
+        <p>Creemos en los contenidos que informan sin ruido y en las historias que dejan algo después de ser leídas. Por eso desarrollamos espacios para la conversación, la creatividad y el aprendizaje.</p>
       </div>
-    </section>
-
-    <section class="studio-services" id="servicios" aria-labelledby="services-title">
-      <div class="studio-section-head"><div><p class="studio-eyebrow"><span></span> Servicios</p><h2 id="services-title">De la idea<br><i>al resultado.</i></h2></div><p>Elige el punto de partida. Nosotros nos encargamos de construir la imagen completa.</p></div>
-      <div class="studio-service-list">
-        <a href="contratar.html" class="studio-service"><span class="service-number">01</span><div><h3>Fotografía</h3><p>Retrato, moda, producto, eventos y sesiones para marcas personales.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
-        <a href="contratar.html" class="studio-service"><span class="service-number">02</span><div><h3>Producción audiovisual</h3><p>Contenido para redes, piezas de campaña y videos con dirección visual.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
-        <a href="contratar.html" class="studio-service"><span class="service-number">03</span><div><h3>Diseño y branding</h3><p>Identidad visual, piezas gráficas y sistemas que hacen reconocible tu marca.</p></div><span class="service-arrow" aria-hidden="true">↗</span></a>
+      <div class="intro-stats" aria-label="Principios de Heliot Media">
+        <div><strong>04</strong><span>áreas de<br>conexión</span></div>
+        <div><strong>01</strong><span>mirada<br>independiente</span></div>
+        <div><strong>∞</strong><span>historias<br>por descubrir</span></div>
       </div>
     </section>
 
-    <section class="studio-process" aria-labelledby="process-title">
-      <div class="studio-process-image"><img src="assets/portfolio-product.jpg" alt="Detalle visual de producción fotográfica"></div>
-      <div class="studio-process-copy"><p class="studio-eyebrow studio-eyebrow-dark"><span></span> Trabajemos juntos</p><h2 id="process-title">Una buena sesión empieza antes de encender la cámara.</h2><p>Escuchamos la idea, definimos el lenguaje visual y cuidamos cada detalle para que el resultado se sienta auténtico. Sin fórmulas genéricas, sin improvisar lo importante.</p><a class="studio-button studio-button-dark" href="contactanos.html">Cuéntanos tu idea <span aria-hidden="true">↗</span></a></div>
+    <section class="explore-section" id="explora" aria-labelledby="explore-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow eyebrow-dark"><span></span> Explora Heliot</p>
+          <h2 id="explore-title">Ideas con distintos puntos de entrada.</h2>
+        </div>
+        <p>Conoce nuestras iniciativas y encuentra el espacio que mejor conecta contigo.</p>
+      </div>
+      <div class="editorial-grid">
+        <a class="editorial-card card-blue" href="sobre-nosotros.html">
+          <div class="card-number">01</div>
+          <div class="card-icon" aria-hidden="true">◌</div>
+          <h3>Información y contexto</h3>
+          <p>Conoce la visión, el propósito y la política editorial detrás de cada conversación.</p>
+          <span class="card-link">Conoce nuestro enfoque <b aria-hidden="true">↗</b></span>
+        </a>
+        <a class="editorial-card card-yellow" href="cide-heliot.html">
+          <div class="card-number">02</div>
+          <div class="card-icon" aria-hidden="true">✦</div>
+          <h3>Cultura y creatividad</h3>
+          <p>Un punto de encuentro para la innovación, el arte y las expresiones contemporáneas.</p>
+          <span class="card-link">Visita el centro <b aria-hidden="true">↗</b></span>
+        </a>
+        <a class="editorial-card card-slate" href="beneficios.html">
+          <div class="card-number">03</div>
+          <div class="card-icon" aria-hidden="true">+</div>
+          <h3>Comunidad y alianzas</h3>
+          <p>Descubre oportunidades de vinculación y beneficios pensados para crecer juntos.</p>
+          <span class="card-link">Ver alianzas <b aria-hidden="true">↗</b></span>
+        </a>
+        <a class="editorial-card card-outline" href="el-tiempo.html">
+          <div class="card-number">04</div>
+          <div class="card-icon" aria-hidden="true">◒</div>
+          <h3>El tiempo</h3>
+          <p>Consulta el clima y mantente al tanto de las condiciones de tu entorno.</p>
+          <span class="card-link">Consultar ahora <b aria-hidden="true">↗</b></span>
+        </a>
+      </div>
     </section>
 
-    <section class="studio-cta" aria-labelledby="cta-title"><p class="studio-eyebrow"><span></span> ¿Tienes un proyecto?</p><h2 id="cta-title">Hagamos algo<br><i>que se vea.</i></h2><a class="studio-button studio-button-light" href="contratar.html">Solicitar cotización <span aria-hidden="true">↗</span></a></section>
+    <section class="closing-banner" aria-labelledby="closing-title">
+      <div>
+        <p class="eyebrow"><span></span> Sigamos la conversación</p>
+        <h2 id="closing-title">Hay más por descubrir.</h2>
+      </div>
+      <a href="contactanos.html" class="cta-btn cta-btn-light">Hablemos <span aria-hidden="true">↗</span></a>
+    </section>
   </main>
 
-  <footer class="studio-footer"><div class="studio-footer-grid"><div><a class="studio-logo studio-footer-logo" href="index.html"><span class="studio-logo-mark" aria-hidden="true">hm</span><span><strong>Heliot</strong><small>Media</small></span></a><p>Estudio fotográfico y de producción visual para ideas con intención.</p></div><div><h3>Explora</h3><a href="#portafolio">Portafolio</a><a href="#servicios">Servicios</a><a href="sobre-nosotros.html">El estudio</a></div><div><h3>Conecta</h3><a href="contratar.html">Cotizar proyecto</a><a href="contactanos.html">Contacto</a><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div><div><h3>Legal</h3><a href="politica-de-privacidad.html">Privacidad</a><a href="politica-de-cookies.html">Cookies</a><a href="aviso-legal.html">Aviso legal</a></div></div><div class="studio-footer-bottom"><span>© 2026 Heliot Media</span><span>Fotografía · Video · Diseño</span></div></footer>
+  <footer class="footer home-footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html" aria-label="Heliot Media, inicio"><span class="logo-mark" aria-hidden="true">hm</span><span><strong>Heliot</strong><small>Media</small></span></a>
+          <p class="tagline">Información, cultura, academia y sociedad con una mirada independiente.</p>
+        </div>
+        <div class="footer-col"><h4>Explora</h4><ul><li><a href="sobre-nosotros.html">Nosotros</a></li><li><a href="cide-heliot.html">Cultura e innovación</a></li><li><a href="beneficios.html">Comunidad</a></li><li><a href="el-tiempo.html">El tiempo</a></li></ul></div>
+        <div class="footer-col"><h4>Conecta</h4><ul><li><a href="contactanos.html">Contáctanos</a></li><li><a href="reservas.html">Reservar</a></li><li><a href="contratar.html">Contratar</a></li><li><a href="https://heliotacademy.milaulas.com/">Campus virtual</a></li></ul></div>
+        <div class="footer-col"><h4>Transparencia</h4><ul><li><a href="politica-editorial.html">Política editorial</a></li><li><a href="politica-de-privacidad.html">Privacidad</a></li><li><a href="politica-de-cookies.html">Cookies</a></li><li><a href="aviso-legal.html">Aviso legal</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Heliot Media</span><a class="footer-social" href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a></div>
+    </div>
+  </footer>
+
+  <div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+    <div class="search-modal">
+      <button class="search-close" id="searchClose" aria-label="Cerrar búsqueda">×</button>
+      <p class="eyebrow eyebrow-dark" id="searchTitle"><span></span> Buscar</p>
+      <div class="search-container"><label class="sr-only" for="searchInput">Escribe una búsqueda</label><input class="search-input" id="searchInput" placeholder="¿Qué quieres encontrar?" type="search"><button class="search-submit-btn" id="searchButton" aria-label="Ejecutar búsqueda"><svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="22" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg></button></div>
+      <div class="search-results" id="searchResults" aria-live="polite"></div>
+      <p class="search-hint">Presiona ESC para cerrar</p>
+    </div>
+  </div>
 
   <script>
     (function () {
-      var toggle = document.getElementById('mobileToggle');
-      var nav = document.getElementById('navMain');
-      toggle.addEventListener('click', function () { var open = nav.classList.toggle('active'); toggle.setAttribute('aria-expanded', open ? 'true' : 'false'); toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú'); });
-      nav.querySelectorAll('a').forEach(function (link) { link.addEventListener('click', function () { nav.classList.remove('active'); toggle.setAttribute('aria-expanded', 'false'); }); });
       var header = document.getElementById('mainHeader');
-      window.addEventListener('scroll', function () { header.classList.toggle('is-scrolled', window.scrollY > 20); }, { passive: true });
+      var ticking = false;
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          requestAnimationFrame(function () { header.classList.toggle('scroll-hidden', window.pageYOffset > 80); ticking = false; });
+          ticking = true;
+        }
+      });
+
+      var mobileToggle = document.getElementById('mobileToggle');
+      var navMain = document.getElementById('navMain');
+      mobileToggle.addEventListener('click', function () {
+        var isOpen = navMain.classList.toggle('active');
+        mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        mobileToggle.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+      });
+      document.querySelectorAll('.dropdown .dropbtn').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          if (window.innerWidth <= 768) {
+            event.preventDefault();
+            var dropdown = button.parentElement;
+            var isOpen = dropdown.classList.toggle('active');
+            button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          }
+        });
+      });
+      document.querySelectorAll('.nav-main a').forEach(function (link) { link.addEventListener('click', function () { navMain.classList.remove('active'); mobileToggle.setAttribute('aria-expanded', 'false'); }); });
+
+      var searchInput = document.getElementById('searchInput'), searchButton = document.getElementById('searchButton'), resultsContainer = document.getElementById('searchResults'), overlay = document.getElementById('searchOverlay'), closeBtn = document.getElementById('searchClose'), toggleBtn = document.getElementById('searchToggle');
+      var pages = [
+        { title: 'Inicio', url: 'index.html' }, { title: 'Quiénes somos', url: 'sobre-nosotros.html' }, { title: 'Política editorial', url: 'politica-editorial.html' }, { title: 'Cultura y creatividad', url: 'cide-heliot.html' }, { title: 'Beneficios y alianzas', url: 'beneficios.html' }, { title: 'Centro de innovación', url: 'cide-heliot.html' }, { title: 'El tiempo', url: 'el-tiempo.html' }, { title: 'Aranceles', url: 'aranceles.html' }, { title: 'Promociones', url: 'promociones.html' }, { title: 'Reservar', url: 'reservas.html' }, { title: 'Contratar', url: 'contratar.html' }, { title: 'Contacto', url: 'contactanos.html' }
+      ];
+      function performSearch(query) {
+        if (!query || query.length < 2) { resultsContainer.innerHTML = ''; return; }
+        var results = pages.filter(function (item) { return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1; });
+        if (!results.length) { resultsContainer.innerHTML = '<div class="no-results">No encontramos resultados para <strong>“' + query + '”</strong>.</div>'; return; }
+        resultsContainer.innerHTML = results.slice(0, 8).map(function (item) { return '<div class="result-item"><a href="' + item.url + '">' + item.title + '<span>↗</span></a></div>'; }).join('');
+      }
+      searchInput.addEventListener('input', function () { performSearch(this.value.trim()); });
+      searchInput.addEventListener('keydown', function (event) { if (event.key === 'Enter') { event.preventDefault(); performSearch(this.value.trim()); } });
+      searchButton.addEventListener('click', function () { performSearch(searchInput.value.trim()); });
+      function closeSearch() { overlay.classList.remove('active'); resultsContainer.innerHTML = ''; searchInput.value = ''; toggleBtn.focus(); }
+      closeBtn.addEventListener('click', closeSearch);
+      overlay.addEventListener('click', function (event) { if (event.target === overlay) closeSearch(); });
+      document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && overlay.classList.contains('active')) closeSearch(); });
+      toggleBtn.addEventListener('click', function () { overlay.classList.add('active'); setTimeout(function () { searchInput.focus(); }, 100); });
     }());
   </script>
 </body>

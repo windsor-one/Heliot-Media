@@ -4,14 +4,15 @@
   var pageName = (document.title || 'Heliot Media').split('·')[0].trim();
   var pageLinks = [
     { label: 'Inicio', href: 'index.html' },
-    { label: 'Portafolio', href: 'index.html#portafolio' },
-    { label: 'Servicios', href: 'index.html#servicios' },
-    { label: 'El estudio', href: 'sobre-nosotros.html' },
-    { label: 'Fotografía', href: 'contratar.html' },
-    { label: 'Producción audiovisual', href: 'contratar.html' },
-    { label: 'Diseño y branding', href: 'contratar.html' },
+    { label: 'Quiénes somos', href: 'sobre-nosotros.html' },
+    { label: 'Política editorial', href: 'politica-editorial.html' },
+    { label: 'Beneficios y alianzas', href: 'beneficios.html' },
+    { label: 'Centro de innovación', href: 'cide-heliot.html' },
+    { label: 'El tiempo', href: 'el-tiempo.html' },
+    { label: 'Aranceles', href: 'aranceles.html' },
     { label: 'Promociones', href: 'promociones.html' },
-    { label: 'Cotizar proyecto', href: 'contratar.html' },
+    { label: 'Reservar', href: 'contratar.html' },
+    { label: 'Contratar', href: 'contratar.html' },
     { label: 'Contacto', href: 'contactanos.html' }
   ];
 
@@ -29,10 +30,16 @@
       '<nav class="site-nav-wrap" aria-label="Navegación principal">' +
       '<ul class="nav-main site-nav" id="navMain">' +
       '<li><a href="index.html">Inicio</a></li>' +
-      '<li><a href="index.html#portafolio">Portafolio</a></li>' +
-      '<li><a href="index.html#servicios">Servicios</a></li>' +
-      '<li><a href="sobre-nosotros.html">El estudio</a></li>' +
-      '<li><a href="contactanos.html">Contacto</a></li>' +
+      '<li class="dropdown"><button class="dropbtn" type="button" aria-expanded="false">Nosotros</button><ul class="submenu">' +
+      '<li><a href="sobre-nosotros.html">Quiénes somos</a></li><li><a href="politica-editorial.html">Política editorial</a></li><li><a href="https://heliotacademy.milaulas.com/">Campus virtual</a></li>' +
+      '</ul></li>' +
+      '<li class="dropdown"><button class="dropbtn" type="button" aria-expanded="false">Comunidad</button><ul class="submenu">' +
+      '<li><a href="beneficios.html">Beneficios y alianzas</a></li><li><a href="cide-heliot.html">Centro de innovación</a></li>' +
+      '</ul></li>' +
+      '<li><a href="el-tiempo.html">El tiempo</a></li>' +
+      '<li class="dropdown"><button class="dropbtn" type="button" aria-expanded="false">Servicios</button><ul class="submenu">' +
+      '<li><a href="aranceles.html">Aranceles</a></li><li><a href="promociones.html">Promociones</a></li><li><a href="contratar.html">Reservar o contratar</a></li>' +
+      '</ul></li>' +
       '</ul></nav>' +
       '<button class="search-toggle site-search-toggle" id="searchToggle" type="button" aria-label="Buscar en Heliot Media" aria-haspopup="dialog">' +
       '<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewBox="0 0 24 24" width="20" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>' +
@@ -42,11 +49,11 @@
   function footerMarkup() {
     return '<div class="footer-inner site-footer-inner">' +
       '<div class="footer-grid site-footer-grid">' +
-      '<div class="footer-brand site-footer-brand">' + logoMarkup('site-footer-logo') + '<p class="tagline">Estudio fotográfico y de producción visual para ideas con intención.</p></div>' +
-      '<div class="footer-col"><h4>Estudio</h4><ul><li><a href="index.html#portafolio">Portafolio</a></li><li><a href="index.html#servicios">Servicios</a></li><li><a href="sobre-nosotros.html">Quiénes somos</a></li><li><a href="promociones.html">Promociones</a></li></ul></div>' +
-      '<div class="footer-col"><h4>Conecta</h4><ul><li><a href="contratar.html">Solicitar cotización</a></li><li><a href="contactanos.html">Contáctanos</a></li><li><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li></ul></div>' +
-      '<div class="footer-col"><h4>Legal</h4><ul><li><a href="politica-de-privacidad.html">Privacidad</a></li><li><a href="politica-de-cookies.html">Cookies</a></li><li><a href="terminos-y-condiciones-de-uso.html">Términos</a></li><li><a href="aviso-legal.html">Aviso legal</a></li></ul></div>' +
-      '</div><div class="footer-bottom site-footer-bottom"><span>© 2026 Heliot Media</span><span>Fotografía · Video · Diseño</span></div></div>';
+      '<div class="footer-brand site-footer-brand">' + logoMarkup('site-footer-logo') + '<p class="tagline">Información, cultura, academia y sociedad con una mirada independiente.</p></div>' +
+      '<div class="footer-col"><h4>Explora</h4><ul><li><a href="sobre-nosotros.html">Nosotros</a></li><li><a href="cide-heliot.html">Cultura e innovación</a></li><li><a href="beneficios.html">Comunidad</a></li><li><a href="el-tiempo.html">El tiempo</a></li></ul></div>' +
+      '<div class="footer-col"><h4>Conecta</h4><ul><li><a href="contactanos.html">Contáctanos</a></li><li><a href="contratar.html">Reservar o contratar</a></li><li><a href="https://heliotacademy.milaulas.com/">Campus virtual</a></li><li><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li></ul></div>' +
+      '<div class="footer-col"><h4>Transparencia</h4><ul><li><a href="politica-editorial.html">Política editorial</a></li><li><a href="politica-de-privacidad.html">Privacidad</a></li><li><a href="politica-de-cookies.html">Cookies</a></li><li><a href="terminos-y-condiciones-de-uso.html">Términos</a></li><li><a href="aviso-legal.html">Aviso legal</a></li></ul></div>' +
+      '</div><div class="footer-bottom site-footer-bottom"><span>© 2026 Heliot Media</span><span>Una mirada independiente desde El Salvador</span></div></div>';
   }
 
   function searchMarkup() {
