@@ -10,11 +10,7 @@
     { label: 'Fotografía', href: 'contratar.html' },
     { label: 'Producción audiovisual', href: 'contratar.html' },
     { label: 'Diseño y branding', href: 'contratar.html' },
-    { label: 'Beneficios', href: 'beneficios.html' },
-    { label: 'CIDE', href: 'cide-heliot.html' },
-    { label: 'El tiempo', href: 'el-tiempo.html' },
     { label: 'Promociones', href: 'promociones.html' },
-    { label: 'Aranceles', href: 'aranceles.html' },
     { label: 'Cotizar proyecto', href: 'contratar.html' },
     { label: 'Contacto', href: 'contactanos.html' }
   ];
@@ -39,7 +35,6 @@
       '<li class="dropdown site-nav-more"><button class="dropbtn" type="button" aria-expanded="false">Más <span aria-hidden="true">+</span></button><ul class="submenu"><li><a href="beneficios.html">Beneficios</a></li><li><a href="cide-heliot.html">CIDE</a></li><li><a href="el-tiempo.html">El tiempo</a></li><li><a href="promociones.html">Promociones</a></li><li><a href="aranceles.html">Aranceles</a></li></ul></li>' +
       '<li><a href="contactanos.html">Contacto</a></li>' +
       '</ul></nav>' +
-      '<a class="studio-header-cta" href="contratar.html">Solicitar cotización <span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></a>' +
       '<button class="search-toggle site-search-toggle" id="searchToggle" type="button" aria-label="Buscar en Heliot Media" aria-haspopup="dialog">' +
       '<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewBox="0 0 24 24" width="20" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>' +
       '</button></div>';
@@ -50,7 +45,7 @@
       '<div class="footer-grid site-footer-grid">' +
       '<div class="footer-brand site-footer-brand">' + logoMarkup('site-footer-logo') + '<p class="tagline">Estudio fotográfico y de producción visual para ideas con intención.</p></div>' +
       '<div class="footer-col"><h4>Estudio</h4><ul><li><a href="index.html#portafolio">Portafolio</a></li><li><a href="index.html#servicios">Servicios</a></li><li><a href="sobre-nosotros.html">Quiénes somos</a></li><li><a href="promociones.html">Promociones</a></li></ul></div>' +
-      '<div class="footer-col"><h4>Conecta</h4><ul><li><a href="contratar.html">Solicitar cotización</a></li><li><a href="contactanos.html">Contáctanos</a></li><li><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram <span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></a></li></ul></div>' +
+      '<div class="footer-col"><h4>Conecta</h4><ul><li><a href="contratar.html">Solicitar cotización</a></li><li><a href="contactanos.html">Contáctanos</a></li><li><a href="https://www.instagram.com/heliotmedia" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li></ul></div>' +
       '<div class="footer-col"><h4>Legal</h4><ul><li><a href="politica-de-privacidad.html">Privacidad</a></li><li><a href="politica-de-cookies.html">Cookies</a></li><li><a href="terminos-y-condiciones-de-uso.html">Términos</a></li><li><a href="aviso-legal.html">Aviso legal</a></li></ul></div>' +
       '</div><div class="footer-bottom site-footer-bottom"><span>© 2026 Heliot Media</span><span>Fotografía · Video · Diseño</span></div></div>';
   }
@@ -109,10 +104,7 @@
         }
       });
     });
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.site-nav a').forEach(function (link) {
-      var linkPage = (link.getAttribute('href') || '').split('#')[0];
-      if (linkPage === currentPage || (currentPage === 'index.html' && linkPage === '')) link.classList.add('active');
       link.addEventListener('click', function () {
         if (nav) nav.classList.remove('active');
         if (toggle) toggle.setAttribute('aria-expanded', 'false');
@@ -140,7 +132,7 @@
       if (query.length < 2) { results.innerHTML = ''; return; }
       var matches = pageLinks.filter(function (item) { return item.label.toLowerCase().indexOf(query) !== -1; });
       results.innerHTML = matches.length ? matches.slice(0, 8).map(function (item) {
-        return '<div class="result-item"><a href="' + item.href + '">' + item.label + '<span class="ui-icon ui-icon-arrow-up-right" aria-hidden="true"></span></a></div>';
+        return '<div class="result-item"><a href="' + item.href + '">' + item.label + '<span aria-hidden="true">↗</span></a></div>';
       }).join('') : '<div class="no-results">No encontramos resultados para <strong>“' + input.value + '”</strong>.</div>';
     }
     openButton.addEventListener('click', function () { overlay.classList.add('active'); setTimeout(function () { input.focus(); }, 80); });
